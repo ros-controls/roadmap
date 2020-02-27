@@ -5,7 +5,9 @@
 ROS2 Eloquent introduced the concept of components.
 A component represents a node which can be conveniently loaded into a generic components container and so being executed without the node to compile the node in its own executable.
 Throughout the rest of this document, the word `node` is equivalent to `component`.
-The component container (a.k.a `ComponentManager`) takes ownership over the loaded components and can thus control their life cycle, in which components can be dynamically loaded and unloaded.
+The component container (a.k.a `ComponentManager`) provides functionalities such as services and command line interfaces to dynamically load and unload components.
+It takes ownership over the loaded components and can thus control their execution.
+
 That should be enough background for the scope of this document.
 For more details see https://index.ros.org/doc/ros2/Tutorials/Composition/
 
@@ -46,3 +48,9 @@ Controllers have the ability to claim hardware resources.
 These resources might be potentially in conflict when multiple controllers try to acquire ownership of these resources concurrently.
 It shall further be the responsibility of the controller manager to react appropriately to these conflicts and unload either one or all conflicting controllers.
 
+### Execution Management of Controllers
+
+One important aspect of the controller manager is its execution model which is responsible for in which order the loaded controllers are being processed.
+The component manager in its current implementation accepts a pointer to an `rclcpp::Executor` which could be leverage to provide an executor tailored for the controller manager.
+Details on how this execution management can look like is outside of the scope of this document and shall be discussed in its dedicated design document.
+The point here being made is solely that a component manager must not interfere with the execution management applied in the controller manager.
