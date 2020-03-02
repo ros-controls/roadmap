@@ -15,6 +15,8 @@ For more details see https://index.ros.org/doc/ros2/Tutorials/Composition/
 
 The `ComponentManager` is in a sense very similar to the `ControllerManager` in which the controller manager holds the same logic of dynamically loading and unloading controllers.
 We therefore propose to leverage the functionality of the `rclcpp_components` within the controller manager, which provides all necessary services and command line tools needed to load components.
+The current implementation is the component manager is non-public and has to be made public for inheritance.
+A top-level issue tracking this can be found here: https://github.com/ros2/rclcpp/issues/1010
 
 ### Type Safety of Components
 
