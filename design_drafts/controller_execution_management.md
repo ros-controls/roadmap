@@ -40,6 +40,9 @@ That is, all controllers loaded within a container don't see any input/output st
 The input and output states can then be safely re-routed and linked between individual controllers.
 After all controllers are executed, the final output state is being returned from the container.
 
+The image below shows how this execution model could look like:
+![sequential_execution](images/sequential_execution.png "Sequential Execution Container")
+
 ## Parallel Execution of Controllers
 
 Opposite to the sequential order, there are use cases where it makes sense to operate controllers in a parallel fashion.
@@ -62,12 +65,18 @@ As already mentioned previously, this parallel container can be initialized with
 The parallel container also has only one input and one output state.
 However, the input state has to be multiplexed (essentially copied) for each controller and can't be shared in order to guarantee and isolated execution where no other controller within the same container can interfere.
 
+The image below shows how this execution model could look like:
+![parallel_execution](images/parallel_execution.png "Parallel Execution Container")
+
 ## Nested Controllers
 
 In both cases, the sequential as well as the parallel container can be controllers in itself.
 That gives the flexibility to easily nest the container within another container transparently.
 Again, a very simple scenario could be a parallel `PID` controller setup which is then being configured within a sequential container to enforce joint limits.
 This further allows to consider maybe very complex configured containers as black boxes, yet have the freedom to extend these fairly easy.
+
+The image below shows how this execution model could look like:
+![nested_execution](images/nested_execution.png "Nested Execution Container")
 
 ## Variable Controller Frequencies
 
