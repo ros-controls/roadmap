@@ -14,8 +14,38 @@ We'll go into more details below for each aspect.
 
 ## Prerequisites
 
-<Go into some needed details of a flexible joint state message>
+### Flexible Joint State Message
 
+Over the course of this document, we are referring to a "Flexible Joint State Message".
+This data type is precisely described in [here](flexible_joint_states_msg.md).
+
+What is important to understand for this article is that this joint state message serves as a general container structure for various, dynamically specified key values pairs.
+Every controller can hereby access values which are specific to itself without being limited to a set of pre-defined keys.
+For example can a `JointEffortController` access the robot's input state via keys like `joint_position` and `joint_velocity` and write its output torque under a key such as `torque_command`.
+This further allows an easy extensibility in the variety of controllers which could access data completely independent of their underlying hardware.
+Various components such as camera systems or third-party peripherals can therefore be combined and shared between controllers.
+A typical example for this are visuomotor controllers where camera images are used to generate torque values.
+Relevant features extracted from camera inputs can so be shared between multiple controllers to eventually calculate the appropriate control command.
+
+### Controller and Hardware Interface
+
+Each controller gets the previously mentioned joint state message attached during their initialization phase.
+The controller manager is responsible to initialize the joint state message appropriately and route it correctly to each controller.
+It is further the task of the controller manager to fill the message with a call to `read` from the connected hardware interface and apply the results from the controllers accordingly with a call to `write`.
+
+Each individual implementation for a hardware then reads the appropriate values out of the flexible joint state message and applies these on the actual hardware.
+
+To gain some insights about which keys each controller requires, the `ControllerInterface` specifies two abstract method each controller implementation has to define.
+With `get_input_keys` the controller has to specify a list of keys which are being used to fetch its input state from the attached joint state message.
+Respectively, with `get_output_keys` the controller specifies a list of keys it is modifying inside the joint state message.
+
+### Resource Management
+
+While the general container structure with key-value pairs offers a great deal of flexibility, it has to be guaranteed that no concurrent access of the same key can happen during runtime.
+The controller manager has to make sure that controllers don't collide with their input and output keys.
+
+One could argue that input keys should generally be flagged as read-only to keep the input state of the hardware in a valid state.
+This however disables basic functionality such as clamping where the input key would be the same as the output key or any other use case where a key-value pair is getting modified in place.
 
 ## Sequential Execution of Controllers
 
@@ -80,7 +110,15 @@ The image below shows how this execution model could look like:
 
 ## Variable Controller Frequencies
 
-<TBD example of gripper/camera running with 20hz where as joint state controller runs with 1khz>
+One big constraint of the round-robin approach is the constant update frequency for all loaded controllers.
+There are plenty of use-cases however where it makes sense to have variable update frequencies, such as running a robot controller with 1 kHz whereas a camera controller only receives new images with a 20 Hz frequency.
+Every controller should therefore be attached with its own update frequency.
+
+Looking at the `rclcpp executor` model, one approach could be to start a timer for each controller where its callback will call the respective `update()` function.
+In order to establish a deterministic behavior of the timers, the controller manager has to make sure that really only timers are started and no other blocking calls such as subscriptions or services are part of it.
+There is quite some discussion about this at the moment of writing here: https://answers.ros.org/question/327477/ros2-uses-6-times-more-cpu-than-fastrtps/
+
+The potential options are having a separate executor designed for ros control with adheres to the interface of the `rclcpp::executor` or to neglect the concept and implement a custom execution model for ros_control.
 
 ## Implementation - Proof of Concept
 
