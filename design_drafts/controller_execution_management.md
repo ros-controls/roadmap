@@ -111,7 +111,7 @@ The image below shows how this execution model could look like:
 ## Variable Controller Frequencies
 
 One big constraint of the round-robin approach is the constant update frequency for all loaded controllers.
-There are plenty of use-cases however where it makes sense to have variable update frequencies, such as running a robot controller with 1 kHz whereas a camera controller only receives new images with a 20 Hz frequency.
+There are plenty of use-cases however where it makes sense to have variable update frequencies, such as running a robot controller with 1 kHz whereas a controller operating on a slower sensor only receives new data at e.g. 20 Hz.
 Every controller should therefore be attached with its own update frequency.
 
 Looking at the `rclcpp executor` model, one approach could be to start a timer for each controller where its callback will call the respective `update()` function.
