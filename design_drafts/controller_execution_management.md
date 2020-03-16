@@ -22,15 +22,15 @@ This data type is precisely described in [here](flexible_joint_states_msg.md).
 What is important to understand for this article is that this joint state message serves as a general container structure for various, dynamically specified key values pairs.
 Every controller can hereby access values which are specific to itself without being limited to a set of pre-defined keys.
 For example can a `JointEffortController` access the robot's input state via keys like `joint_position` and `joint_velocity` and write its output torque under a key such as `torque_command`.
-This further allows an easy extensibility in the variety of controllers which could access data completely independent of their underlying hardware.
+This further allows ease of extensibility for various controllers which could access data completely independent of their underlying hardware.
 Various components such as camera systems or third-party peripherals can therefore be combined and shared between controllers.
 A typical example for this are visuomotor controllers where camera images are used to generate torque values.
-Relevant features extracted from camera inputs can so be shared between multiple controllers to eventually calculate the appropriate control command.
+Relevant features extracted from camera inputs can be shared between multiple controllers to eventually calculate the appropriate control command.
 
 ### Controller and Hardware Interface
 
 Each controller gets the previously mentioned joint state message attached during their initialization phase.
-The controller manager is responsible to initialize the joint state message appropriately and route it correctly to each controller.
+The controller manager is responsible for initializing the joint state message appropriately and routing it correctly to each controller.
 It is further the task of the controller manager to fill the message with a call to `read` from the connected hardware interface and apply the results from the controllers accordingly with a call to `write`.
 
 Each individual implementation for a hardware then reads the appropriate values out of the flexible joint state message and applies these on the actual hardware.
@@ -62,16 +62,16 @@ Another use case could be to clamp a `DiffDriveController` velocity values to op
 In order to realize such a controller chaining, the output of one's controller must be linked as the input to its consecutive controller.
 This further motivates a relaxation that resources such as the `JointHandle` can only be uniquely claimed.
 
-### Sequential Controller Container
+### Sequential Controller Group
 
-Instead of loading each controller individually as an independent controller, we propose a parent container which holds and connects controllers which are configured in a specific order.
-The container has a single input and a single output which is being scoped within the container.
-That is, all controllers loaded within a container don't see any input/output states outside the container.
+Instead of loading each controller individually as an independent controller, we propose a parent group which holds and connects controllers which are configured in a specific order.
+The group has a single input and a single output which is being scoped within the group.
+That is, all controllers loaded within a group don't see any input/output states outside the group.
 The input and output states can then be safely re-routed and linked between individual controllers.
-After all controllers are executed, the final output state is being returned from the container.
+After all controllers are executed, the final output state is being returned from the group.
 
 The image below shows how this execution model could look like:
-![sequential_execution](images/sequential_execution.png "Sequential Execution Container")
+![sequential_execution](images/sequential_execution.png "Sequential Execution group")
 
 ## Parallel Execution of Controllers
 
@@ -86,27 +86,28 @@ We could break down each gain (`P`, `I`, `D`) in its own controller and let them
 By being able to execute multiple controllers in parallel, the calculation of the actual output can then be to simply add the `P`, `I`, `D` outputs - according to the control law of `p * (x_d - x) + p * (x_d - x) / dt  + i * sum(x_d -x) * dt`.
 A second use case could be a differential drive controller which computes rotational and translational velocities and a second controller calculates dynamic friction values which then again can be fused together.
 
-### Parallel Controller Container
+### Parallel Controller Group
 
-Just like in the sequential execution, we propose having a container structure which holds a set of loaded controllers which are being executed in parallel and primarily independent from each other.
+Just like in the sequential execution, we propose having a group structure which holds a set of loaded controllers which are being executed in parallel and primarily independent from each other.
 When all controllers were executed, each individual calculated values are being joined.
-As already mentioned previously, this parallel container can be initialized with a custom designed operation which dictates how all commonly calculated values (e.g. `torques`) are being combined.
+As already mentioned previously, this parallel group can be initialized with a custom designed operation which dictates how all commonly calculated values (e.g. `torques`) are being combined.
 
-The parallel container also has only one input and one output state.
-However, the input state has to be multiplexed (essentially copied) for each controller and can't be shared in order to guarantee and isolated execution where no other controller within the same container can interfere.
+The parallel group also has only one input and one output state.
+However, the input state has to be multiplexed (essentially copied) for each controller and can't be shared in order to guarantee and isolated execution where no other controller within the same group can interfere.
 
 The image below shows how this execution model could look like:
-![parallel_execution](images/parallel_execution.png "Parallel Execution Container")
+![parallel_execution](images/parallel_execution.png "Parallel Execution group")
 
 ## Nested Controllers
 
-In both cases, the sequential as well as the parallel container can be controllers in itself.
-That gives the flexibility to easily nest the container within another container transparently.
-Again, a very simple scenario could be a parallel `PID` controller setup which is then being configured within a sequential container to enforce joint limits.
-This further allows to consider maybe very complex configured containers as black boxes, yet have the freedom to extend these fairly easy.
+In both cases, the sequential as well as the parallel group can be controllers in itself.
+That gives the flexibility to easily nest the group within another group transparently.
+Again, a very simple scenario could be a parallel `PID` controller setup which is then being configured within a sequential group to enforce joint limits.
+This further allows to consider maybe very complex configured groups as black boxes, yet have the freedom to extend these fairly easy.
+In principle, this feature allows to create cascading controller schemes.
 
 The image below shows how this execution model could look like:
-![nested_execution](images/nested_execution.png "Nested Execution Container")
+![nested_execution](images/nested_execution.png "Nested Execution group")
 
 ## Variable Controller Frequencies
 
