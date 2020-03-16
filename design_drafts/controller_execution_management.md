@@ -35,7 +35,7 @@ It is further the task of the controller manager to fill the message with a call
 
 Each individual implementation for a hardware then reads the appropriate values out of the flexible joint state message and applies these on the actual hardware.
 
-To gain some insights about which keys each controller requires, the `ControllerInterface` specifies two abstract method each controller implementation has to define.
+To gain some insights about which keys each controller requires, the `ControllerInterface` specifies two abstract methods each controller implementation has to define.
 With `get_input_keys` the controller has to specify a list of keys which are being used to fetch its input state from the attached joint state message.
 Respectively, with `get_output_keys` the controller specifies a list of keys it is modifying inside the joint state message.
 
