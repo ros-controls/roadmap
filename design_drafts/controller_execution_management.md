@@ -76,7 +76,7 @@ The image below shows how this execution model could look like:
 ## Parallel Execution of Controllers
 
 Complementary to sequential execution, there are use cases where it makes sense to operate controllers in a parallel fashion.
-`Controller_1`, `Controller_2`, …, `Controller_3` are being executed in parallel, each operates on a copy of the group's input and individual output states are being fused with a specific strategy.
+`Controller_1`, `Controller_2`, …, `Controller_N` are being executed in parallel, each operates on a copy of the group's input and individual output states are being fused with a specific strategy.
 
 ### Separation of Tasks
 
