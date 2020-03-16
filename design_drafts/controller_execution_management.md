@@ -84,7 +84,7 @@ Having controllers being run in parallel allows a better separation of tasks per
 One easy to grasp example (also if not the most sensible) is a simple `PID-Controller`.
 We could break down each gain (`P`, `I`, `D`) in its own controller and let them calculate in isolation.
 By being able to execute multiple controllers in parallel, the calculation of the actual output can then be to simply add the `P`, `I`, `D` outputs - according to the control law of `p * (x_d - x) + p * (x_d - x) / dt  + i * sum(x_d -x) * dt`.
-A second use case could be again a differential drive controller which computes rotational and translational velocities and a second controller calculates dynamic friction values which then again can be fused together.
+A second use case could be a differential drive controller which computes rotational and translational velocities and a second controller calculates dynamic friction values which then again can be fused together.
 
 ### Parallel Controller Container
 
