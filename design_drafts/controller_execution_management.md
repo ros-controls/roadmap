@@ -75,7 +75,7 @@ The image below shows how this execution model could look like:
 
 ## Parallel Execution of Controllers
 
-Opposite to the sequential order, there are use cases where it makes sense to operate controllers in a parallel fashion.
+Complementary to sequential execution, there are use cases where it makes sense to operate controllers in a parallel fashion.
 `Controller_1`, `Controller_2`, …, `Controller_3` are being executed in parallel/isolated and their output state is being fused with a specific function.
 
 ### Separation of Tasks
