@@ -107,13 +107,14 @@ Each individual field is thus indexable by a tuple of `interface_name` and `valu
 
 ### Name Lookup
 
+*Value Identifier Convention*
 With a dynamically allocated message values, the value identifier might not comply to any standard.
 Imagine a torque controller working with a particular hardware setup (and thus a particular joint state message configuration).
 This controller needs to know whether it can compute a torque value based on `position`, `velocity` or something completely different.
 An additional drawback of this key-value pair is that the keys are not necessarily defined correctly.
 It can potentially be very cumbersome to debug the difference between a keys like `position`, or `pos`, or `pos_val`.
 
-*possible improvements:*
+*Constants within the Message*
 A potential solution to this is to provide constants of the most applicable keys and use as such.
 Secondly, in order to pre-process whether all key-values pairs are available before, we propose a change to the controller interface to provide the used keys during startup time.
 This would allow to perform a sanity check before actually running the controller and potentially crash.
@@ -121,11 +122,54 @@ For more details on this, we refer to the [Execution Management Desin Doc](contr
 Additionally, we could provide a set of helper functions in the form of header-only files along with `control_msgs`.
 Nothing says that a messages package cannot ship some util code, too.
 
-### Read Only Access
+### Realtime Access Control
 
-// TODO, explain that with controller chaining, the resource management has to be addressed that values should be declared read-only
+*Concurrent Access*
+With multiple controllers being loaded, this could potentially lead to concurrent access of the same value in the joint state map.
+In order to avoid this, the current ROS1 features `JointInterfaceHandles` which essentially look the resource to avoid multiple access to the same hardware interface.
+However, as previously motivated this has drawbacks when designing complex control schemes, such as controller chaining or cascading.
+Instead of `mutex`ing and therefore locking the resources, we can provide a lock-free method.
+The idea is to introduce so-called controller groups, which either run controllers in parallel or sequentially.
+In the first case, a copy of the joint state map is attached to each controller and eventually their results will be combined into a new joint map.
+In the seconds case, the sequential controller group is responsible to attach the joint state map to the controllers in order - this can be done without any additional copies.
+For more information on this, the reader is again referred to [Execution Management](controller_execution_management.md).
+
+*Read-Only vs Read-Write Access*
+In certain cases, one might want to flag certain value identifiers as read-only, such as `joint_1_position` or `joint_1_velocity` as these values are directly measured by the robot's hardware and should not be modified during the execution of the control loop.
+Controllers trying to write a read-only value are thus denied and the integrity of the read-only values can be guaranteed.
+This could potentially be achieved by requiring that each controller has to declare its identifiers as `input` and `output` where all `input` values are by default read-only.
+Similarly, `output` identifiers are `read-write`, which would also cope with cases where an `input` topic is getting modified, e.g. when clamping joint torque commands, where input and output are the same identifier.
+
+However, the method mentioned here is a sole implementation detail and is not reflected in the actual message.
+For this, one could thing of creating a third field to the `InterfaceValue` message, which has a `enum` value for IO:
+```
+Header header
+
+string[] interface_name
+InterfaceValue[] interface_value
+  int8 IO_READ_ONLY = 0  # read-only constant
+  int8 IO_READ_WRITE = 1 # read-write constant
+  string[] value_identifier
+  float64[] value
+  int8[] io_flag
+```
 
 ## Discarded Designs
+
+### Flat Structure
+```
+Header header
+
+string[] value_identifier
+float64[] value
+```
+
+Alternatively to the chosen one, this proposal has one less indirection when indexing the values.
+Each value has to be precisely identified by its name.
+
+While being small and flat, this proposal was discarded as the indexing entails more issues than benefits as for every value per hardware interface, a unique name has to be designed.
+This design would most likely mean to prefix the value with its interface name, e.g. `joint_1_torque_command`, which is no better than having a level of indirection more in the index.
+Furthermore, this even more leads to confusion and non-standard value identifiers.
 
 ### Matrix configuration
 ```
