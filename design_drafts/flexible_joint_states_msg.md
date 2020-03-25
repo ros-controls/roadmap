@@ -9,7 +9,7 @@ This design is proposing to break with this practice and provide a message that 
 The proposed setup should both allow for reporting values for user-defined interfaces as well as making reporting position, velocity and effort optional.
 The rationale behind the latter is that it is currently left entirely to user-policy whether e.g. velocity and effort should be filled with zeroes when only position is reported and how to tell if this is the case.
 The flexible joint state message shall encompass a complex  hardware setup, covering a mix of different actuators and sensors.
-A set of mixed-type joints would e.g. be a mobile actuator.
+A set of mixed-type joints would e.g. be a mobile manipulator.
 One could think of a diff drive controller only providing velocity values, whereas the manipulator provides the full joint state (`position`, `velocity`, `effort`) for its joints.
 In the example given, it would be possible to provide pre-defined fields in a statically defined joint state message, however this brings two problems with it:
 1. How can the user indicate that a certain field (e.g. `effort`) is not provided for the joint?
