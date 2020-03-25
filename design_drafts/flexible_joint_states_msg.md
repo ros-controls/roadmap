@@ -69,7 +69,7 @@ InterfaceValue[] interface_value
   float64[] value
 ```
 
-where `name` stands for a list of joint or hardware interface names, `interface_value` is a vector of a new message, being essentially a key-value pair, e.g. `effort` and `1.0`.
+where `interface_name` stands for a list of joint or hardware interface names, `interface_value` is a vector of a new message, being essentially a key-value pair, e.g. `effort` and `1.0`.
 
 In the example of the mobile manipulator, a possible configuration would look like the following:
 
@@ -77,9 +77,9 @@ In the example of the mobile manipulator, a possible configuration would look li
 Header header
 
 interface_name = ['wheel_left', 'wheel_right', 'joint_1', 'joint_2', …, 'joint_N', 'gripper_1']
-InterfaceValue = [wheel_left_iv, wheel_right_iv, joint_1_iv, joint_2_iv, …, joint_n_iv, gripper_1_iv]
+interface_value = [wheel_left_iv, wheel_right_iv, joint_1_iv, joint_2_iv, …, joint_n_iv, gripper_1_iv]
 ```
-where the `InterfaceValue` messages can be composed individually per `InterfaceName`.
+where the `InterfaceValue` messages can be composed individually per `interface_name`.
 The name is similar to the already existing joint state message coming from the URDF.
 
 The `InterfaceValue` for the left wheel `wheel_left_iv` could be composed as such, reporting only its velocity:
@@ -96,7 +96,7 @@ value = [1.1, 2.2, 3.3]
 
 Additionally, the `InterfaceValue` for the gripper can be completely custom:
 ```
-value_identifier = ['vaccuum_level', 'voltage']
+value_identifier = ['vacuum_level', 'voltage']
 value = [4.4, 5.5]
 ```
 
@@ -118,7 +118,7 @@ It can potentially be very cumbersome to debug the difference between a keys lik
 A potential solution to this is to provide constants of the most applicable keys and use as such.
 Secondly, in order to pre-process whether all key-values pairs are available before, we propose a change to the controller interface to provide the used keys during startup time.
 This would allow to perform a sanity check before actually running the controller and potentially crash.
-For more details on this, we refer to the [Execution Management Desin Doc](controller_execution_management.md).
+For more details on this, we refer to the [Execution Management Design Doc](controller_execution_management.md).
 Additionally, we could provide a set of helper functions in the form of header-only files along with `control_msgs`.
 Nothing says that a messages package cannot ship some util code, too.
 
@@ -131,7 +131,7 @@ However, as previously motivated this has drawbacks when designing complex contr
 Instead of `mutex`ing and therefore locking the resources, we can provide a lock-free method.
 The idea is to introduce so-called controller groups, which either run controllers in parallel or sequentially.
 In the first case, a copy of the joint state map is attached to each controller and eventually their results will be combined into a new joint map.
-In the seconds case, the sequential controller group is responsible to attach the joint state map to the controllers in order - this can be done without any additional copies.
+In the second case, the sequential controller group is responsible to attach the joint state map to the controllers in order - this can be done without any additional copies.
 For more information on this, the reader is again referred to [Execution Management](controller_execution_management.md).
 
 *Read-Only vs Read-Write Access*
