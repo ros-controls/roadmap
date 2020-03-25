@@ -19,25 +19,25 @@ One example could be a suction gripper, which may report only the applied pressu
 
 ## Goal
 
-With the given motivation, we therefore propose to introduce a flexible way of providing custom values in the joint state message to address the given problems mentioned above.
+With the given motivation, we therefore propose to introduce a flexible way of reporting values in the joint state message to address the given problems mentioned above.
 
 Further in this text `value-identifier` is used to refer to a type of value reported in joint states, e.g. `position`, `velocity` and `effort`.
 
 The requirements for a flexible joint state message are fulfilled, if it
 1. does not enforce defining position, velocity and effort for every joint,
-1. supports different hardware interface to report additional values on top of position, velocity and effort,
+2. supports different hardware interface(s) additionally to position, velocity and effort,
 3. does not enforce defining values for every joint in every value-identifier,
 4. provides a realtime-friendly way of use (some assumptions are fair to use),
 
 If the requirements are all fulfilled, the flexible joint state message can replace the currently used `JointStateHandles`.
 One can consider the flexible joint state message to represent not only a ROS message, which being used for communication.
-The same message instance can be used internal to ROS control as a storage instance which is used to propagate the robot's state to the loaded controllers.
+The same message type can be used internally in `ros_control` as a storage instance which is used to propagate the robot's state to the loaded controllers and to convey desired joint/actuator commands to the robot hardware.
 That is, the hardware interface can fill the joint state message with all information the underlying hardware reports.
 This would traditionally be joint states such as `position` and `velocity`, but also provides the flexibility to be extended by non-classical hardware interfaces such as grippers or custom sensors/actuators.
 The joint state message would then be passed to each individual controller to read the appropriate information about of the message and perform their calculation.
-The result of each controller can be similarly be stored in the same instance of the joint state message which will be eventually passed back to the hardware interface.
+The result of each controller can similarly be stored in the same instance of the joint state message which will be eventually passed back to the hardware interface.
 The hardware interface then can extract the result of the controller's computation from the message and apply their values to the hardware.
-That not only allows to easily combine multiple controllers, but also a dynamic composition of the hardware interface to contain multiple interfaces to various hardware components such as robots, external grippers.
+That not only allows to easily combine multiple controllers, but also a dynamic composition of the hardware interfaces to contain multiple interfaces to various hardware components such as robots with interchangeable grippers.
 This composition can become extremely handy when dealing with external components to a robot, such as a gripper or the previously mentioned mobile manipulator, where the base platform is not necessarily coupled with the robotic arm.
 
 For more details on how the flexible joint state message can be used to create complex controller schemes, please refer to [controller execution management](controller_execution_management.md).
@@ -56,9 +56,9 @@ float64[] velocity
 float64[] effort
 ```
 
-The following proposal reflects a map-like (similar to what `std::unordered_map` represents in C++ or a hash table in other languages) datatype where not only three statically chosen value-identifier are attached to a joint name, but can be set dynamically.
+The following proposal reflects a map-like (similar to what `std::unordered_map` represents in C++ or a hash table in other languages) datatype where not only three statically chosen value-identifiers are attached to a joint name, but can be set dynamically.
 
-### Proposal for a Dynamic Joint State Message
+### Proposal for a Flexible Joint State Message
 
 ```
 Header header
