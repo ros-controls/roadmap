@@ -96,7 +96,7 @@ value = [1.1, 2.2, 3.3]
 
 Additionally, the `InterfaceValue` for the gripper can be completely custom:
 ```
-value_identifier = ['vaccuum_level', 'voltage']
+value_identifier = ['vacuum_level', 'voltage']
 value = [4.4, 5.5]
 ```
 
@@ -118,7 +118,7 @@ It can potentially be very cumbersome to debug the difference between a keys lik
 A potential solution to this is to provide constants of the most applicable keys and use as such.
 Secondly, in order to pre-process whether all key-values pairs are available before, we propose a change to the controller interface to provide the used keys during startup time.
 This would allow to perform a sanity check before actually running the controller and potentially crash.
-For more details on this, we refer to the [Execution Management Desin Doc](controller_execution_management.md).
+For more details on this, we refer to the [Execution Management Design Doc](controller_execution_management.md).
 Additionally, we could provide a set of helper functions in the form of header-only files along with `control_msgs`.
 Nothing says that a messages package cannot ship some util code, too.
 
