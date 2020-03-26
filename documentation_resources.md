@@ -5,6 +5,7 @@ Any level of complexity is appreciated as long as it's an effective way to expla
 
 * The quintessential presentation by Adolfo: https://vimeo.com/107507546
 * [`ros_control`](http://wiki.ros.org/ros_control) and [`ros_controllers`](http://wiki.ros.org/ros_controllers) ROS wiki pages
+* [ROS Control, An Overview](https://fjp.at/posts/ros/ros-control/): summary of Adolfo's ROSCon presentation ([edit on github](https://github.com/fjp/fjp.github.io/blob/master/collections/_posts/ros/2020-03-13-ros-controls.md)).
 * `joint_trajectory_controller`: [ROS wiki](http://wiki.ros.org/joint_trajectory_controller?distro=melodic), [Understanding trajectory replacement](http://wiki.ros.org/joint_trajectory_controller/UnderstandingTrajectoryReplacement)
 * ros_control tutorials [ROS wiki page](http://wiki.ros.org/ros_control/Tutorials)
 * ros_control [github wiki on basics](https://github.com/ros-controls/ros_control/wiki)
