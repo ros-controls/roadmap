@@ -96,50 +96,95 @@ For better understanding please consider following use-case:
   * Sensor2 with different propriatrey protocol for communication (e.g. Schunk FTC50 sensor with CAN interface).
   
 * The Robot1 (KUKARobot) is then used as follows:
-  * A new class `KUKARobot` is written which extends 
-  
+  * A new class `KUKA_RSI_HWCommunicationInterface` implementing RSI communication protocl for KUKA robots and extending `TCP/IP_HWCommunicaitonInterface` is written.
+  * To start the robot, a yaml configuration for `Robot` class needs to be writte.
+  This file would look something like:
+  ```
+    RobotKUKA:
+      name: "KUKA KR5 arc"
+      RobotHW:
+        type: "kuka_driver/KUKA_RSI_HWCommunicationInterface"
+        HWCommunicationInterface:
+          rsi_type: 4  #RSI-Fast with 4ms loop
+          interface: eth_kuka
+          interface_ip: 192.168.1.1
+
+      # Parameters for Robot class
+      joints: [joint1, joint2, joint3, joint4, joint5, joint6]
+      actuators:
+        joint1:
+          name: joint1
+          type: "ros2_control_components/PositionActuator"
+          n_dof: 1
+          max_values: [PI]
+          min_values: [-PI]
+        joint2:
+          ...
+      sensors:
+        joint1:
+          name: joint1
+          type: "ros2_control_components/PositionSensor"
+        ...
+  ```
+
+
+
   
 * The Sensor1 (ATI FTS with CAN) is integrated as follows:
   * A new class `ATI_ForceTorqueSensorHW_CAN` which extends `ForceTorqueSensorHW` is written.
   This class implements ATI's communication protocol, e.g. fetching the calibration matrices, calculation of FT-data from strain gaugle values, etc.
   This class uses `Generic_CAN_HWCommunicationInterface` to be able to dynamically load specific CAN-device library depending on the manufacturer of used CAN interface (e.g. PEAK, ESD, ...).
   * To use this class by ROS, a yaml configuration for `ForceTorqueSensor` class which provides high-level functions (e.g. noise filters, offset and gravity compensation) needs to be written.
-  This file would look someting like:
+  This file would look something like:
   ```
-  SensorHW:
+  SensorATI:
     name: "ATI Force Torque Sensor"
-    type: "ati_force_torque_sensors/ATI_ForceTorqueSensorHW_CAN"
-    data_pull_frequency: 1000 #Hz
-    HWCommunicationInterface:
-      type: "PEAK_CAN_HWCommunicatonInterface"
-      path: can0
-      base_id: 0x20
-    
-  # Parameters for   
-  data_publish_frequency: 200 #Hz
-  sensor_frame: "fts_reference_link"
-  robot_base_frame: "robot_base_link"
-  auto_init: true
-  offset:
-    is_static: false #Caculate always sensor offen on start
-  filters:
-    - MovingMean:
-      - device: 3
-    - ThresholdFilter:
-      - linear:
-        - x: 2
-     ...
+    SensorHW:
+      type: "ati_force_torque_sensors/ATI_ForceTorqueSensorHW_CAN"
+      data_pull_frequency: 1000 #Hz
+      HWCommunicationInterface:
+        type: "PEAK_CAN_HWCommunicatonInterface"
+        path: can0
+        base_id: 0x20
+
+    # Parameters for ForceTorqueSensor class  
+    data_publish_frequency: 200 #Hz
+    sensor_frame: "fts_reference_link"
+    robot_base_frame: "robot_base_link"
+    auto_init: true
+    offset:
+      is_static: false #Caculate always sensor offen on start
+    filters:
+      - MovingMean:
+        - device: 3
+      - ThresholdFilter:
+        - linear:
+          - x: 2
+    ...
   ```
 
+* The Sensor2 (Schunk FTC50 with CAN) is integrated as follows:
+  * A new class `Schunk FTC50_ForceTorqueSensorHW_CAN` which extends `ForceTorqueSensorHW` is written.
+  * Other steps are the same as for Sensor1.
+  This first part of configuration would change tok something like:
+  ```
+  SensorSchunk:
+    name: "Schunk Force Torque Sensor"
+    SensorHW: 
+      type: "schunk_force_torque/FTC50_ForceTorqueSensorHW_CAN"
+  ...
+  ```
 
+### Class Diagrams
 
-To help integration of new robots into `ros2_control` following is proposed:
+The following class diagram shows interal structures of `ros2_control`-hardware interface.
+In blue are marked example components used in ROS1.
+Green color marks the structure relevant for the example.
+Red components are needed only if one need some spatial robot abstraction for a hardware.
 
-The following class diagram shows interal structures of `ros2_control`-hardware interface:
-
-![ros2_control_hardware_interfaces](images/ros2_control_hardware_interfaces.png "ROS2 Control - Hardware Interfaces")
-
+![ROS2 Control Class Diagram][ros2_control_hardware_interfaces]
 
 
 <!-- List of References -->
+[ros2_control_hardware_interfaces]: images/ros2_control_hw_interface_structure.svg "ROS2 Control - Hardware Interfaces"
 [controllers execution mangagemnt design]:https://github.com/Karsten1987/roadmap/blob/controller_execution_management/design_drafts/controller_execution_management.md
