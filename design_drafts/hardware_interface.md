@@ -43,61 +43,62 @@ Only data writing is possible for this type of hardware.
 Resource conflict should be strictly checked, managed, and protected (e.g., by a key provided by a specific controller).
 
 
-## Class Structure
+## Package and Class Structure
 
-The details on internal class strucutre of `ros2_control` is described in follwing subsections.
-A complete overview is given in the figure on the end of this section.
+The following subsections describe the internal class structure of `ros2_control`.
+The figure at the end of this section gives a complete overview with examples.
 
-This structure has following intentions:
+This structure has the following intentions:
 
-1. `Robot` class should not be basic class any more, since we want also integrate simpler strucutres like sensors and 1 DoF actuators.
-1. Internal data structures should be agnostic of specific interface type and data this interface manges. An important part for this is [Flexible Joint State Message](flexible_joint_states_msg.md) data type.
-1. Users should be able to use Sensor and Actuators directly as well as bundelded them to a robot.
-1. The data structure should enable management of communication with a robot at once (e.g. KUKA RSI communication) and also separating it into multiple `Sensors` and `Actuators` (`Joints`) (e.g. Schunk LWA4p which uses ros_canopen) where each of them has separate communication channel.
+1. `Robot` class should not be the basic class anymore since we also want to integrate simpler structures like sensors and 1 DoF actuators.
+1. Internal data structures should be agnostic of specific interface types and data this interface manages. An important part for this is [Flexible Joint State Message](flexible_joint_states_msg.md) data type.
+1. Users should be able to use Sensors and Actuators directly as well as bundled them to a robot.
+1. The data structure should enable management of communication with a robot at once (e.g., KUKA RSI communication) and also separating it into multiple `Sensors` and `Actuators` (`Joints`) (e.g., Schunk LWA4p which uses ros_canopen) where each of them has separate communication channe
 
 The classes are separated in following logical packages:
-1. `ros2_control_components` provides digital representation of components used in a robotic system.
-1. `ros2_control_hardware_interface` provides "connection" between digital model from `ros2_control_components` and concete communication interface to a real hardware.
-1. `ros2_control_communication_interfaces` provides definition for structures of specific communication interfaces to enable simpler integration for the end users.
+
+1. `ros2_control_components` provides a digital representation of components used in a robotic system.
+1. `ros2_control_hardware_interface` provides "connection" between digital model from `ros2_control_components` and concrete communication interface to a real hardware.
+1. `ros2_control_communication_interfaces` defines structures of specific communication interfaces to enable simpler integration for the end-users.
 
 ### `ros2_control_components`
 
-The package `ros2_control_components` models hardware components of which are used by `ros2_control` framework.
-The classes are uses for storing run-time data and for acces from controllers.
-The `BaseComponent` class which all members of this package should extend and its main purpose is to keep logical order of 
-The `Component` class enalbes storing of values and basic informations like `frame_id`.
-It is not intended to be used by a user.
-The classes `Sensor` and `Actuator` are first level classes which can be used by a user.
-They define only a basic structure and should be extended for specific type of a sensor (e.g. ForceTorqueSensor class) and actuator (e.g. PositionActuator).
-The `Robot` class is complex class which holds references for its `Sensor`, `Actuator` and other `Robot` classes in a case of combined robot hardware (e.g. mobile manipulator).
+The package `ros2_control_components` models hardware components of which are used by the `ros2_control` framework.
+These classes are used for storing run-time data and for access from controllers.
+The `BaseComponent` class which all members of this package should extend and its primary purpose is to keep logical order of 
+The `Component` class enables storing of values and necessary information like `frame_id`.
+The end-user should not use this class.
+The classes `Sensor` and `Actuator` are first level classes that can be used by a user.
+They define only a basic structure and should be extended for a specific type of a sensor (e.g., ForceTorqueSensor class) and actuator (e.g., PositionActuator).
+The `Robot` class is the complex class that holds references for its `Sensor`, `Actuator`, and other `Robot` classes in a case of combined robot hardware (e.g., mobile manipulator).
 
 
 ### `ros2_control_hardware_interface`
 
-The package `ros2_control_hardware_interface` servs as connection between virtual repsentation of robotic hardware in the package `ros2_control_components` with the specific communication interfaces.
-Therefore, this package provides equivalent classes to those in `ros2_control_components`, but defines what functinalities is internal model is exepcting from a specific hardware.
+The package `ros2_control_hardware_interface` serves as a connection between virtual representation of robotic hardware in the package `ros2_control_components` with the specific communication interfaces.
+Therefore, this package provides equivalent classes to those in `ros2_control_components`, but defines what functionalities internal model is expecting from specific hardware.
 
 ### `ros2_control_communication_interfaces`
 
 The package `ros2_control_communication_interfaces` defines some standard communication interfaces used for control of the robots to cut the integration time for the end-users.
-**Note:** This is maybe out of scope?
 
 
 ### Example use-case of for the classes
 
-The reasonong behind this structure is based on abstraction of functionalty and hardware access for multiple kind of robots used with and without additional sensors.
+The reasoning behind this structure is based on the abstraction of functionality and hardware access for multiple kinds of robots used with and without additional sensors.
 To extend the robot with additional actuators follows the same logic.
-For better understanding please consider following use-case:
-* In a ROS-runned factory there is a process which need force controlled robots.
+
+For better understanding, please consider the following use-case:
+* In a ROS-runed factory, there is a process which needs force-controlled robots.
 * Following hardware is provided:
-  * Robot1 with "batch" interface for communication" (e.g. KUKA robots with RSI);
-  * Robot2 with interface where each joint can be addressed separately (e.g. Schunk LWA4p with canopen);
-  * Sensor1 with propiatery protocol for communication (e.g. ATI Force-Torque Sensors with CAN interface);
-  * Sensor2 with different propriatrey protocol for communication (e.g. Schunk FTC50 sensor with CAN interface).
+  * Robot1 with "batch" interface for communication" (e.g., KUKA robots with RSI);
+  * Robot2 with an interface where each joint can be addressed separately (e.g., Schunk LWA4p with canopen);
+  * Sensor1 with a proprietary protocol for communication (e.g., ATI Force-Torque Sensors with CAN interface);
+  * Sensor2 with a different proprietary protocol for communication (e.g., Schunk FTC50 sensor with CAN interface).
   
 * The Robot1 (KUKARobot) is then used as follows:
-  * A new class `KUKA_RSI_HWCommunicationInterface` implementing RSI communication protocl for KUKA robots and extending `TCP/IP_HWCommunicaitonInterface` is written.
-  * To start the robot, a yaml configuration for `Robot` class needs to be writte.
+  * A new class `KUKA_RSI_HWCommunicationInterface` implementing RSI communication protocol for KUKA robots and extending `TCP/IP_HWCommunicaitonInterface` is written.
+  * To start the robot, a YAML configuration for `Robot` class needs to be written.
   This file would look something like:
   ```
     RobotKUKA:
@@ -126,15 +127,45 @@ For better understanding please consider following use-case:
           type: "ros2_control_components/PositionSensor"
         ...
   ```
+  
+* The Robot2 (Schunk) is then used as follows:
+  * To use this robot, one can reuse `canopen_motor_HWCommunicationInterface` implemented for communication with canopen motors (Profile 402).
+  * Therefore, the YAML configuration of `Robot` class is a bit longer.
+  This file would look something like:
+  ```
+    RobotSchunk:
+      name: "Schunk LWA4p"
 
-
-
+      # Parameters for Robot class
+      joints: [joint1, joint2, joint3, joint4, joint5, joint6]
+      actuators:
+        joint1:
+          name: joint1
+          type: "ros2_control_components/PositionActuator"
+          n_dof: 1
+          max_values: [PI]
+          min_values: [-PI]
+          ActuatorHW:
+            type: "ros_canopen/canopen_motor_HWCommunicationInterface"
+            interface_path: can0
+            socket: true
+            can_id: 3
+            profile: 402
+            eds_file: "schunk_lwa4p/config/Schunk_0_63.dcf"
+        joint2:
+          ...
+      sensors:
+        joint1:
+          name: joint1
+          type: "ros2_control_components/PositionSensor"
+        ...
+  ```
   
 * The Sensor1 (ATI FTS with CAN) is integrated as follows:
   * A new class `ATI_ForceTorqueSensorHW_CAN` which extends `ForceTorqueSensorHW` is written.
-  This class implements ATI's communication protocol, e.g. fetching the calibration matrices, calculation of FT-data from strain gaugle values, etc.
-  This class uses `Generic_CAN_HWCommunicationInterface` to be able to dynamically load specific CAN-device library depending on the manufacturer of used CAN interface (e.g. PEAK, ESD, ...).
-  * To use this class by ROS, a yaml configuration for `ForceTorqueSensor` class which provides high-level functions (e.g. noise filters, offset and gravity compensation) needs to be written.
+  This class implements ATI's communication protocol, e.g., fetching the calibration matrices, calculation of FT-data from strain gauge values, etc.
+  This class uses `Generic_CAN_HWCommunicationInterface` to be able to dynamically load specific CAN-device library depending on the manufacturer of used CAN adapter (e.g., PEAK, ESD, ...).
+  * To use this class by ROS, a YAML configuration for `ForceTorqueSensor` class, which provides high-level functions (e.g., noise filters, offset, and gravity compensation), needs to be written.
   This file would look something like:
   ```
   SensorATI:
@@ -166,7 +197,7 @@ For better understanding please consider following use-case:
 * The Sensor2 (Schunk FTC50 with CAN) is integrated as follows:
   * A new class `Schunk FTC50_ForceTorqueSensorHW_CAN` which extends `ForceTorqueSensorHW` is written.
   * Other steps are the same as for Sensor1.
-  This first part of configuration would change tok something like:
+  This first part of the configuration would change to something like:
   ```
   SensorSchunk:
     name: "Schunk Force Torque Sensor"
@@ -174,13 +205,27 @@ For better understanding please consider following use-case:
       type: "schunk_force_torque/FTC50_ForceTorqueSensorHW_CAN"
   ...
   ```
+ 
+Now there is a possibility to combine the hardware as needed:
+  * The example file for Robot1 (KUKARobot) and Sensor2 (Schunk FTC50 with CAN):
+  ```
+    RobotSensorKUKASchunk:
+      name: "KUKA KR5 arc with Schunk FTC50 on TCP"
+      robots:
+        RobotKUKA:
+          # Description from above
+      
+      sensors:
+        SensorSchunk:
+          # Description from above
+  ```
 
 ### Class Diagrams
 
-The following class diagram shows interal structures of `ros2_control`-hardware interface.
+The following class diagram shows the internal structures of `ros2_control`-hardware interface.
 In blue are marked example components used in ROS1.
 Green color marks the structure relevant for the example.
-Red components are needed only if one need some spatial robot abstraction for a hardware.
+Red components are needed in a case if one needs some spatial robot abstraction for hardware (they should probably be deleted.
 
 ![ROS2 Control Class Diagram][ros2_control_hardware_interfaces]
 
