@@ -35,49 +35,57 @@ and ties in with the use of the [flexible joint states message](https://github.c
 ## Proposal
 
 ### urdf
-Over the years we didn't receive any feedback about the URDF notation being good/bad which means it's not currently a pain point for anyone at the moment, this design will not propose any changes to that.
-Let's stick with the notation:
+
 ```
 <transmission name="extended_simple_trans">
     <type>transmission_interface/ExtendedSimpleTransmission</type>
     <joint name="joint1">
-      <offset>0.0</offset>
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-      <hardwareInterface>awesome_interface/FooJointInterface</hardwareInterface>
-      <role></role>
+      <actuator>
+        <!-- control input (u) for the joint, i.e. effort/torque value -->
+        <hardwareInterface>hardware_interface/EffortJointCommandInterface</hardwareInterface>
+      </actuator>
+      <sensor>
+        <!-- output state (x) from the joint, e.g. position -->
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <!-- output state (x_dot) from the joint, e.g. velocity -->
+        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+        <!-- output state (x_dot_dot) from the joint, e.g. acceleration -->
+        <hardwareInterface>hardware_interface/AccelerationJointInterface</hardwareInterface>
+      </sensor>
     </joint>
-    <actuator name="actuator1">
-      <mechanicalReduction>50</mechanicalReduction>
-    </actuator>
+    <joint name="joint2">
+      <actuator>
+        <hardwareInterface>hardware_interface/EffortJointCommandInterface</hardwareInterface>
+      </actuator>
+      <sensor>
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+        <hardwareInterface>hardware_interface/AccelerationJointInterface</hardwareInterface>
+      </actuator>
+    </joint>
+    <joint>
+      <actuator>
+        <!-- control input (u) for the joint, i.e. velocity value -->
+        <hardwareInterface>hardware_interface/VelocityJointCommandInterface</hardwareInterface>
+      </actuator>
+      <sensor>
+        <!-- custom output state (x) for the joint, i.e. some custom value such as current      
+        <hardwareInterface name="current_joint_interface">hardware_interface/CustomValueInterface</hardwareInterface>
+      </sensor>
+    </joint>
 </transmission>
 ```
-The content of a `hardwareInterface`  XML attribute should match up with strings provided by `ros2_control` in the shape of familiar names:
+
+The content of a `hardwareInterface` XML tag should match up with strings provided by `ros2_control` in the shape of familiar names:
 `hardware_interface::PositionJointInterface, hardware_interface::VelocityJointInterface, hardware_interface::EffortJointInterface`.
-By relying on strings internally in the framework but using them mostly through shared names, a standard nomenclature is kept all the while allowing custom extensions in an easy and transparent way.
-Note the in the example above, since all names are merely strings, `awesome_interface/FooJointInterface` - a custom interface - can be used if it is provided by the `RobotHardware`.
+By relying on strings internally in the framework but using them mostly through shared names, a standard nomenclature is kept all the while allowing custom extensions in an easy and transparent way. 
 
 ### RobotHardware
 
-```
-void RobotHardware::declareInterface(string name);
-```
-or
-```
-void RobotHardware::registerInterface(string interface_name, string joint_name);
-```
+Based on the URDF snippet above, the instance of a robot hardware can be generated as described in the [hardware interface design doc](hardware_interface.md).
 
-a possible automated way adding these to the `RobotHardware` is to declare them when 
-```
-template<class... interfaces>
-class RobotHardware{};
-...
-MyRobotHW : public RobotHardware<hardware_interface::PositionJointInterface, hardware_interface::VelocityJointInterface>
-```
-
-Initially, controller and transmission loader checks could happen through a list of registered interfaces.
-Once all requirements are there, this can also manifest in a few entries being added to the shared flexible joint state message instance, removing the need for a separate "registry" of interfaces.
+The transmission parser is being used to set up and configure the robot hardware accordingly.
+Refer to the design doc for more information.
 
 ### Transmissions
 
