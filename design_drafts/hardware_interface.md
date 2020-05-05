@@ -82,7 +82,7 @@ Therefore, this package provides equivalent classes to those in `ros2_control_co
 The package `ros2_control_communication_interfaces` defines some standard communication interfaces used for control of the robots to cut the integration time for the end-users.
 
 
-### Example use-case of for the classes
+### Example use-case of the classes
 
 The reasoning behind this structure is based on the abstraction of functionality and hardware access for multiple kinds of robots used with and without additional sensors.
 To extend the robot with additional actuators follows the same logic.
