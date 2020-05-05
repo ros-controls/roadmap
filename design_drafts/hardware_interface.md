@@ -64,7 +64,7 @@ The classes are separated in following logical packages:
 
 The package `ros2_control_components` models hardware components of which are used by the `ros2_control` framework.
 These classes are used for storing run-time data and for access from controllers.
-The `BaseComponent` class which all members of this package should extend and its primary purpose is to keep logical order of 
+The `BaseComponent` class which all members of this package should extend and its primary purpose is to keep logical order of.
 The `Component` class enables storing of values and necessary information like `frame_id`.
 The end-user should not use this class.
 The classes `Sensor` and `Actuator` are first level classes that can be used by a user.
