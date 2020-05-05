@@ -42,7 +42,6 @@ An actuator in a robotic system is represented with the `ActuatorHardware` class
 Only data writing is possible for this type of hardware.
 Resource conflict should be strictly checked, managed, and protected (e.g., by a key provided by a specific controller).
 
-
 ## Package and Class Structure
 
 The following subsections describe the internal class structure of `ros2_control`.
