@@ -52,7 +52,7 @@ This structure has the following intentions:
 1. `Robot` class should not be the basic class anymore since we also want to integrate simpler structures like sensors and 1 DoF actuators.
 1. Internal data structures should be agnostic of specific interface types and data this interface manages. An important part for this is [Flexible Joint State Message](flexible_joint_states_msg.md) data type.
 1. Users should be able to use Sensors and Actuators directly as well as bundled them to a robot.
-1. The data structure should enable management of communication with a robot at once (e.g., KUKA RSI communication) and also separating it into multiple `Sensors` and `Actuators` (`Joints`) (e.g., Schunk LWA4p which uses ros_canopen) where each of them has separate communication channe
+1. The data structure should enable management of communication with a robot at once (e.g., KUKA RSI communication) and also separating it into multiple `Sensors` and `Actuators` (`Joints`) (e.g., Schunk LWA4p which uses ros_canopen) where each of them has a separate communication channel.
 
 The classes are separated in following logical packages:
 
