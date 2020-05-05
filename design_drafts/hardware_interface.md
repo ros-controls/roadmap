@@ -32,7 +32,7 @@ A specific implementation of the `RobotHardware` decides if the data are receive
 
 ### Sensor Hardware
 
-A sensor in a robotic system is represented with the `SesorHardware` class.
+A sensor in a robotic system is represented with the `SensorHardware` class.
 Only data reading is possible from this type of hardware.
 Therefore no resource conflict is possible, and it will not be checked.
 
