@@ -88,7 +88,7 @@ The reasoning behind this structure is based on the abstraction of functionality
 To extend the robot with additional actuators follows the same logic.
 
 For better understanding, please consider the following use-case:
-* In a ROS-runed factory, there is a process which needs force-controlled robots.
+* In a ROS-based factory, there is a process which needs force-controlled robots.
 * Following hardware is provided:
   * Robot1 with "batch" interface for communication" (e.g., KUKA robots with RSI);
   * Robot2 with an interface where each joint can be addressed separately (e.g., Schunk LWA4p with canopen);
