@@ -3,7 +3,7 @@
 The following shall discuss the design of data structures in the `hardware_interface` package for ROS2.
 The document deals only with hardware description, but this also depends on [controllers execution management design](controller_execution_management.md).
 As of today (ROS1), a `robot` is a fundamental and rigid structure that handles any hardware.
-Therefore to extend it with additional hardware, like sensors, actuators, and tools, without coding and recompiling it.
+Therefore it is not possible to extend it with additional hardware, like sensors, actuators, and tools, without coding.
 This design tries to achieve the following:
 
 * Consistent naming of classes with the wording used in control theory (should simplify starting for new users);
