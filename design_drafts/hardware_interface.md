@@ -64,7 +64,10 @@ The classes are separated in following logical packages:
 
 The package `ros2_control_components` models hardware components of which are used by the `ros2_control` framework.
 These classes are used for storing run-time data and for access from controllers.
-The `BaseComponent` class which all members of this package should extend and its primary purpose is to keep logical order of.
+All classes in this package implement the `BaseComponent` interface.
+The primary purpose of this component is to separate the inheritance of `Robot` class versus `Sensor` and `Actuator` classes.
+This interface keeps references to the `ComponentHardwareInterface` interface and provides some basic functionality needed by all components.
+
 The `Component` class enables storing of values and necessary information like `frame_id`.
 The end-user should not use this class.
 The classes `Sensor` and `Actuator` are first level classes that can be used by a user.
@@ -231,15 +234,15 @@ Red components are needed in a case if one needs some spatial robot abstraction 
 
 ### Using `ros2_control` With a new Robot
 
-The process of making a new robot `ros2_control` compatible is depicted in the flow chart here under.
-One basically need to do following steps:
+The process of making a new robot `ros2_control` compatible is depicted in the flow chart hereunder.
+One needs to do the following steps:
 
-1. Check if needed `HardwareCommunicationInterface` is integrated in `ros2_control` and if not it is recommended to do it.
-For this get in touch with people responsible for `ros2_control_hardware_comunication` package.
-2. Check if needed `HardwareInterface`, i.e. logical part of the communication with the robot, exists and if not implement it.
-This has to inheirt `ComponentHardwareInterface` interface.
-3. Check if all types of `Sensor` and `Actuator` classes exists in `ros2_control_components` (or some third-party repository) and if not get in touch with people responsible for the repository and decide where to implement it.
-4. Check `ros2_control_demo` repository for example files and templates to create YAMLs, URDF and launch files for your robot.
+1. Check if needed `HardwareCommunicationInterface` is already integrated into `ros2_control`, and if not, it is recommended to do it.
+For this, get in touch with people responsible for the `ros2_control_hardware_comunication` package.
+2. Check if needed `HardwareInterface`, i.e., logical part of the communication with the robot, exists and if not implement it.
+This class has to inherit the `ComponentHardwareInterface` interface.
+3. Check if all types of `Sensor` and `Actuator` classes exist in `ros2_control_components` (or some third-party repository) and if not get in touch with people responsible for the repository and decide where to implement it.
+4. Check `ros2_control_demo` repository, for example, files and templates to create YAMLs, URDF, and launch files for your robot.
 
 ![ROS2 Control - Enabling a new Robot][ros2_control_new_robot]
 
