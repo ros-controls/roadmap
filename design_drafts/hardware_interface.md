@@ -96,15 +96,15 @@ For better understanding, please consider the following use-case:
   * Sensor2 with a different proprietary protocol for communication (e.g., Schunk FTC50 sensor with CAN interface).
   
 * The Robot1 (KUKARobot) is then used as follows:
-  * A new class `KUKA_RSI_HWCommunicationInterface` implementing RSI communication protocol for KUKA robots and extending `TCP/IP_HWCommunicaitonInterface` is written.
+  * A new class `KUKA_RSI_HardwareInterface` implementing RSI communication protocol for KUKA robots and extending `TCP/IP_HWCommunicaitonInterface` is written.
   * To start the robot, a YAML configuration for `Robot` class needs to be written.
   This file would look something like:
   ```
     RobotKUKA:
       name: "KUKA KR5 arc"
-      RobotHW:
-        type: "kuka_driver/KUKA_RSI_HWCommunicationInterface"
-        HWCommunicationInterface:
+      RobotHardware:
+        type: "kuka_driver/KUKA_RSI_HardwareInterface"
+        HardwareCommunicationInterface:
           rsi_type: 4  #RSI-Fast with 4ms loop
           interface: eth_kuka
           interface_ip: 192.168.1.1
@@ -169,10 +169,10 @@ For better understanding, please consider the following use-case:
   ```
   SensorATI:
     name: "ATI Force Torque Sensor"
-    SensorHW:
+    SensorHardware:
       type: "ati_force_torque_sensors/ATI_ForceTorqueSensorHW_CAN"
       data_pull_frequency: 1000 #Hz
-      HWCommunicationInterface:
+      HardwareCommunicationInterface:
         type: "PEAK_CAN_HWCommunicatonInterface"
         path: can0
         base_id: 0x20
@@ -200,7 +200,7 @@ For better understanding, please consider the following use-case:
   ```
   SensorSchunk:
     name: "Schunk Force Torque Sensor"
-    SensorHW: 
+    SensorHardware: 
       type: "schunk_force_torque/FTC50_ForceTorqueSensorHW_CAN"
   ...
   ```
@@ -219,16 +219,38 @@ Now there is a possibility to combine the hardware as needed:
           # Description from above
   ```
 
-### Class Diagrams
+### Class Diagram
 
 The following class diagram shows the internal structures of `ros2_control`-hardware interface.
 In blue are marked example components used in ROS1.
 Green color marks the structure relevant for the example.
 Red components are needed in a case if one needs some spatial robot abstraction for hardware (they should probably be deleted.
 
+![ROS2 Control Class Diagram][ros2_control_class_diagram]
+
+
+### Using `ros2_control` With a new Robot
+
+The process of making a new robot `ros2_control` compatible is depicted in the flow chart here under.
+One basically need to do following steps:
+
+1. Check if needed `HardwareCommunicationInterface` is integrated in `ros2_control` and if not it is recommended to do it.
+For this get in touch with people responsible for `ros2_control_hardware_comunication` package.
+2. Check if needed `HardwareInterface`, i.e. logical part of the communication with the robot, exists and if not implement it.
+This has to inheirt `ComponentHardwareInterface` interface.
+3. Check if all types of `Sensor` and `Actuator` classes exists in `ros2_control_components` (or some third-party repository) and if not get in touch with people responsible for the repository and decide where to implement it.
+4. Check `ros2_control_demo` repository for example files and templates to create YAMLs, URDF and launch files for your robot.
+
+![ROS2 Control - Enabling a new Robot][ros2_control_new_robot]
+
+### Full Class Diagram With Members
+__NOTE:__ this could be outdated. It is kept here for the discussion reasons and it will be updated once we agree on the interfaces.
+
 ![ROS2 Control Class Diagram][ros2_control_hardware_interfaces]
 
 
 <!-- List of References -->
+[ros2_control_class_diagram]: images/ros2_control_class_diagram.svg "ROS2 Control - Class Diagram"
+[ros2_control_new_robot]: images/ros2_control_new_robot.svg "ROS2 Control - Enabling a new Robot"
 [ros2_control_hardware_interfaces]: images/ros2_control_hw_interface_structure.svg "ROS2 Control - Hardware Interfaces"
 [controllers execution mangagemnt design]:https://github.com/Karsten1987/roadmap/blob/controller_execution_management/design_drafts/controller_execution_management.md
