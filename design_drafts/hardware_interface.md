@@ -90,7 +90,7 @@ To extend the robot with additional actuators follows the same logic.
 For better understanding, please consider the following use-case:
 * In a ROS-based factory, there is a process which needs force-controlled robots.
 * Following hardware is provided:
-  * Robot1 with "batch" interface for communication" (e.g., KUKA robots with RSI);
+  * Robot1 with "batch" interface for communication (e.g., KUKA robots with RSI);
   * Robot2 with an interface where each joint can be addressed separately (e.g., Schunk LWA4p with canopen);
   * Sensor1 with a proprietary protocol for communication (e.g., ATI Force-Torque Sensors with CAN interface);
   * Sensor2 with a different proprietary protocol for communication (e.g., Schunk FTC50 sensor with CAN interface).
