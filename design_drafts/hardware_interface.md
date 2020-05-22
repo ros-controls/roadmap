@@ -84,8 +84,31 @@ Therefore, this package provides equivalent classes to those in `ros2_control_co
 
 The package `ros2_control_communication_interfaces` defines some standard communication interfaces used for control of the robots to cut the integration time for the end-users.
 
+### Class Diagram
 
-### Example use-case of the classes
+The following class diagram shows the internal structures of `ros2_control`-hardware interface.
+In blue are marked example components used in ROS1.
+Green color marks the structure relevant for the example.
+Red components are needed in a case if one needs some spatial robot abstraction for hardware (they should probably be deleted.
+
+![ROS2 Control Class Diagram][ros2_control_core_diagram]
+
+## Using `ros2_control` With a new Robot
+
+The process of making a new robot `ros2_control` compatible is depicted in the flow chart hereunder.
+One needs to do the following steps:
+
+1. Check if needed `HardwareCommunicationInterface` is already integrated into `ros2_control`, and if not, it is recommended to do it.
+For this, get in touch with people responsible for the `ros2_control_hardware_comunication` package.
+2. Check if needed `HardwareInterface`, i.e., logical part of the communication with the robot, exists and if not implement it.
+This class has to inherit the `ComponentHardwareInterface` interface.
+3. Check if all types of `Sensor` and `Actuator` classes exist in `ros2_control_components` (or some third-party repository) and if not get in touch with people responsible for the repository and decide where to implement it.
+4. Check `ros2_control_demo` repository, for example, files and templates to create YAMLs, URDF, and launch files for your robot.
+
+![ROS2 Control - Enabling a new Robot][ros2_control_new_robot]
+
+
+## Example use-case
 
 The reasoning behind this structure is based on the abstraction of functionality and hardware access for multiple kinds of robots used with and without additional sensors.
 To extend the robot with additional actuators follows the same logic.
@@ -222,38 +245,13 @@ Now there is a possibility to combine the hardware as needed:
           # Description from above
   ```
 
-### Class Diagram
+### Class Diagram of the Example
 
-The following class diagram shows the internal structures of `ros2_control`-hardware interface.
-In blue are marked example components used in ROS1.
-Green color marks the structure relevant for the example.
-Red components are needed in a case if one needs some spatial robot abstraction for hardware (they should probably be deleted.
-
-![ROS2 Control Class Diagram][ros2_control_class_diagram]
-
-
-### Using `ros2_control` With a new Robot
-
-The process of making a new robot `ros2_control` compatible is depicted in the flow chart hereunder.
-One needs to do the following steps:
-
-1. Check if needed `HardwareCommunicationInterface` is already integrated into `ros2_control`, and if not, it is recommended to do it.
-For this, get in touch with people responsible for the `ros2_control_hardware_comunication` package.
-2. Check if needed `HardwareInterface`, i.e., logical part of the communication with the robot, exists and if not implement it.
-This class has to inherit the `ComponentHardwareInterface` interface.
-3. Check if all types of `Sensor` and `Actuator` classes exist in `ros2_control_components` (or some third-party repository) and if not get in touch with people responsible for the repository and decide where to implement it.
-4. Check `ros2_control_demo` repository, for example, files and templates to create YAMLs, URDF, and launch files for your robot.
-
-![ROS2 Control - Enabling a new Robot][ros2_control_new_robot]
-
-### Full Class Diagram With Members
-__NOTE:__ this could be outdated. It is kept here for the discussion reasons and it will be updated once we agree on the interfaces.
-
-![ROS2 Control Class Diagram][ros2_control_hardware_interfaces]
+![ROS2 Control Class Diagram][ros2_control_example_diagram]
 
 
 <!-- List of References -->
-[ros2_control_class_diagram]: images/ros2_control_class_diagram.svg "ROS2 Control - Class Diagram"
+[ros2_control_core_diagram]: images/ros2_control_core_diagram.svg "ROS2 Control - Class Diagram"
+[ros2_control_example_diagram]: images/ros2_control_example_diagram.svg "ROS2 Control - Example"
 [ros2_control_new_robot]: images/ros2_control_new_robot.svg "ROS2 Control - Enabling a new Robot"
-[ros2_control_hardware_interfaces]: images/ros2_control_hw_interface_structure.svg "ROS2 Control - Hardware Interfaces"
 [controllers execution mangagemnt design]:https://github.com/Karsten1987/roadmap/blob/controller_execution_management/design_drafts/controller_execution_management.md
