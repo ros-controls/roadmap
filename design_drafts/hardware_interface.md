@@ -3,44 +3,72 @@
 The following shall discuss the design of data structures in the `hardware_interface` package for ROS2.
 The document deals only with hardware description, but this also depends on [controllers execution management design](controller_execution_management.md).
 As of today (ROS1), a `robot` is a fundamental and rigid structure that handles any hardware.
-Therefore it is not possible to extend it with additional hardware, like sensors, actuators, and tools, without coding.
+Therefore, it is impossible to extend it with additional hardware, like sensors, actuators, and tools, without coding.
 This design tries to achieve the following:
 
 * Consistent naming of classes with the wording used in control theory (should simplify starting for new users);
 * Logical implementation of relations between robots, sensors, actuators and finally controllers (should simplify starting for new users);
-* Easy extension of a robot with additional hardware (no need for compilation).
+* Easy extension of a robot with additional hardware (no need for coding/compilation).
 
 
 ## Motivation
 
-The `RobotHW` class in ROS1 is the basic structure for representing any hardware, robots, sensors, and actuators.
+The `RobotHW` class in ROS1 is the basic structure for representing any hardware, i.e. robots, sensors, and actuators.
 From the control theory perspective, a robot is an assembly with one or more sensors and actuators.
 Therefore we should strive such a design, primarily because it provides a few pleasing side effects:
 
 * Simple extension with additional hardware (e.g., extending an industrial robot with an additional sensor on the TCP );
 * Dynamic extension of a robot with other equipment (e.g., tool changers);
-* Reuse of hardware definitions and interfaces without a need for coding and compiling of robot hardware.
+* Reuse of hardware definitions and interfaces without a need for coding and compiling of the hardware interfaces.
 
 ## Nomenclature
 
-### Robot Hardware
+### Logical Components
 
-A robot is logically represented with the `RobotHardware` class.
-This structure has at least one sensor and one actuator, but it generally represents any composition of `RobotHardware`, `SensorHardware`, and `ActuatorHardware` structures.
-Specific implementation takes care to read/write data to physical hardware properly.
-A specific implementation of the `RobotHardware` decides if the data are received/sent at once (e.g., industrial robot). Its sensors and actuators can read/write from/to physical hardware (e.g., a sensor attached to a robot's TCP).
+#### Robot
 
-### Sensor Hardware
+A robot is logically represented with the `Robot` class.
+This structure has at least two sub-components, i.e., sensors or actuators.
+It generally represents any composition of `Robot`, `Sensor`, or `Actuator` structures.
+Specific implementation in `*Hardware`-classes take care to read/write data to physical hardware/devices.
 
-A sensor in a robotic system is represented with the `SensorHardware` class.
+#### Sensor
+
+A sensor in a robotic system is represented with the `Sensor` class.
 Only data reading is possible from this type of hardware.
-Therefore no resource conflict is possible, and it will not be checked.
+Therefore, no resource conflict is possible, and this is not checked.
 
-### Actuator Hardware
+#### Actuator Hardware
 
-An actuator in a robotic system is represented with the `ActuatorHardware` class.
-Only data writing is possible for this type of hardware.
-Resource conflict should be strictly checked, managed, and protected (e.g., by a key provided by a specific controller).
+An actuator in a robotic system is represented with the `Actuator` class.
+Data writing and reading are possible for this type of hardware.
+A capability of an actuator to know its state has to be stated explicitly with a flag.
+Resource conflict should be strictly checked, managed, and protected (e.g., by a key or hash provided by a specific controller).
+The `Actuator` and `Robot` classes' main difference is that the `Actuator` class represents compact devices with,  usually, only one degree of freedom.
+An example of an actuator would be a robot joint or TCP tool which can rotate.
+
+
+### Hardware components
+
+#### Robot Hardware
+
+`RobotHardware` class is per-hardware specific class.
+This means that one can have a specific class for specific communication protocol on the logical level (e.g., KUKA RSI).
+This class is to be used when data are received and sent to a robot's internal controller in one message.
+This is usual for industrial robots.
+If communication to robot's joints uses separate logical communication channels, `SensorHardware` or `ActuatorHardware` classes should be used.
+`RobotHardware` class, as well as all other `*Hardware` classes, implement the logic for initialization, starting, stoping, and halting the specific hardware.
+
+#### Sensor Hardware
+
+Logical communication to a physical sensor is implemented in `SensorHardware` class.
+Only data reading is possible for this type of hardware.
+
+#### Actuator Hardware
+
+`ActuatorHardware` class implements the logical communication protocol for specific hardware.
+Using this class one can write, and if enabled, read the data from a hardware device.
+
 
 ## Package and Class Structure
 
@@ -56,28 +84,39 @@ This structure has the following intentions:
 
 The classes are separated in following logical packages:
 
+1. `ros2_control_core` provides a core components in `ros2_control` system.
+Those components depend on each other and serve as a basic structure to provide easier integration for a user.
 1. `ros2_control_components` provides a digital representation of components used in a robotic system.
-1. `ros2_control_hardware_interface` provides "connection" between digital model from `ros2_control_components` and concrete communication interface to a real hardware.
-1. `ros2_control_communication_interfaces` defines structures of specific communication interfaces to enable simpler integration for the end-users.
+1. `ros2_control_hardware` provides a logical protocol to talk with the hardware.
+These classes can be seen as a "connection" between a digital model from `ros2_control_components` and a specific communication interface to real hardware.
+1. `ros2_control_communication_interfaces` defines structures of specific communication interfaces to enable straightforward integration for the end-users.
 
-### `ros2_control_components`
 
-The package `ros2_control_components` models hardware components of which are used by the `ros2_control` framework.
-These classes are used for storing run-time data and for access from controllers.
-All classes in this package implement the `BaseComponent` interface.
-The primary purpose of this component is to separate the inheritance of `Robot` class versus `Sensor` and `Actuator` classes.
-This interface keeps references to the `ComponentHardwareInterface` interface and provides some basic functionality needed by all components.
+### `ros2_control_core`
 
-The `Component` class enables storing of values and necessary information like `frame_id`.
-The end-user should not use this class.
+The package `ros2_control_core` implements central components of ros2_control system.
+Those components serve as an intelligent backend and connector between the digital model, communication protocol, and communication interface.
+These components should enable the user to focus on implementing specific logic for its robot and, if needed, its digital representation.
+
+The `Component` class is on the base of any robot or device in `ros2_control`. It enables a connection between the ROS2 world and the hardware communication layer.
+The `SimpleComponent` class provides an additional abstraction layer for `Actuator`, and `Sensor` classes since those share specific members who should not be part of the `Robot` class.
+An end-user should never use or extend these two classes.
 The classes `Sensor` and `Actuator` are first level classes that can be used by a user.
 They define only a basic structure and should be extended for a specific type of a sensor (e.g., ForceTorqueSensor class) and actuator (e.g., PositionActuator).
 The `Robot` class is the complex class that holds references for its `Sensor`, `Actuator`, and other `Robot` classes in a case of combined robot hardware (e.g., mobile manipulator).
 
+The `ComponentHardware` class is the counterpart of the `Component` class for `*Hardware` components, which implement specific logic for hardware.
 
-### `ros2_control_hardware_interface`
+### `ros2_control_components`
 
-The package `ros2_control_hardware_interface` serves as a connection between virtual representation of robotic hardware in the package `ros2_control_components` with the specific communication interfaces.
+The package `ros2_control_components` models hardware components of which are used by the `ros2_control` framework.
+An exmple for those classes are `ForceTorqueSensor`, `PositionActuator`, `VelocityActuator`, etc.
+These classes are used for storing run-time data and for access from controllers.
+
+### `ros2_control_hardware`
+
+The package `ros2_control_hardware` implements specific abstractions for hardware types.
+An example of such a class would be `ForceTorqueSensorHardware`, which knows how specific hardware is used (e.g., every sensor should access to ist calibration matrix).
 Therefore, this package provides equivalent classes to those in `ros2_control_components`, but defines what functionalities internal model is expecting from specific hardware.
 
 ### `ros2_control_communication_interfaces`
@@ -86,10 +125,8 @@ The package `ros2_control_communication_interfaces` defines some standard commun
 
 ### Class Diagram
 
-The following class diagram shows the internal structures of `ros2_control`-hardware interface.
-In blue are marked example components used in ROS1.
-Green color marks the structure relevant for the example.
-Red components are needed in a case if one needs some spatial robot abstraction for hardware (they should probably be deleted.
+The following class diagram shows the internal structures of `ros2_control`.
+In blue are marked exampole components which extendnd the basic components.
 
 ![ROS2 Control Class Diagram][ros2_control_core_diagram]
 
