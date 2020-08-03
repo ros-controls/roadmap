@@ -4,7 +4,7 @@
 
 ![ros2_control Components Achitecture][ros2_control_arch_ressource_manager]
 
-[ros2_control_arch_ressource_manager]: images/resource_manger_ds.svg "ROS2 Control - Components Architecture"
+[ros2_control_arch_ressource_manager]: images/ResourceManager_ds.png "ROS2 Control - Components Architecture"
 
 ## URDF Examples
 
