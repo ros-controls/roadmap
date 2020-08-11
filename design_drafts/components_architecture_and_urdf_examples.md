@@ -98,7 +98,7 @@ Note:
 ```
 
 Note:
-  * For `joint2` the "velocity" and "effort" command interfaces are intentionally left out to show another often use-case
+  * For `joint2` the "velocity" and "effort" command interfaces are intentionally left out to show another common use-case
 
 
 #### 3. Robots with multiple interfaces used at the same time
