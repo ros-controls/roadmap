@@ -11,7 +11,7 @@
 ros2_control implementation examples are presented for the following robot/robot-cell architectures:
 
 1. Industrial Robots with only one interface
-2. Industrial Robots with multiple interfaces (can not be written at those at the same time)
+2. Industrial Robots with multiple interfaces (can not be written at the same time)
 3. Robots with multiple interfaces used at the same time
 4. Industrial Robots with a sensor integrated into the robot's control box
 5. Industrial Robots with a sensor connected to ROS computer
