@@ -329,6 +329,7 @@ Note:
 #### 8. Modular Robots with separate communication to each "actuator" with multi joints (Transmission Example) - (system component is used)
   * the communication is done on actuator level using proprietary or standardized API (e.g., canopen_402)
   * Data for all actuators is exchanged separately from each other
+  * There is a many-to-many connection between joint and actuator values resolved by a transmission
   * Examples: Wrist of a humanoid robot
 
 ```xml
