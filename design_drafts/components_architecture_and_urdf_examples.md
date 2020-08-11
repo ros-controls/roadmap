@@ -22,6 +22,9 @@ ros2_control implementation examples are presented for the following robot/robot
 10. Actuator Only
 
 
+Note:
+  * Everything within the `<classType>` tag is implemented as a plugin.
+  * The examples below have some `<param>` tags defined for each plugin which are primarily for demonstration, not part of a pre-defined xml schema. Components can define their own parameters.
 #### 1. Industrial Robots with only one interface
   * the communication is done using proprietary API to communicate with robot control box
   * Data for all joints is exchanged in batch (at once)
