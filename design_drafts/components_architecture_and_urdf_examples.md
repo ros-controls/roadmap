@@ -23,7 +23,7 @@ ros2_control implementation examples are presented for the following robot/robot
 
 
 #### 1. Industrial Robots with only one interface
-  * the communication is done using proprietary API to connect the robots control box
+  * the communication is done using proprietary API to communicate with robot control box
   * Data for all joints is exchanged in batch (at once)
   * Examples: KUKA RSI
 
