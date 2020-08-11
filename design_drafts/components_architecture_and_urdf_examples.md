@@ -8,7 +8,7 @@
 
 ## URDF Examples
 
-ros2_control implements following robot/robot-cell architectures:
+ros2_control implementation examples are presented for the following robot/robot-cell architectures:
 
 1. Industrial Robots with only one interface
 2. Industrial Robots with multiple interfaces (can not be written at those at the same time)
