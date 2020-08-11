@@ -54,7 +54,7 @@ Note:
       <stateInterfaceType>position</stateInterfaceType>
     ```
 
-#### 2. Industrial Robots with multiple interfaces (can not be written at those at the same time)
+#### 2. Industrial Robots with multiple interfaces (can not be written at the same time)
   * the communication is done using proprietary API to connect the robots control box
   * Data for all joints is exchanged in batch (at once)
   * Examples: KUKA FRI, ABB Yummy, Schunk LWA4p, etc.
