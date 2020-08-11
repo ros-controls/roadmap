@@ -395,6 +395,7 @@ Note:
 
 #### 10. Actuator Only
   * the communication is done on actuator level using proprietary or standardized API
+  * There may be a mechanical reduction or other type of 1-1 mapping between joint and actuator resolved by a transmission
   * Examples: Small Conveyor, Motor, etc.
 
 ```xml
