@@ -104,7 +104,7 @@ Note:
   * For `joint2` the "velocity" and "effort" command interfaces are intentionally left out to show another common use-case
 
 
-#### 4. Industrial Robots with a sensor integrated into the robot's control box
+#### 4. Industrial Robots with integrated sensor
   * the communication is done using proprietary API
   * Data for all joints is exchanged in batch (at once)
   * Sensor data are exchanged together with joint data
