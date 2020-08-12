@@ -12,7 +12,7 @@ ros2_control implementation examples are presented for the following robot/robot
 
 1. Industrial Robots with only one interface
 2. Industrial Robots with multiple interfaces (can not be written at the same time)
-3. Robots with multiple interfaces used at the same time
+2.1. Robots with multiple interfaces used at the same time - the same structure as in ex. 2
 4. Industrial Robots with a sensor integrated into the robot's control box
 5. Industrial Robots with a sensor connected to ROS computer
 6. Modular Robots with separate communication to each actuator
@@ -21,10 +21,10 @@ ros2_control implementation examples are presented for the following robot/robot
 9. Sensor only
 10. Actuator Only
 
-
 Note:
   * Everything within the `<classType>` tag is implemented as a plugin.
-  * The examples below have some `<param>` tags defined for each plugin which are primarily for demonstration, not part of a pre-defined xml schema. Components can define their own parameters.
+  * The examples below have some `<param>` tags defined. The names in those tags are primarily for demonstration, not part of a pre-defined XML schema. Each component may define their names inside the `<param>` tag.
+  
 #### 1. Industrial Robots with only one interface
   * the communication is done using proprietary API to communicate with robot control box
   * Data for all joints is exchanged in batch (at once)
@@ -103,51 +103,6 @@ Note:
 Note:
   * For `joint2` the "velocity" and "effort" command interfaces are intentionally left out to show another common use-case
 
-
-#### 3. Robots with multiple interfaces used at the same time
-  * the communication is done using proprietary API or some standardized interface
-  * Data for all joints is exchanged in batch (at once)
-  * Examples: (some humanoid robots)?
-
-```xml
-  <ros2_control name="2DOF_System_Robot_MultiInterface_MultiWrite" type="system">
-    <hardware>
-      <classType>ros2_control_demo_hardware/2DOF_System_Hardware_MultiInterface_MultiWrite</classType>
-      <param name="example_param_write_for_sec">2</param>
-      <param name="example_param_read_for_sec">2</param>
-    </hardware>
-    <joint name="joint1">
-      <classType>ros2_control_components/MultiInterfaceJoint_MultiWrite</classType>
-      <commandInterfaceType>position</commandInterfaceType>
-      <commandInterfaceType>velocity</commandInterfaceType>
-      <commandInterfaceType>effort</commandInterfaceType>
-      <stateInterfaceType>position</stateInterfaceType>
-      <stateInterfaceType>velocity</stateInterfaceType>
-      <stateInterfaceType>effort</stateInterfaceType>
-      <param name="min_position_value">-1</param>
-      <param name="max_position_value">1</param>
-      <param name="min_velocity_value">-1</param>
-      <param name="max_velocity_value">1</param>
-      <param name="min_effort_value">-0.5</param>
-      <param name="max_effort_value">0.5</param>
-    </joint>
-    <joint name="joint2">
-      <classType>ros2_control_components/MultiInterfaceJoint_MultiWrite</classType>
-      <commandInterfaceType>position</commandInterfaceType>
-      <commandInterfaceType>velocity</commandInterfaceType>
-      <commandInterfaceType>effort</commandInterfaceType>
-      <stateInterfaceType>position</stateInterfaceType>
-      <stateInterfaceType>velocity</stateInterfaceType>
-      <stateInterfaceType>effort</stateInterfaceType>
-      <param name="min_position_value">-1</param>
-      <param name="max_position_value">1</param>
-      <param name="min_velocity_value">-1</param>
-      <param name="max_velocity_value">1</param>
-      <param name="min_effort_value">-0.5</param>
-      <param name="max_effort_value">0.5</param>
-    </joint>
-  </ros2_control>
-```
 
 #### 4. Industrial Robots with a sensor integrated into the robot's control box
   * the communication is done using proprietary API
@@ -398,7 +353,7 @@ Note:
 
 #### 10. Actuator Only
   * the communication is done on actuator level using proprietary or standardized API
-  * There may be a mechanical reduction or other type of 1-1 mapping between joint and actuator resolved by a transmission
+  * There may be a mechanical reduction or other type of 1-1 mapping between joint and actuator resolved by a transmission - there is no need to name the joint in the transmission tag
   * Examples: Small Conveyor, Motor, etc.
 
 ```xml
@@ -415,10 +370,8 @@ Note:
     </joint>
     <transmission name="transmission1">
       <type>transmission_interface/RotationToLinerTansmission</type>
-      <joint name="joint1">
-        <interfaceType>velocity</interfaceType>
-        <rotation_to_linenar_velocity>${2*radius*PI}</rotation_to_linenar_velocity>
-      </joint>
+      <interfaceType>velocity</interfaceType>
+      <rotation_to_linenar_velocity>${2*radius*PI}</rotation_to_linenar_velocity>
     </transmission>
   </ros2_control>
 ```
