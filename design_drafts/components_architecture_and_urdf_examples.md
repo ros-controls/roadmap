@@ -145,7 +145,7 @@ Note:
     ```
 
 
-#### 5. Industrial Robots with a sensor connected to ROS computer
+#### 5. Industrial Robots with externally connected sensor
   * the communication is done using proprietary API
   * Data for all joints is exchanged at once
   * Sensor data are exchanged independently
