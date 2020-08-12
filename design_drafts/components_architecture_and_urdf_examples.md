@@ -239,7 +239,7 @@ Note:
       <type>transmission_interface/SimpleTansmission</type>
       <joint name="joint1">
         <interfaceType>velocity</interfaceType>
-        <velocity_to_voltage>${1024/PI}</velocity_to_voltage>
+        <param name="velocity_to_voltage">${1024/PI}</param>
       </joint>
     </transmission>
   </ros2_control>
