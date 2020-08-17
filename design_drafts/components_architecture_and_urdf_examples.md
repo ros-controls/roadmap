@@ -12,14 +12,14 @@ ros2_control implementation examples are presented for the following robot/robot
 
 1. Industrial Robots with only one interface
 2. Industrial Robots with multiple interfaces (can not be written at the same time)
-2.1. Robots with multiple interfaces used at the same time - the same structure as in ex. 2
-4. Industrial Robots with a sensor integrated into the robot's control box
-5. Industrial Robots with a sensor connected to ROS computer
-6. Modular Robots with separate communication to each actuator
-7. Modular Robots with actuators not providing states and additional sensors (simple Transmissions)
-8. Modular Robots with separate communication to each "actuator" with multi joints (Transmission Example) - (system component is used)
-9. Sensor only
-10. Actuator Only
+2.1. Robots with multiple interfaces used at the same time - the same structure as in (2)
+3. Industrial Robots with a sensor integrated into the robot's control box
+4. Industrial Robots with a sensor connected to ROS computer
+5. Modular Robots with separate communication to each actuator
+6. Modular Robots with actuators not providing states and additional sensors (simple Transmissions)
+7. Modular Robots with separate communication to each "actuator" with multi joints (Transmission Example) - (system component is used)
+8. Sensor only
+9. Actuator Only
 
 Note:
   * Everything within the `<classType>` tag is implemented as a plugin.
@@ -39,13 +39,13 @@ Note:
     </hardware>
     <joint name="joint1">
       <classType>ros2_control_components/PositionJoint</classType>
-      <param name="min_values">-1</param>
-      <param name="max_values">1</param>
+      <param name="min_position_value">-1</param>
+      <param name="max_position_value">1</param>
     </joint>
     <joint name="joint2">
       <classType>ros2_control_components/PositionJoint</classType>
-      <param name="min_values">-1</param>
-      <param name="max_values">1</param>
+      <param name="min_position_value">-1</param>
+      <param name="max_position_value">1</param>
     </joint>
   </ros2_control>
 ```
@@ -101,10 +101,55 @@ Note:
 ```
 
 Note:
-  * For `joint2` the "velocity" and "effort" command interfaces are intentionally left out to show another common use-case
+  * For `joint2` the "velocity" and "effort" command interfaces are intentionally left out to show another common use-case where only one interface can be commanded, but robot provides state of multiple types.
 
 
-#### 4. Industrial Robots with integrated sensor
+#### 2.1 Robots with multiple interfaces used at the same time - the same structure as in (2)
+  * the communication is done using proprietary API to communicate with robot control box
+  * Data for all joints is exchanged in batch (at once)
+  * Multiple values can be commanded, e.g. goal position and the maximal velocity on the trajectory allowed
+  * Examples: (humanoid robots?)
+
+```xml
+  <ros2_control name="2DOF_System_Robot_MultiInterface" type="system">
+    <hardware>
+      <classType>ros2_control_demo_hardware/2DOF_System_Hardware_MultiInterface_MultiWrite</classType>
+      <param name="example_param_write_for_sec">2</param>
+      <param name="example_param_read_for_sec">2</param>
+    </hardware>
+    <joint name="joint1">
+      <classType>ros2_control_components/MultiInterfaceJoint_MultiWrite</classType>
+      <commandInterfaceType>position</commandInterfaceType>
+      <commandInterfaceType>velocity</commandInterfaceType>
+      <commandInterfaceType>effort</commandInterfaceType>
+      <stateInterfaceType>position</stateInterfaceType>
+      <stateInterfaceType>velocity</stateInterfaceType>
+      <stateInterfaceType>effort</stateInterfaceType>
+      <param name="min_position_value">-1</param>
+      <param name="max_position_value">1</param>
+      <param name="min_velocity_value">-1</param>
+      <param name="max_velocity_value">1</param>
+      <param name="min_effort_value">-0.5</param>
+      <param name="max_effort_value">0.5</param>
+    </joint>
+    <joint name="joint2">
+      <classType>ros2_control_components/MultiInterfaceJoint_MultiWrite</classType>
+      <commandInterfaceType>position</commandInterfaceType>
+      <stateInterfaceType>position</stateInterfaceType>
+      <stateInterfaceType>velocity</stateInterfaceType>
+      <stateInterfaceType>effort</stateInterfaceType>
+      <param name="min_position_value">-1</param>
+      <param name="max_position_value">1</param>
+      <param name="min_velocity_value">-1</param>
+      <param name="max_velocity_value">1</param>
+      <param name="min_effort_value">-0.5</param>
+      <param name="max_effort_value">0.5</param>
+    </joint>
+  </ros2_control>
+```
+
+
+#### 3. Industrial Robots with integrated sensor
   * the communication is done using proprietary API
   * Data for all joints is exchanged in batch (at once)
   * Sensor data are exchanged together with joint data
@@ -119,19 +164,17 @@ Note:
     </hardware>
     <joint name="joint1">
       <classType>ros2_control_components/PositionJoint</classType>
-      <param name="can_read">True</param>
-      <param name="min_values">-1</param>
-      <param name="max_values">1</param>
+      <param name="min_position_value">-1</param>
+      <param name="max_position_value">1</param>
     </joint>
     <joint name="joint2">
       <classType>ros2_control_components/PositionJoint</classType>
-      <param name="can_read">True</param>
-      <param name="min_values">-1</param>
-      <param name="max_values">1</param>
+      <param name="min_position_value">-1</param>
+      <param name="max_position_value">1</param>
     </joint>
     <sensor name="tcp_fts_sensor">
       <classType>ros2_control_components/ForceTorqueSensor</classType>
-      <param name="frame_id">kuka_tcp</frame_id>
+      <param name="frame_id">kuka_tcp</param>
       <param name="lower_limits">-100</param>
       <param name="upper_limits">100</param>
     </sensor>
@@ -145,13 +188,13 @@ Note:
     ```
 
 
-#### 5. Industrial Robots with externally connected sensor
+#### 4. Industrial Robots with externally connected sensor
   * the communication is done using proprietary API
   * Data for all joints is exchanged at once
   * Sensor data are exchanged independently
   * Examples: KUKA RSI and FTS connected to ROS-PC
 
-```xml
+```
   <ros2_control name="2DOF_System_Robot_Position_Only_External_Sensor" type="system">
     <hardware>
       <classType>ros2_control_demo_hardware/2DOF_System_Hardware_Position_Only</classType>
@@ -160,32 +203,30 @@ Note:
     </hardware>
     <joint name="joint1">
       <classType>ros2_control_components/PositionJoint</classType>
-      <param name="can_read">True</param>
-      <param name="min_values">-1</param>
-      <param name="max_values">1</param>
+      <param name="min_position_value">-1</param>
+      <param name="max_position_value">1</param>
     </joint>
     <joint name="joint2">
       <classType>ros2_control_components/PositionJoint</classType>
-      <param name="can_read">True</param>
-      <param name="min_values">-1</param>
-      <param name="max_values">1</param>
+      <param name="min_position_value">-1</param>
+      <param name="max_position_value">1</param>
     </joint>
   </ros2_control>
   <ros2_control name="2DOF_System_Robot_ForceTorqueSensor" type="sensor">
     <hardware>
       <classType>ros2_control_demo_hardware/2D_Sensor_Force_Torque</classType>
-      <param name="example_param_read_for_sec">2</param>
+      <param name="example_param_read_for_sec">0.43</param>
     </hardware>
     <sensor name="tcp_fts_sensor">
       <classType>ros2_control_components/ForceTorqueSensor</classType>
-      <param name="frame_id">kuka_tcp</frame_id>
+      <param name="frame_id">kuka_tcp</param>
       <param name="lower_limits">-100</param>
       <param name="upper_limits">100</param>
     </sensor>
   </ros2_control>
 ```
 
-#### 6. Modular Robots with separate communication to each actuator
+#### 5. Modular Robots with separate communication to each actuator
   * the communication is done on actuator level using proprietary or standardized API (e.g., canopen_402, Modbus, RS232, RS485)
   * Data for all actuators is exchanged separately from each other
   * Examples: Mara, Arduino-based-robots
@@ -199,8 +240,8 @@ Note:
     </hardware>
     <joint name="joint1">
       <classType>ros2_control_components/PositionJoint</classType>
-      <param name="min_values">-1</param>
-      <param name="max_values">1</param>
+      <param name="min_position_value">-1</param>
+      <param name="max_position_value">1</param>
     </joint>
   </ros2_control>
   <ros2_control name="2DOF_Modular_Robot_joint2"  type="actuator">
@@ -211,13 +252,13 @@ Note:
     </hardware>
     <joint name="joint2">
       <classType>ros2_control_components/PositionJoint</classType>
-      <param name="min_values">-1</param>
-      <param name="max_values">1</param>
+      <param name="min_position_value">-1</param>
+      <param name="max_position_value">1</param>
     </joint>
   </ros2_control>
 ```
 
-#### 7. Modular Robots with actuators not providing states and additional sensors (simple Transmissions)
+#### 6. Modular Robots with actuators not providing states and with additional sensors (simple Transmissions)
   * the communication is done on actuator level using proprietary or standardized API (e.g., canopen_402, modbus, RS232, RS485)
   * Data for all actuators and sensors is exchanged separately from each other
   * Examples: Arduino-based-robots, custom robots
@@ -231,16 +272,13 @@ Note:
     </hardware>
     <joint name="joint1">
       <classType>ros2_control_components/VelocityJoint</classType>
-      <commandInterfaceType>position</commandInterfaceType>
-      <param name="min_values">-1</param>
-      <param name="max_values">1</param>
+      <commandInterfaceType>velocity</commandInterfaceType>
+      <param name="min_velocity_value">-1</param>
+      <param name="max_velocity_value">1</param>
     </joint>
     <transmission name="transmission1">
-      <type>transmission_interface/SimpleTansmission</type>
-      <joint name="joint1">
-        <interfaceType>velocity</interfaceType>
-        <param name="velocity_to_voltage">${1024/PI}</param>
-      </joint>
+      <classType>transmission_interface/SimpleTansmission</classType>
+      <param name="joint_to_actuator">${1024/PI}</param>
     </transmission>
   </ros2_control>
   <ros2_control name="2DOF_Modular_Robot_joint2"  type="actuator">
@@ -251,9 +289,9 @@ Note:
     </hardware>
     <joint name="joint2">
       <classType>ros2_control_components/VelocityJoint</classType>
-      <commandInterfaceType>position</commandInterfaceType>
-      <param name="min_values">-1</param>
-      <param name="max_values">1</param>
+      <commandInterfaceType>velocity</commandInterfaceType>
+      <param name="min_velocity_value">-1</param>
+      <param name="max_velocity_value">1</param>
     </joint>
   </ros2_control>
   <ros2_control name="2DOF_System_Robot_Position_Sensor_joint1" type="sensor">
@@ -264,8 +302,8 @@ Note:
     <joint name="joint1">
       <classType>ros2_control_components/PositionJoint</classType>
       <stateInterfaceType>position</stateInterfaceType>
-      <param name="min_values">${-PI}</param>
-      <param name="max_values">${PI}</param>
+      <param name="min_position_value">${-PI}</param>
+      <param name="max_position_value">${PI}</param>
     </joint>
   </ros2_control>
   <ros2_control name="2DOF_System_Robot_Position_Sensor_joint2" type="sensor">
@@ -276,15 +314,15 @@ Note:
     <joint name="joint2">
       <classType>ros2_control_components/PositionJoint</classType>
       <stateInterfaceType>position</stateInterfaceType>
-      <param name="min_values">${-PI}</param>
-      <param name="max_values">${PI}</param>
+      <param name="min_position_value">${-PI}</param>
+      <param name="max_position_value">${PI}</param>
     </joint>
   </ros2_control>
 ```
 Note:
   * since there is only one keyword `commandInterfaceType` or `stateInterfaceType` given to `ros2_control_components/PositionJoint`type the other one is ignored for the hardware
 
-#### 8. Modular Robots with separate communication to each "actuator" with multi joints (Transmission Example) - (system component is used)
+#### 7. Modular Robots with separate communication to each "actuator" with multi joints (Transmission Example) - (system component is used)
   * the communication is done on actuator level using proprietary or standardized API (e.g., canopen_402)
   * Data for all actuators is exchanged separately from each other
   * There is a many-to-many connection between joint and actuator values resolved by a transmission
@@ -299,28 +337,22 @@ Note:
     </hardware>
     <joint name="joint1">
       <classType>ros2_control_components/PositionJoint</classType>
-      <param name="can_read">True</param>
-      <param name="min_values">-1</param>
-      <param name="max_values">1</param>
+      <param name="min_position_value">-1</param>
+      <param name="max_position_value">1</param>
     </joint>
     <joint name="joint2">
       <classType>ros2_control_components/PositionJoint</classType>
-      <param name="can_read">True</param>
-      <param name="min_values">-1</param>
-      <param name="max_values">1</param>
+      <param name="min_position_value">-1</param>
+      <param name="max_position_value">1</param>
     </joint>
     <transmission name="transmission1">
-      <type>transmission_interface/SomeComplex_2x2_Transmission</type>
-      <joint name="joint1">
-        <interfaceType>position</interfaceType>
-        <mechanicalReduction_output1>1.5</mechanicalReduction_output1>
-        <mechanicalReduction_output2>3.2</mechanicalReduction_output2>
-      </joint>
-      <joint name="joint2">
-        <interfaceType>position</interfaceType>
-        <mechanicalReduction_output1>3.1</mechanicalReduction_output1>
-        <mechanicalReduction_output2>1.4</mechanicalReduction_output2>
-      </joint>
+      <classType>transmission_interface/SomeComplex_2x2_Transmission</classType>
+      <param name="joints">{joint1, joint2}</param>
+      <param name="output">{output2, output2}</param>
+      <param name="joint1_output1">1.5</param>
+      <param name="joint1_output2">3.2</param>
+      <param name="joint2_output1">3.1</param>
+      <param name="joint2_output2">1.4</param>
     </transmission>
   </ros2_control>
 ```
@@ -337,21 +369,23 @@ Note:
     </hardware>
     <sensor name="sensor1">
       <classType>ros2_control_components/IMUSensor</classType>
-      <interfaceType>velocity</interfaceType>
-      <interfaceType>acceleration</interfaceType>
-      <param name="min_values">-1000</param>
-      <param name="max_values">1000</param>
-    </joint>
-    <joint name="sensor2">
+      <stateInterfaceType>velocity</stateInterfaceType>
+      <stateInterfaceType>acceleration</stateInterfaceType>
+      <param name="min_velocity_value">-54</param>
+      <param name="max_velocity_value">23</param>
+      <param name="min_acceleration_value">-10</param>
+      <param name="max_acceleration_value">10</param>
+    </sensor>
+    <sensor name="sensor2">
       <classType>ros2_control_components/2DImageSensor</classType>
-      <interfaceType>image</interfaceType>
-      <param name="min_values">0</param>
-      <param name="max_values">255</param>
-    </joint>
+      <stateInterfaceType>image</stateInterfaceType>
+      <param name="min_image_value">0</param>
+      <param name="max_image_value">255</param>
+    </sensor>
   </ros2_control>
 ```
 
-#### 10. Actuator Only
+#### 9. Actuator Only
   * the communication is done on actuator level using proprietary or standardized API
   * There may be a mechanical reduction or other type of 1-1 mapping between joint and actuator resolved by a transmission - there is no need to name the joint in the transmission tag
   * Examples: Small Conveyor, Motor, etc.
@@ -360,18 +394,17 @@ Note:
   <ros2_control name="2DOF_Modular_Robot_joint1"  type="actuator">
     <hardware>
       <classType>ros2_control_demo_hardware/Velocity_Actuator_Hadware</classType>
-      <param name="example_param_write_for_sec">1.23</param>
+      <param name="example_param_write_for_sec">1.13</param>
       <param name="example_param_read_for_sec">3</param>
     </hardware>
     <joint name="joint1">
       <classType>ros2_control_components/VelocityJoint</classType>
-      <param name="min_values">-1</param>
-      <param name="max_values">1</param>
+      <param name="min_velocity_value">-1</param>
+      <param name="max_velocity_value">1</param>
     </joint>
     <transmission name="transmission1">
-      <type>transmission_interface/RotationToLinerTansmission</type>
-      <interfaceType>velocity</interfaceType>
-      <rotation_to_linenar_velocity>${2*radius*PI}</rotation_to_linenar_velocity>
+      <classType>transmission_interface/RotationToLinerTansmission</classType>
+      <param name="joint_to_actuator">${1024/PI}</param>
     </transmission>
   </ros2_control>
 ```
