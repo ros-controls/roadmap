@@ -140,10 +140,6 @@ Note:
       <stateInterfaceType>effort</stateInterfaceType>
       <param name="min_position_value">-1</param>
       <param name="max_position_value">1</param>
-      <param name="min_velocity_value">-1</param>
-      <param name="max_velocity_value">1</param>
-      <param name="min_effort_value">-0.5</param>
-      <param name="max_effort_value">0.5</param>
     </joint>
   </ros2_control>
 ```
