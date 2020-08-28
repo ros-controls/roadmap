@@ -108,7 +108,7 @@ Note:
   * the communication is done using proprietary API to communicate with robot control box
   * Data for all joints is exchanged in batch (at once)
   * Multiple values can be commanded, e.g. goal position and the maximal velocity on the trajectory allowed
-  * Examples: (humanoid robots?)
+  * Examples: humanoid robots (TALOS), 4 legged robot [solo](https://github.com/open-dynamic-robot-initiative/master-board/blob/master/documentation/BLMC_%C2%B5Driver_SPI_interface.md)
 
 ```xml
   <ros2_control name="RRBotSystemMultiInterface" type="system">
@@ -145,6 +145,287 @@ Note:
       <stateInterfaceType name="velocity"/>
       <stateInterfaceType name="effort"/>
     </joint>
+  </ros2_control>
+```
+
+```xml
+  <ros2_control name="12DOF_Legged_System_Robot_MultiInterface" type="system">
+    <hardware>
+      <classType>ros2_control_demo_hardware/2DOF_System_Hardware_MultiInterface_MultiWrite</classType>
+      <param name="example_param_write_for_sec">0.001</param>
+      <param name="example_param_read_for_sec">0.001</param>
+    </hardware>
+    <joint name="front_left_leg_joint1">
+      <classType>ros2_control_components/MultiInterfaceJoint_MultiWrite</classType>
+      <commandInterfaceType>position</commandInterfaceType>
+      <commandInterfaceType>velocity</commandInterfaceType>
+      <commandInterfaceType>effort</commandInterfaceType>
+      <commandInterfaceType>Kp</commandInterfaceType>
+      <commandInterfaceType>Kd</commandInterfaceType>
+      <commandInterfaceType>effort_limit</commandInterfaceType>      
+      <stateInterfaceType>position</stateInterfaceType>
+      <stateInterfaceType>velocity</stateInterfaceType>
+      <stateInterfaceType>effort</stateInterfaceType>
+      <stateInterfaceType>coil_resistance</stateInterfaceType>
+      <stateInterfaceType>timestamp</stateInterfaceType>
+
+      <param name="min_position_value">-1</param>
+      <param name="max_position_value">1</param>
+      <param name="min_velocity_value">-1</param>
+      <param name="max_velocity_value">1</param>
+      <param name="min_effort_value">-0.5</param>
+      <param name="max_effort_value">0.5</param>
+    </joint>
+    <joint name="front_left_leg_joint2">
+      <classType>ros2_control_components/MultiInterfaceJoint_MultiWrite</classType>
+      <commandInterfaceType>position</commandInterfaceType>
+      <commandInterfaceType>velocity</commandInterfaceType>
+      <commandInterfaceType>effort</commandInterfaceType>
+      <commandInterfaceType>Kp</commandInterfaceType>
+      <commandInterfaceType>Kd</commandInterfaceType>
+      <commandInterfaceType>effort_limit</commandInterfaceType>      
+      <stateInterfaceType>position</stateInterfaceType>
+      <stateInterfaceType>velocity</stateInterfaceType>
+      <stateInterfaceType>effort</stateInterfaceType>
+      <stateInterfaceType>coil_resistance</stateInterfaceType>
+      <stateInterfaceType>timestamp</stateInterfaceType>
+
+      <param name="min_position_value">-1</param>
+      <param name="max_position_value">1</param>
+      <param name="min_velocity_value">-1</param>
+      <param name="max_velocity_value">1</param>
+      <param name="min_effort_value">-0.5</param>
+      <param name="max_effort_value">0.5</param>
+    </joint>
+    <joint name="front_left_leg_joint3">
+      <classType>ros2_control_components/MultiInterfaceJoint_MultiWrite</classType>
+      <commandInterfaceType>position</commandInterfaceType>
+      <commandInterfaceType>velocity</commandInterfaceType>
+      <commandInterfaceType>effort</commandInterfaceType>
+      <commandInterfaceType>Kp</commandInterfaceType>
+      <commandInterfaceType>Kd</commandInterfaceType>
+      <commandInterfaceType>effort_limit</commandInterfaceType>      
+      <stateInterfaceType>position</stateInterfaceType>
+      <stateInterfaceType>velocity</stateInterfaceType>
+      <stateInterfaceType>effort</stateInterfaceType>
+      <stateInterfaceType>coil_resistance</stateInterfaceType>
+      <stateInterfaceType>contact_information</stateInterfaceType>
+      <stateInterfaceType>timestamp</stateInterfaceType>
+
+      <param name="min_position_value">-1</param>
+      <param name="max_position_value">1</param>
+      <param name="min_velocity_value">-1</param>
+      <param name="max_velocity_value">1</param>
+      <param name="min_effort_value">-0.5</param>
+      <param name="max_effort_value">0.5</param>
+    </joint>
+    <joint name="front_right_leg_joint1">
+      <classType>ros2_control_components/MultiInterfaceJoint_MultiWrite</classType>
+      <commandInterfaceType>position</commandInterfaceType>
+      <commandInterfaceType>velocity</commandInterfaceType>
+      <commandInterfaceType>effort</commandInterfaceType>
+      <commandInterfaceType>Kp</commandInterfaceType>
+      <commandInterfaceType>Kd</commandInterfaceType>
+      <commandInterfaceType>effort_limit</commandInterfaceType>      
+      <stateInterfaceType>position</stateInterfaceType>
+      <stateInterfaceType>velocity</stateInterfaceType>
+      <stateInterfaceType>effort</stateInterfaceType>
+      <stateInterfaceType>coil_resistance</stateInterfaceType>
+      <stateInterfaceType>timestamp</stateInterfaceType>
+
+      <param name="min_position_value">-1</param>
+      <param name="max_position_value">1</param>
+      <param name="min_velocity_value">-1</param>
+      <param name="max_velocity_value">1</param>
+      <param name="min_effort_value">-0.5</param>
+      <param name="max_effort_value">0.5</param>
+    </joint>
+    <joint name="front_right_leg_joint2">
+      <classType>ros2_control_components/MultiInterfaceJoint_MultiWrite</classType>
+      <commandInterfaceType>position</commandInterfaceType>
+      <commandInterfaceType>velocity</commandInterfaceType>
+      <commandInterfaceType>effort</commandInterfaceType>
+      <commandInterfaceType>Kp</commandInterfaceType>
+      <commandInterfaceType>Kd</commandInterfaceType>
+      <commandInterfaceType>effort_limit</commandInterfaceType>      
+      <stateInterfaceType>position</stateInterfaceType>
+      <stateInterfaceType>velocity</stateInterfaceType>
+      <stateInterfaceType>effort</stateInterfaceType>
+      <stateInterfaceType>coil_resistance</stateInterfaceType>
+      <stateInterfaceType>timestamp</stateInterfaceType>
+
+      <param name="min_position_value">-1</param>
+      <param name="max_position_value">1</param>
+      <param name="min_velocity_value">-1</param>
+      <param name="max_velocity_value">1</param>
+      <param name="min_effort_value">-0.5</param>
+      <param name="max_effort_value">0.5</param>
+    </joint>
+    <joint name="front_right_leg_joint3">
+      <classType>ros2_control_components/MultiInterfaceJoint_MultiWrite</classType>
+      <commandInterfaceType>position</commandInterfaceType>
+      <commandInterfaceType>velocity</commandInterfaceType>
+      <commandInterfaceType>effort</commandInterfaceType>
+      <commandInterfaceType>Kp</commandInterfaceType>
+      <commandInterfaceType>Kd</commandInterfaceType>
+      <commandInterfaceType>effort_limit</commandInterfaceType>      
+      <stateInterfaceType>position</stateInterfaceType>
+      <stateInterfaceType>velocity</stateInterfaceType>
+      <stateInterfaceType>effort</stateInterfaceType>
+      <stateInterfaceType>coil_resistance</stateInterfaceType>
+      <stateInterfaceType>contact_information</stateInterfaceType>
+      <stateInterfaceType>timestamp</stateInterfaceType>
+
+      <param name="min_position_value">-1</param>
+      <param name="max_position_value">1</param>
+      <param name="min_velocity_value">-1</param>
+      <param name="max_velocity_value">1</param>
+      <param name="min_effort_value">-0.5</param>
+      <param name="max_effort_value">0.5</param>
+    </joint>
+
+    <joint name="hind_left_leg_joint1">
+      <classType>ros2_control_components/MultiInterfaceJoint_MultiWrite</classType>
+      <commandInterfaceType>position</commandInterfaceType>
+      <commandInterfaceType>velocity</commandInterfaceType>
+      <commandInterfaceType>effort</commandInterfaceType>
+      <commandInterfaceType>Kp</commandInterfaceType>
+      <commandInterfaceType>Kd</commandInterfaceType>
+      <commandInterfaceType>effort_limit</commandInterfaceType>      
+      <stateInterfaceType>position</stateInterfaceType>
+      <stateInterfaceType>velocity</stateInterfaceType>
+      <stateInterfaceType>effort</stateInterfaceType>
+      <stateInterfaceType>coil_resistance</stateInterfaceType>
+      <stateInterfaceType>timestamp</stateInterfaceType>
+
+      <param name="min_position_value">-1</param>
+      <param name="max_position_value">1</param>
+      <param name="min_velocity_value">-1</param>
+      <param name="max_velocity_value">1</param>
+      <param name="min_effort_value">-0.5</param>
+      <param name="max_effort_value">0.5</param>
+    </joint>
+    <joint name="hind_left_leg_joint2">
+      <classType>ros2_control_components/MultiInterfaceJoint_MultiWrite</classType>
+      <commandInterfaceType>position</commandInterfaceType>
+      <commandInterfaceType>velocity</commandInterfaceType>
+      <commandInterfaceType>effort</commandInterfaceType>
+      <commandInterfaceType>Kp</commandInterfaceType>
+      <commandInterfaceType>Kd</commandInterfaceType>
+      <commandInterfaceType>effort_limit</commandInterfaceType>      
+      <stateInterfaceType>position</stateInterfaceType>
+      <stateInterfaceType>velocity</stateInterfaceType>
+      <stateInterfaceType>effort</stateInterfaceType>
+      <stateInterfaceType>coil_resistance</stateInterfaceType>
+      <stateInterfaceType>timestamp</stateInterfaceType>
+
+      <param name="min_position_value">-1</param>
+      <param name="max_position_value">1</param>
+      <param name="min_velocity_value">-1</param>
+      <param name="max_velocity_value">1</param>
+      <param name="min_effort_value">-0.5</param>
+      <param name="max_effort_value">0.5</param>
+    </joint>
+    <joint name="hind_left_leg_joint3">
+      <classType>ros2_control_components/MultiInterfaceJoint_MultiWrite</classType>
+      <commandInterfaceType>position</commandInterfaceType>
+      <commandInterfaceType>velocity</commandInterfaceType>
+      <commandInterfaceType>effort</commandInterfaceType>
+      <commandInterfaceType>Kp</commandInterfaceType>
+      <commandInterfaceType>Kd</commandInterfaceType>
+      <commandInterfaceType>effort_limit</commandInterfaceType>      
+      <stateInterfaceType>position</stateInterfaceType>
+      <stateInterfaceType>velocity</stateInterfaceType>
+      <stateInterfaceType>effort</stateInterfaceType>
+      <stateInterfaceType>coil_resistance</stateInterfaceType>
+      <stateInterfaceType>contact_information</stateInterfaceType>
+      <stateInterfaceType>timestamp</stateInterfaceType>
+
+      <param name="min_position_value">-1</param>
+      <param name="max_position_value">1</param>
+      <param name="min_velocity_value">-1</param>
+      <param name="max_velocity_value">1</param>
+      <param name="min_effort_value">-0.5</param>
+      <param name="max_effort_value">0.5</param>
+    </joint>
+
+    <joint name="hind_right_leg_joint1">
+      <classType>ros2_control_components/MultiInterfaceJoint_MultiWrite</classType>
+      <commandInterfaceType>position</commandInterfaceType>
+      <commandInterfaceType>velocity</commandInterfaceType>
+      <commandInterfaceType>effort</commandInterfaceType>
+      <commandInterfaceType>Kp</commandInterfaceType>
+      <commandInterfaceType>Kd</commandInterfaceType>
+      <commandInterfaceType>effort_limit</commandInterfaceType>      
+      <stateInterfaceType>position</stateInterfaceType>
+      <stateInterfaceType>velocity</stateInterfaceType>
+      <stateInterfaceType>effort</stateInterfaceType>
+      <stateInterfaceType>coil_resistance</stateInterfaceType>
+      <stateInterfaceType>timestamp</stateInterfaceType>
+
+      <param name="min_position_value">-1</param>
+      <param name="max_position_value">1</param>
+      <param name="min_velocity_value">-1</param>
+      <param name="max_velocity_value">1</param>
+      <param name="min_effort_value">-0.5</param>
+      <param name="max_effort_value">0.5</param>
+    </joint>
+    <joint name="hind_right_leg_joint2">
+      <classType>ros2_control_components/MultiInterfaceJoint_MultiWrite</classType>
+      <commandInterfaceType>position</commandInterfaceType>
+      <commandInterfaceType>velocity</commandInterfaceType>
+      <commandInterfaceType>effort</commandInterfaceType>
+      <commandInterfaceType>Kp</commandInterfaceType>
+      <commandInterfaceType>Kd</commandInterfaceType>
+      <commandInterfaceType>effort_limit</commandInterfaceType>      
+      <stateInterfaceType>position</stateInterfaceType>
+      <stateInterfaceType>velocity</stateInterfaceType>
+      <stateInterfaceType>effort</stateInterfaceType>
+      <stateInterfaceType>coil_resistance</stateInterfaceType>
+      <stateInterfaceType>timestamp</stateInterfaceType>
+
+      <param name="min_position_value">-1</param>
+      <param name="max_position_value">1</param>
+      <param name="min_velocity_value">-1</param>
+      <param name="max_velocity_value">1</param>
+      <param name="min_effort_value">-0.5</param>
+      <param name="max_effort_value">0.5</param>
+    </joint>
+    <joint name="hind_right_leg_joint3">
+      <classType>ros2_control_components/MultiInterfaceJoint_MultiWrite</classType>
+      <commandInterfaceType>position</commandInterfaceType>
+      <commandInterfaceType>velocity</commandInterfaceType>
+      <commandInterfaceType>effort</commandInterfaceType>
+      <commandInterfaceType>Kp</commandInterfaceType>
+      <commandInterfaceType>Kd</commandInterfaceType>
+      <commandInterfaceType>effort_limit</commandInterfaceType>      
+      <stateInterfaceType>position</stateInterfaceType>
+      <stateInterfaceType>velocity</stateInterfaceType>
+      <stateInterfaceType>effort</stateInterfaceType>
+      <stateInterfaceType>coil_resistance</stateInterfaceType>
+      <stateInterfaceType>contact_information</stateInterfaceType>
+      <stateInterfaceType>timestamp</stateInterfaceType>
+
+      <param name="min_position_value">-1</param>
+      <param name="max_position_value">1</param>
+      <param name="min_velocity_value">-1</param>
+      <param name="max_velocity_value">1</param>
+      <param name="min_effort_value">-0.5</param>
+      <param name="max_effort_value">0.5</param>
+    </joint>
+
+
+    <sensor name="sensor1">
+      <classType>ros2_control_components/IMUSensor</classType>
+      <stateInterfaceType>orientation</stateInterfaceType>   
+      <stateInterfaceType>velocity</stateInterfaceType>
+      <stateInterfaceType>acceleration</stateInterfaceType>
+      <param name="min_velocity_value">-54</param>
+      <param name="max_velocity_value">23</param>
+      <param name="min_acceleration_value">-10</param>
+      <param name="max_acceleration_value">10</param>
+    </sensor>
+
   </ros2_control>
 ```
 
