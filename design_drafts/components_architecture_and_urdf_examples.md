@@ -97,12 +97,6 @@ Note:
       <stateInterfaceType>position</stateInterfaceType>
       <stateInterfaceType>velocity</stateInterfaceType>
       <stateInterfaceType>effort</stateInterfaceType>
-      <param name="min_position_value">-1</param>
-      <param name="max_position_value">1</param>
-      <param name="min_velocity_value">-1</param>
-      <param name="max_velocity_value">1</param>
-      <param name="min_effort_value">-0.5</param>
-      <param name="max_effort_value">0.5</param>
     </joint>
   </ros2_control>
 ```
@@ -383,16 +377,10 @@ Note:
       <classType>ros2_control_components/IMUSensor</classType>
       <stateInterfaceType>velocity</stateInterfaceType>
       <stateInterfaceType>acceleration</stateInterfaceType>
-      <param name="min_velocity_value">-54</param>
-      <param name="max_velocity_value">23</param>
-      <param name="min_acceleration_value">-10</param>
-      <param name="max_acceleration_value">10</param>
     </sensor>
     <sensor name="sensor2">
       <classType>ros2_control_components/2DImageSensor</classType>
       <stateInterfaceType>image</stateInterfaceType>
-      <param name="min_image_value">0</param>
-      <param name="max_image_value">255</param>
     </sensor>
   </ros2_control>
 ```
