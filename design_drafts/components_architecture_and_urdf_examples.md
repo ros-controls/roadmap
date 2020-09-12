@@ -31,21 +31,21 @@ Note:
   * Examples: KUKA RSI
 
 ```xml
-  <ros2_control name="2DOF_System_Robot_Position_Only" type="system">
+  <ros2_control name="2DOFSystemRobotPositionOnly" type="system">
     <hardware>
-      <classType>ros2_control_demo_hardware/2DOF_System_Hardware_Position_Only</classType>
+      <classType>ros2_control_demo_hardware/2DOFSystemHardwarePositionOnly</classType>
       <param name="example_param_write_for_sec">2</param>
       <param name="example_param_read_for_sec">2</param>
     </hardware>
     <joint name="joint1">
       <classType>ros2_control_components/PositionJoint</classType>
-      <param name="min_value">-1</param>
-      <param name="max_value">1</param>
+      <param name="min">-1</param>
+      <param name="max">1</param>
     </joint>
     <joint name="joint2">
       <classType>ros2_control_components/PositionJoint</classType>
-      <param name="min_value">-1</param>
-      <param name="max_value">1</param>
+      <param name="min">-1</param>
+      <param name="max">1</param>
     </joint>
   </ros2_control>
 ```
@@ -53,8 +53,8 @@ Note:
 Note:
   * `ros2_control_components/PositionJoint`type has implicitly:
     ```xml
-      <commandInterfaceType>position</commandInterfaceType>
-      <stateInterfaceType>position</stateInterfaceType>
+      <commandInterfaceType name="position"/>
+      <stateInterfaceType name="position"/>
     ```
 
 #### 2. Industrial Robots with multiple interfaces (can not be written at the same time)
@@ -63,26 +63,17 @@ Note:
   * Examples: KUKA FRI, ABB Yummy, Schunk LWA4p, etc.
 
 ```xml
-  <ros2_control name="2DOF_System_Robot_MultiInterface" type="system">
+  <ros2_control name="2DOFSystemRobotMultiInterface" type="system">
     <hardware>
-      <classType>ros2_control_demo_hardware/2DOF_System_Hardware_MultiInterface</classType>
+      <classType>ros2_control_demo_hardware/2DOFSystemHardwareMultiInterface</classType>
       <param name="example_param_write_for_sec">2</param>
       <param name="example_param_read_for_sec">2</param>
     </hardware>
     <joint name="joint1">
       <classType>ros2_control_components/MultiInterfaceJoint</classType>
-      <commandInterfaceType name="position">
-        <param name="min_value">-1</param>
-        <param name="max_value">1</param>
-      </commandInterfaceType>
-      <commandInterfaceType name="velocity">
-        <param name="min_value">-1</param>
-        <param name="max_value">1</param>
-      </commandInterfaceType>
-      <commandInterfaceType name="effort">
-        <param name="min_value">-0.5</param>
-        <param name="max_value">0.5</param>
-      </commandInterfaceType>
+      <commandInterfaceType name="position" min="-1" max="1"/>
+      <commandInterfaceType name="velocity" min="-1" max="1"/>
+      <commandInterfaceType name="effort" min="-0.5" max ="0.5"/>
       <stateInterfaceType>position</stateInterfaceType>
       <stateInterfaceType>velocity</stateInterfaceType>
       <stateInterfaceType>effort</stateInterfaceType>
@@ -90,10 +81,7 @@ Note:
     </joint>
     <joint name="joint2">
       <classType>ros2_control_components/MultiInterfaceJoint</classType>
-      <commandInterfaceType name="position">
-        <param name="min_value">-1</param>
-        <param name="max_value">1</param>
-      </commandInterfaceType>
+      <commandInterfaceType name="position" min="-1" max="1"/>
       <stateInterfaceType>position</stateInterfaceType>
       <stateInterfaceType>velocity</stateInterfaceType>
       <stateInterfaceType>effort</stateInterfaceType>
@@ -112,36 +100,24 @@ Note:
   * Examples: (humanoid robots?)
 
 ```xml
-  <ros2_control name="2DOF_System_Robot_MultiInterface" type="system">
+  <ros2_control name="2DOFSystemRobotMultiInterface" type="system">
     <hardware>
-      <classType>ros2_control_demo_hardware/2DOF_System_Hardware_MultiInterface_MultiWrite</classType>
+      <classType>ros2_control_demo_hardware/2DOFSystemHardwareMultiInterfaceMultiWrite</classType>
       <param name="example_param_write_for_sec">2</param>
       <param name="example_param_read_for_sec">2</param>
     </hardware>
     <joint name="joint1">
-      <classType>ros2_control_components/MultiInterfaceJoint_MultiWrite</classType>
-      <commandInterfaceType name="position">
-        <param name="min_value">-1</param>
-        <param name="max_value">1</param>
-      </commandInterfaceType>
-      <commandInterfaceType name="velocity">
-        <param name="min_value">-1</param>
-        <param name="max_value">1</param>
-      </commandInterfaceType>
-      <commandInterfaceType name="effort">
-        <param name="min_value">-0.5</param>
-        <param name="max_value">0.5</param>
-      </commandInterfaceType>
+      <classType>ros2_control_components/MultiInterfaceMultiWriteJoint</classType>
+      <commandInterfaceType name="position" min="-1" max="1"/>
+      <commandInterfaceType name="velocity" min="-1" max="1"/>
+      <commandInterfaceType name="effort" min="-0.5" max ="0.5"/>
       <stateInterfaceType>position</stateInterfaceType>
       <stateInterfaceType>velocity</stateInterfaceType>
       <stateInterfaceType>effort</stateInterfaceType>
     </joint>
     <joint name="joint2">
-      <classType>ros2_control_components/MultiInterfaceJoint_MultiWrite</classType>
-      <commandInterfaceType name="position">
-        <param name="min_value">-1</param>
-        <param name="max_value">1</param>
-      </commandInterfaceType>
+      <classType>ros2_control_components/MultiInterfaceMultiWriteJoint</classType>
+      <commandInterfaceType name="position" min="-1" max="1"/>
       <stateInterfaceType>position</stateInterfaceType>
       <stateInterfaceType>velocity</stateInterfaceType>
       <stateInterfaceType>effort</stateInterfaceType>
@@ -157,21 +133,21 @@ Note:
   * Examples: KUKA RSI with sensor connected to KRC (KUKA control box)
 
 ```xml
-  <ros2_control name="2DOF_System_Robot_with_Sensor" type="system">
+  <ros2_control name="2DOFSystemRobotwithSensor" type="system">
     <hardware>
-      <classType>ros2_control_demo_hardware/2DOF_System_Hardware_Sensor</classType>
+      <classType>ros2_control_demo_hardware/2DOFSystemHardwareSensor</classType>
       <param name="example_param_write_for_sec">2</param>
       <param name="example_param_read_for_sec">2</param>
     </hardware>
     <joint name="joint1">
       <classType>ros2_control_components/PositionJoint</classType>
-      <param name="min_value">-1</param>
-      <param name="max_value">1</param>
+      <param name="min">-1</param>
+      <param name="max">1</param>
     </joint>
     <joint name="joint2">
       <classType>ros2_control_components/PositionJoint</classType>
-      <param name="min_value">-1</param>
-      <param name="max_value">1</param>
+      <param name="min">-1</param>
+      <param name="max">1</param>
     </joint>
     <sensor name="tcp_fts_sensor">
       <classType>ros2_control_components/ForceTorqueSensor</classType>
@@ -187,7 +163,7 @@ Note:
       <commandInterfaceType>position</commandInterfaceType>
       <stateInterfaceType>position</stateInterfaceType>
     ```
-    with `min_value` and `max_value` belonging to the `commandInterfaceType` element.
+    with the `min` and `max` parameters belonging to the `commandInterfaceType` element.
 
 
 #### 4. Industrial Robots with externally connected sensor
@@ -197,24 +173,24 @@ Note:
   * Examples: KUKA RSI and FTS connected to ROS-PC
 
 ```xml
-  <ros2_control name="2DOF_System_Robot_Position_Only_External_Sensor" type="system">
+  <ros2_control name="2DOFSystemRobotPositionOnlyExternalSensor" type="system">
     <hardware>
-      <classType>ros2_control_demo_hardware/2DOF_System_Hardware_Position_Only</classType>
+      <classType>ros2_control_demo_hardware/2DOFSystemHardwarePositionOnly</classType>
       <param name="example_param_write_for_sec">2</param>
       <param name="example_param_read_for_sec">2</param>
     </hardware>
     <joint name="joint1">
       <classType>ros2_control_components/PositionJoint</classType>
-      <param name="min_value">-1</param>
-      <param name="max_value">1</param>
+      <param name="min">-1</param>
+      <param name="max">1</param>
     </joint>
     <joint name="joint2">
       <classType>ros2_control_components/PositionJoint</classType>
-      <param name="min_value">-1</param>
-      <param name="max_value">1</param>
+      <param name="min">-1</param>
+      <param name="max">1</param>
     </joint>
   </ros2_control>
-  <ros2_control name="2DOF_System_Robot_ForceTorqueSensor" type="sensor">
+  <ros2_control name="2DOFSystemRobotForceTorqueSensor" type="sensor">
     <hardware>
       <classType>ros2_control_demo_hardware/2D_Sensor_Force_Torque</classType>
       <param name="example_param_read_for_sec">0.43</param>
@@ -234,28 +210,28 @@ Note:
   * Examples: Mara, Arduino-based-robots
 
 ```xml
-  <ros2_control name="2DOF_Modular_Robot_joint1"  type="actuator">
+  <ros2_control name="2DOFModularRobotJoint1"  type="actuator">
     <hardware>
-      <classType>ros2_control_demo_hardware/Position_Actuator_Hadware</classType>
+      <classType>ros2_control_demo_hardware/PositionActuatorHadware</classType>
       <param name="example_param_write_for_sec">1.23</param>
       <param name="example_param_read_for_sec">3</param>
     </hardware>
     <joint name="joint1">
       <classType>ros2_control_components/PositionJoint</classType>
-      <param name="min_value">-1</param>
-      <param name="max_value">1</param>
+      <param name="min">-1</param>
+      <param name="max">1</param>
     </joint>
   </ros2_control>
-  <ros2_control name="2DOF_Modular_Robot_joint2"  type="actuator">
+  <ros2_control name="2DOFModularRobotJoint2"  type="actuator">
     <hardware>
-      <classType>ros2_control_demo_hardware/Position_Actuator_Hadware</classType>
+      <classType>ros2_control_demo_hardware/PositionActuatorHadware</classType>
       <param name="example_param_write_for_sec">1.23</param>
       <param name="example_param_read_for_sec">3</param>
     </hardware>
     <joint name="joint2">
       <classType>ros2_control_components/PositionJoint</classType>
-      <param name="min_value">-1</param>
-      <param name="max_value">1</param>
+      <param name="min">-1</param>
+      <param name="max">1</param>
     </joint>
   </ros2_control>
 ```
@@ -266,61 +242,55 @@ Note:
   * Examples: Arduino-based-robots, custom robots
 
 ```xml
-  <ros2_control name="2DOF_Modular_Robot_joint1"  type="actuator">
+  <ros2_control name="2DOFModularRobotJoint1"  type="actuator">
     <hardware>
-      <classType>ros2_control_demo_hardware/Velocity_Actuator_Hadware</classType>
+      <classType>ros2_control_demo_hardware/VelocityActuatorHadware</classType>
       <param name="example_param_write_for_sec">1.23</param>
       <param name="example_param_read_for_sec">3</param>
     </hardware>
     <joint name="joint1">
       <classType>ros2_control_components/VelocityJoint</classType>
-      <commandInterfaceType name="velocity">
-        <param name="min_value">-1</param>
-        <param name="max_value">1</param>
-      </commandInterfaceType>
+      <commandInterfaceType name="velocity" min="-1" max="1"/>
     </joint>
     <transmission name="transmission1">
       <classType>transmission_interface/SimpleTansmission</classType>
       <param name="joint_to_actuator">${1024/PI}</param>
     </transmission>
   </ros2_control>
-  <ros2_control name="2DOF_Modular_Robot_joint2"  type="actuator">
+  <ros2_control name="2DOFModularRobotJoint2"  type="actuator">
     <hardware>
-      <classType>ros2_control_demo_hardware/Velocity_Actuator_Hadware</classType>
+      <classType>ros2_control_demo_hardware/VelocityActuatorHadware</classType>
       <param name="example_param_write_for_sec">1.23</param>
       <param name="example_param_read_for_sec">3</param>
     </hardware>
     <joint name="joint2">
       <classType>ros2_control_components/VelocityJoint</classType>
-      <commandInterfaceType name="velocity">
-        <param name="min_value">-1</param>
-        <param name="max_value">1</param>
-      </commandInterfaceType>
+      <commandInterfaceType name="velocity" min="-1" max="1"/>
     </joint>
   </ros2_control>
-  <ros2_control name="2DOF_System_Robot_Position_Sensor_joint1" type="sensor">
+  <ros2_control name="2DOFSystemRobotPositionSensorJoint1" type="sensor">
     <hardware>
-      <classType>ros2_control_demo_hardware/Position_Sensor_Hardware</classType>
+      <classType>ros2_control_demo_hardware/PositionSensorHardware</classType>
       <param name="example_param_read_for_sec">2</param>
     </hardware>
     <joint name="joint1">
       <classType>ros2_control_components/PositionJoint</classType>
       <stateInterfaceType name="position">
-        <param name="min_value">${-PI}</param>
-        <param name="max_value">${PI}</param>
+        <param name="min">${-PI}</param>
+        <param name="max">${PI}</param>
       </stateInterfaceType>
     </joint>
   </ros2_control>
-  <ros2_control name="2DOF_System_Robot_Position_Sensor_joint2" type="sensor">
+  <ros2_control name="2DOFSystemRobotPositionSensorJoint2" type="sensor">
     <hardware>
-      <classType>ros2_control_demo_hardware/Position_Sensor_Hardware</classType>
+      <classType>ros2_control_demo_hardware/PositionSensorHardware</classType>
       <param name="example_param_read_for_sec">2</param>
     </hardware>
     <joint name="joint2">
       <classType>ros2_control_components/PositionJoint</classType>
       <stateInterfaceType name="position">
-        <param name="min_value">${-PI}</param>
-        <param name="max_value">${PI}</param>
+        <param name="min">${-PI}</param>
+        <param name="max">${PI}</param>
       </stateInterfaceType>
     </joint>
   </ros2_control>
@@ -335,24 +305,24 @@ Note:
   * Examples: Wrist of a humanoid robot
 
 ```xml
-  <ros2_control name="2DOF_Modular_Robot_Wrist"  type="system">
+  <ros2_control name="2DOFModularRobotWrist"  type="system">
     <hardware>
-      <classType>ros2_control_demo_hardware/Actuator_Hadware_MultiDOF</classType>
+      <classType>ros2_control_demo_hardware/ActuatorHadwareMultiDOF</classType>
       <param name="example_param_write_for_sec">1.23</param>
       <param name="example_param_read_for_sec">3</param>
     </hardware>
     <joint name="joint1">
       <classType>ros2_control_components/PositionJoint</classType>
-      <param name="min_value">-1</param>
-      <param name="max_value">1</param>
+      <param name="min">-1</param>
+      <param name="max">1</param>
     </joint>
     <joint name="joint2">
       <classType>ros2_control_components/PositionJoint</classType>
-      <param name="min_value">-1</param>
-      <param name="max_value">1</param>
+      <param name="min">-1</param>
+      <param name="max">1</param>
     </joint>
     <transmission name="transmission1">
-      <classType>transmission_interface/SomeComplex_2x2_Transmission</classType>
+      <classType>transmission_interface/SomeComplex2by2Transmission</classType>
       <param name="joints">{joint1, joint2}</param>
       <param name="output">{output2, output2}</param>
       <param name="joint1_output1">1.5</param>
@@ -368,9 +338,9 @@ Note:
   * Examples: Camera, ForceTorqueSensor, Distance Sensors, IMU, etc.
 
 ```xml
-  <ros2_control name="Camera_with_IMU"  type="sensor">
+  <ros2_control name="CameraWithIMU"  type="sensor">
     <hardware>
-      <classType>ros2_control_demo_hardware/CameraWithIMU_Sensor</classType>
+      <classType>ros2_control_demo_hardware/CameraWithIMUSensor</classType>
       <param name="example_param_read_for_sec">2</param>
     </hardware>
     <sensor name="sensor1">
@@ -391,16 +361,16 @@ Note:
   * Examples: Small Conveyor, Motor, etc.
 
 ```xml
-  <ros2_control name="2DOF_Modular_Robot_joint1"  type="actuator">
+  <ros2_control name="2DOFModularRobotJoint1"  type="actuator">
     <hardware>
-      <classType>ros2_control_demo_hardware/Velocity_Actuator_Hadware</classType>
+      <classType>ros2_control_demo_hardware/VelocityActuatorHadware</classType>
       <param name="example_param_write_for_sec">1.13</param>
       <param name="example_param_read_for_sec">3</param>
     </hardware>
     <joint name="joint1">
       <classType>ros2_control_components/VelocityJoint</classType>
-      <param name="min_value">-1</param>
-      <param name="max_value">1</param>
+      <param name="min">-1</param>
+      <param name="max">1</param>
     </joint>
     <transmission name="transmission1">
       <classType>transmission_interface/RotationToLinerTansmission</classType>
