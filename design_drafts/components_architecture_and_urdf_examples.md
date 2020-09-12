@@ -74,17 +74,17 @@ Note:
       <commandInterfaceType name="position" min="-1" max="1"/>
       <commandInterfaceType name="velocity" min="-1" max="1"/>
       <commandInterfaceType name="effort" min="-0.5" max ="0.5"/>
-      <stateInterfaceType>position</stateInterfaceType>
-      <stateInterfaceType>velocity</stateInterfaceType>
-      <stateInterfaceType>effort</stateInterfaceType>
+      <stateInterfaceType name="position"/>
+      <stateInterfaceType name="velocity"/>
+      <stateInterfaceType name="effort"/>
 
     </joint>
     <joint name="joint2">
       <classType>ros2_control_components/MultiInterfaceJoint</classType>
       <commandInterfaceType name="position" min="-1" max="1"/>
-      <stateInterfaceType>position</stateInterfaceType>
-      <stateInterfaceType>velocity</stateInterfaceType>
-      <stateInterfaceType>effort</stateInterfaceType>
+      <stateInterfaceType name="position"/>
+      <stateInterfaceType name="velocity"/>
+      <stateInterfaceType name="effort"/>
     </joint>
   </ros2_control>
 ```
@@ -111,16 +111,16 @@ Note:
       <commandInterfaceType name="position" min="-1" max="1"/>
       <commandInterfaceType name="velocity" min="-1" max="1"/>
       <commandInterfaceType name="effort" min="-0.5" max ="0.5"/>
-      <stateInterfaceType>position</stateInterfaceType>
-      <stateInterfaceType>velocity</stateInterfaceType>
-      <stateInterfaceType>effort</stateInterfaceType>
+      <stateInterfaceType name="position"/>
+      <stateInterfaceType name="velocity"/>
+      <stateInterfaceType name="effort"/>
     </joint>
     <joint name="joint2">
       <classType>ros2_control_components/MultiInterfaceMultiWriteJoint</classType>
       <commandInterfaceType name="position" min="-1" max="1"/>
-      <stateInterfaceType>position</stateInterfaceType>
-      <stateInterfaceType>velocity</stateInterfaceType>
-      <stateInterfaceType>effort</stateInterfaceType>
+      <stateInterfaceType name="position"/>
+      <stateInterfaceType name="velocity"/>
+      <stateInterfaceType name="effort"/>
     </joint>
   </ros2_control>
 ```
@@ -160,8 +160,8 @@ Note:
 Note:
   * `ros2_control_components/PositionJoint`type has implicitly:
     ```xml
-      <commandInterfaceType>position</commandInterfaceType>
-      <stateInterfaceType>position</stateInterfaceType>
+      <commandInterfaceType name="position"/>
+      <stateInterfaceType name="position"/>
     ```
     with the `min` and `max` parameters belonging to the `commandInterfaceType` element.
 
@@ -275,10 +275,7 @@ Note:
     </hardware>
     <joint name="joint1">
       <classType>ros2_control_components/PositionJoint</classType>
-      <stateInterfaceType name="position">
-        <param name="min">${-PI}</param>
-        <param name="max">${PI}</param>
-      </stateInterfaceType>
+      <stateInterfaceType name="position"/>
     </joint>
   </ros2_control>
   <ros2_control name="2DOFSystemRobotPositionSensorJoint2" type="sensor">
@@ -288,10 +285,7 @@ Note:
     </hardware>
     <joint name="joint2">
       <classType>ros2_control_components/PositionJoint</classType>
-      <stateInterfaceType name="position">
-        <param name="min">${-PI}</param>
-        <param name="max">${PI}</param>
-      </stateInterfaceType>
+      <stateInterfaceType name="position"/>
     </joint>
   </ros2_control>
 ```
@@ -345,12 +339,12 @@ Note:
     </hardware>
     <sensor name="sensor1">
       <classType>ros2_control_components/IMUSensor</classType>
-      <stateInterfaceType>velocity</stateInterfaceType>
-      <stateInterfaceType>acceleration</stateInterfaceType>
+      <stateInterfaceType name="velocity"/>
+      <stateInterfaceType name="acceleration"/>
     </sensor>
     <sensor name="sensor2">
       <classType>ros2_control_components/2DImageSensor</classType>
-      <stateInterfaceType>image</stateInterfaceType>
+      <stateInterfaceType name="image"/>
     </sensor>
   </ros2_control>
 ```
