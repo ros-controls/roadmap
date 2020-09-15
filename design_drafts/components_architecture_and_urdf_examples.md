@@ -31,9 +31,9 @@ Note:
   * Examples: KUKA RSI
 
 ```xml
-  <ros2_control name="2DOFSystemRobotPositionOnly" type="system">
+  <ros2_control name="RRBotSystemPositionOnly" type="system">
     <hardware>
-      <classType>ros2_control_demo_hardware/2DOFSystemHardwarePositionOnly</classType>
+      <classType>ros2_control_demo_hardware/RRBotSystemPositionOnlyHardware</classType>
       <param name="example_param_write_for_sec">2</param>
       <param name="example_param_read_for_sec">2</param>
     </hardware>
@@ -63,9 +63,9 @@ Note:
   * Examples: KUKA FRI, ABB Yummy, Schunk LWA4p, etc.
 
 ```xml
-  <ros2_control name="2DOFSystemRobotMultiInterface" type="system">
+  <ros2_control name="RRBotSystemMultiInterface" type="system">
     <hardware>
-      <classType>ros2_control_demo_hardware/2DOFSystemHardwareMultiInterface</classType>
+      <classType>ros2_control_demo_hardware/RRBotSystemMultiInterfaceHardware</classType>
       <param name="example_param_write_for_sec">2</param>
       <param name="example_param_read_for_sec">2</param>
     </hardware>
@@ -100,9 +100,9 @@ Note:
   * Examples: (humanoid robots?)
 
 ```xml
-  <ros2_control name="2DOFSystemRobotMultiInterface" type="system">
+  <ros2_control name="RRBotSystemMultiInterface" type="system">
     <hardware>
-      <classType>ros2_control_demo_hardware/2DOFSystemHardwareMultiInterfaceMultiWrite</classType>
+      <classType>ros2_control_demo_hardware/RRBotSystemMultiInterfaceMultiWriteHardware</classType>
       <param name="example_param_write_for_sec">2</param>
       <param name="example_param_read_for_sec">2</param>
     </hardware>
@@ -133,9 +133,9 @@ Note:
   * Examples: KUKA RSI with sensor connected to KRC (KUKA control box)
 
 ```xml
-  <ros2_control name="2DOFSystemRobotwithSensor" type="system">
+  <ros2_control name="RRBotSystemWithSensor" type="system">
     <hardware>
-      <classType>ros2_control_demo_hardware/2DOFSystemHardwareSensor</classType>
+      <classType>ros2_control_demo_hardware/RRBotSystemWithSensorHardware</classType>
       <param name="example_param_write_for_sec">2</param>
       <param name="example_param_read_for_sec">2</param>
     </hardware>
@@ -173,9 +173,9 @@ Note:
   * Examples: KUKA RSI and FTS connected to ROS-PC
 
 ```xml
-  <ros2_control name="2DOFSystemRobotPositionOnlyExternalSensor" type="system">
+  <ros2_control name="RRBotSystemPositionOnlyWithExternalSensor" type="system">
     <hardware>
-      <classType>ros2_control_demo_hardware/2DOFSystemHardwarePositionOnly</classType>
+      <classType>ros2_control_demo_hardware/RRBotSystemPositionOnlyHardware</classType>
       <param name="example_param_write_for_sec">2</param>
       <param name="example_param_read_for_sec">2</param>
     </hardware>
@@ -190,9 +190,9 @@ Note:
       <param name="max">1</param>
     </joint>
   </ros2_control>
-  <ros2_control name="2DOFSystemRobotForceTorqueSensor" type="sensor">
+  <ros2_control name="RRBotForceTorqueSensor2D" type="sensor">
     <hardware>
-      <classType>ros2_control_demo_hardware/2D_Sensor_Force_Torque</classType>
+      <classType>ros2_control_demo_hardware/ForceTorqueSensor2DHardware</classType>
       <param name="example_param_read_for_sec">0.43</param>
     </hardware>
     <sensor name="tcp_fts_sensor">
@@ -210,7 +210,7 @@ Note:
   * Examples: Mara, Arduino-based-robots
 
 ```xml
-  <ros2_control name="2DOFModularRobotJoint1"  type="actuator">
+  <ros2_control name="RRBotModularJoint1"  type="actuator">
     <hardware>
       <classType>ros2_control_demo_hardware/PositionActuatorHadware</classType>
       <param name="example_param_write_for_sec">1.23</param>
@@ -222,7 +222,7 @@ Note:
       <param name="max">1</param>
     </joint>
   </ros2_control>
-  <ros2_control name="2DOFModularRobotJoint2"  type="actuator">
+  <ros2_control name="RRBotModularJoint2"  type="actuator">
     <hardware>
       <classType>ros2_control_demo_hardware/PositionActuatorHadware</classType>
       <param name="example_param_write_for_sec">1.23</param>
@@ -242,7 +242,7 @@ Note:
   * Examples: Arduino-based-robots, custom robots
 
 ```xml
-  <ros2_control name="2DOFModularRobotJoint1"  type="actuator">
+  <ros2_control name="RRBotModularJoint1"  type="actuator">
     <hardware>
       <classType>ros2_control_demo_hardware/VelocityActuatorHadware</classType>
       <param name="example_param_write_for_sec">1.23</param>
@@ -257,7 +257,7 @@ Note:
       <param name="joint_to_actuator">${1024/PI}</param>
     </transmission>
   </ros2_control>
-  <ros2_control name="2DOFModularRobotJoint2"  type="actuator">
+  <ros2_control name="RRBotModularJoint2"  type="actuator">
     <hardware>
       <classType>ros2_control_demo_hardware/VelocityActuatorHadware</classType>
       <param name="example_param_write_for_sec">1.23</param>
@@ -268,7 +268,7 @@ Note:
       <commandInterfaceType name="velocity" min="-1" max="1"/>
     </joint>
   </ros2_control>
-  <ros2_control name="2DOFSystemRobotPositionSensorJoint1" type="sensor">
+  <ros2_control name="RRBotModularPositionSensorJoint1" type="sensor">
     <hardware>
       <classType>ros2_control_demo_hardware/PositionSensorHardware</classType>
       <param name="example_param_read_for_sec">2</param>
@@ -278,7 +278,7 @@ Note:
       <stateInterfaceType name="position"/>
     </joint>
   </ros2_control>
-  <ros2_control name="2DOFSystemRobotPositionSensorJoint2" type="sensor">
+  <ros2_control name="RRBotModularPositionSensorJoint2" type="sensor">
     <hardware>
       <classType>ros2_control_demo_hardware/PositionSensorHardware</classType>
       <param name="example_param_read_for_sec">2</param>
@@ -299,7 +299,7 @@ Note:
   * Examples: Wrist of a humanoid robot
 
 ```xml
-  <ros2_control name="2DOFModularRobotWrist"  type="system">
+  <ros2_control name="RRBotModularWrist"  type="system">
     <hardware>
       <classType>ros2_control_demo_hardware/ActuatorHadwareMultiDOF</classType>
       <param name="example_param_write_for_sec">1.23</param>
@@ -355,7 +355,7 @@ Note:
   * Examples: Small Conveyor, Motor, etc.
 
 ```xml
-  <ros2_control name="2DOFModularRobotJoint1"  type="actuator">
+  <ros2_control name="ActuatorModularJoint1"  type="actuator">
     <hardware>
       <classType>ros2_control_demo_hardware/VelocityActuatorHadware</classType>
       <param name="example_param_write_for_sec">1.13</param>
