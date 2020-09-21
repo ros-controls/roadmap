@@ -71,9 +71,19 @@ Note:
     </hardware>
     <joint name="joint1">
       <classType>ros2_control_components/MultiInterfaceJoint</classType>
-      <commandInterfaceType name="position" min="-1" max="1"/>
-      <commandInterfaceType name="velocity" min="-1" max="1"/>
-      <commandInterfaceType name="effort" min="-0.5" max ="0.5"/>
+      <commandInterfaceType name="position">
+        <param name="min">-1</param>
+        <param name="max">1</param>
+      <commandInterfaceType/>
+      <commandInterfaceType name="velocity">
+        <param name="min">-1</param>
+        <param name="max">1</param>
+      <commandInterfaceType/>
+      <commandInterfaceType name="effort">
+        <param name="min">-0.5</param>
+        <param name="max">0.5"</param>
+      </commandInterfaceType>
+
       <stateInterfaceType name="position"/>
       <stateInterfaceType name="velocity"/>
       <stateInterfaceType name="effort"/>
@@ -81,7 +91,10 @@ Note:
     </joint>
     <joint name="joint2">
       <classType>ros2_control_components/MultiInterfaceJoint</classType>
-      <commandInterfaceType name="position" min="-1" max="1"/>
+      <commandInterfaceType name="position">
+        <param name="min">-1</param>
+        <param name="max">1</param>
+      <commandInterfaceType/>
       <stateInterfaceType name="position"/>
       <stateInterfaceType name="velocity"/>
       <stateInterfaceType name="effort"/>
@@ -108,16 +121,28 @@ Note:
     </hardware>
     <joint name="joint1">
       <classType>ros2_control_components/MultiInterfaceMultiWriteJoint</classType>
-      <commandInterfaceType name="position" min="-1" max="1"/>
-      <commandInterfaceType name="velocity" min="-1" max="1"/>
-      <commandInterfaceType name="effort" min="-0.5" max ="0.5"/>
+      <commandInterfaceType name="position">
+        <param name="min">-1</param>
+        <param name="max">1</param>
+      <commandInterfaceType/>
+      <commandInterfaceType name="velocity">
+        <param name="min">-1</param>
+        <param name="max">1</param>
+      <commandInterfaceType/>
+      <commandInterfaceType name="effort">
+        <param name="min">-0.5</param>
+        <param name="max">0.5"</param>
+      </commandInterfaceType>
       <stateInterfaceType name="position"/>
       <stateInterfaceType name="velocity"/>
       <stateInterfaceType name="effort"/>
     </joint>
     <joint name="joint2">
       <classType>ros2_control_components/MultiInterfaceMultiWriteJoint</classType>
-      <commandInterfaceType name="position" min="-1" max="1"/>
+      <commandInterfaceType name="position">
+        <param name="min">-1</param>
+        <param name="max">1</param>
+      <commandInterfaceType/>
       <stateInterfaceType name="position"/>
       <stateInterfaceType name="velocity"/>
       <stateInterfaceType name="effort"/>
@@ -250,7 +275,10 @@ Note:
     </hardware>
     <joint name="joint1">
       <classType>ros2_control_components/VelocityJoint</classType>
-      <commandInterfaceType name="velocity" min="-1" max="1"/>
+      <commandInterfaceType name="velocity">
+        <param name="min">-1</param>
+        <param name="max">1</param>
+      <commandInterfaceType/>
     </joint>
     <transmission name="transmission1">
       <classType>transmission_interface/SimpleTansmission</classType>
@@ -265,7 +293,10 @@ Note:
     </hardware>
     <joint name="joint2">
       <classType>ros2_control_components/VelocityJoint</classType>
-      <commandInterfaceType name="velocity" min="-1" max="1"/>
+      <commandInterfaceType name="velocity">
+        <param name="min">-1</param>
+        <param name="max">1</param>
+      <commandInterfaceType/>
     </joint>
   </ros2_control>
   <ros2_control name="RRBotModularPositionSensorJoint1" type="sensor">
