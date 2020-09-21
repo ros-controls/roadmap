@@ -74,27 +74,25 @@ Note:
       <commandInterfaceType name="position">
         <param name="min">-1</param>
         <param name="max">1</param>
-      <commandInterfaceType/>
+      </commandInterfaceType>
       <commandInterfaceType name="velocity">
         <param name="min">-1</param>
         <param name="max">1</param>
-      <commandInterfaceType/>
+      </commandInterfaceType>
       <commandInterfaceType name="effort">
         <param name="min">-0.5</param>
         <param name="max">0.5"</param>
       </commandInterfaceType>
-
       <stateInterfaceType name="position"/>
       <stateInterfaceType name="velocity"/>
       <stateInterfaceType name="effort"/>
-
     </joint>
     <joint name="joint2">
       <classType>ros2_control_components/MultiInterfaceJoint</classType>
       <commandInterfaceType name="position">
         <param name="min">-1</param>
         <param name="max">1</param>
-      <commandInterfaceType/>
+      </commandInterfaceType>
       <stateInterfaceType name="position"/>
       <stateInterfaceType name="velocity"/>
       <stateInterfaceType name="effort"/>
@@ -124,11 +122,11 @@ Note:
       <commandInterfaceType name="position">
         <param name="min">-1</param>
         <param name="max">1</param>
-      <commandInterfaceType/>
+      </commandInterfaceType>
       <commandInterfaceType name="velocity">
         <param name="min">-1</param>
         <param name="max">1</param>
-      <commandInterfaceType/>
+      </commandInterfaceType>
       <commandInterfaceType name="effort">
         <param name="min">-0.5</param>
         <param name="max">0.5"</param>
@@ -142,7 +140,7 @@ Note:
       <commandInterfaceType name="position">
         <param name="min">-1</param>
         <param name="max">1</param>
-      <commandInterfaceType/>
+      </commandInterfaceType>
       <stateInterfaceType name="position"/>
       <stateInterfaceType name="velocity"/>
       <stateInterfaceType name="effort"/>
@@ -278,7 +276,7 @@ Note:
       <commandInterfaceType name="velocity">
         <param name="min">-1</param>
         <param name="max">1</param>
-      <commandInterfaceType/>
+      </commandInterfaceType>
     </joint>
     <transmission name="transmission1">
       <classType>transmission_interface/SimpleTansmission</classType>
@@ -296,7 +294,7 @@ Note:
       <commandInterfaceType name="velocity">
         <param name="min">-1</param>
         <param name="max">1</param>
-      <commandInterfaceType/>
+      </commandInterfaceType>
     </joint>
   </ros2_control>
   <ros2_control name="RRBotModularPositionSensorJoint1" type="sensor">
