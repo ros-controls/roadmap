@@ -2,23 +2,23 @@
 
 The following article describe how controllers can exclusively claim hardware resources yet stay as flexible as possible to avoid a strongly typed triple of 'position', 'velocity' and 'effort [c.f. [Flexible Joint States Message](https://github.com/ros-controls/roadmap/blob/master/design_drafts/flexible_joint_states_msg.md)].
 We firstly describe how hardware resources are classified and loaded.
-Secondly, we provide a real-time safe way of accessing these resources through controllers.
+Secondly, we provide a real-time safe way of accessing these resources in controllers.
 
 ## Hardware Resources
-A hardware resource describes a physical component which is being considered through ros2-control.
-We hereby distinguish between three classes of hardware resources, namely Actuators, Sensor and System.
+A hardware resource describes a physical component which is being considered through ros2_control.
+We hereby distinguish between three classes of hardware resources, Actuators, Sensor and System.
 Every individual hardware is loaded at runtime and thus allows a flexible and dynamic composition of the to be controlled setup.
-The hardware is composed uniquely through the URDF.
+The hardware is composed and configured solely through the URDF.
 
 **Joint**
-A joint is considered a logical component and is being actuated by at least one actuator (it might be generically under- or over-actuated depending on the actual hardware setup).
-The joint is meant to be abstraction layer between a high-level controller instance and the underlaying hardware.
+A joint is considered a logical component and is being actuated by at least one actuator (generally, it might be under- or over-actuated depending on the actual hardware setup).
+The joint is meant to be abstraction layer between a controller instance and the underlaying hardware.
 The abstraction is needed to shim over a potentially complex hardware setup in order to control a joint.
-A single joint might be controlled by multiple motors with a non-trivial transmission interface, yet a controller only really thinks in joint state values, not in transmission ratios.
+A single joint might be controlled by multiple motors with a non-trivial transmission interface, yet a controller only takes care about joint values.
 
-A joint is configured in conjunction to a hardware resource such as **Actuator**, **Sensor** or **System**.
-The joint component is configured through command and state interfaces.
-The command interfaces describe the value in which this joint can be controlled (e.g. effort or velocity) where as the state interfaces are considered the state feedback interfaces.
+A joint is configured in conjunction with a hardware resource such as **Actuator**, **Sensor** or **System**.
+The joint component is used through command and state interfaces which are declared in the URDF.
+The command interfaces describe the value in which this joint can be controlled (e.g. effort or velocity) where as the state interfaces are considered read-only feedback interfaces.
 An example URDF:
 ```xml
 ...
@@ -31,11 +31,11 @@ An example URDF:
 ```
 
 **Actuator**
-An actuator describes a single motor instance with at max 1DoF and is strictly tight to a **Joint**.
+An actuator describes a single *physical actuator* instance with at max 1DoF and is strictly tight to a **Joint**.
 It might hereby take a single command value for its appropriate mode of operation, such as a desired joint velocity or effort - in rare cases an actuator might actually take a precise joint position value.
 The implementation of this actuator might then convert the desired value into PWM or other hardware specific commands and control the hardware.
 Similarly, an actuator might provide state feedback.
-Depending the setup, the motor encoders might provide position, velocity, effort or current feedback.
+Depending on the setup, the motor encoders might provide position, velocity, effort or current feedback.
 The implementation likewise might provide these values by connecting through the hardware driver.
 
 The URDF snippet for an actuator might look like the following:
@@ -55,8 +55,8 @@ The URDF snippet for an actuator might look like the following:
 </joint>
 </ros2_control>
 ```
-The snippet above depicts a relative simple hardware setup, which a single actuator which controls one logical joint.
-The joint hereby is configured to be commanded in position values, whereas the state feedback is also position.
+The snippet above depicts a simple hardware setup, with a single actuator which controls one logical joint.
+The joint here is configured to be commanded in position values, whereas the state feedback is also position.
 
 If a joint is configured with a command or state interface the hardware is not supporting, a runtime error shall occur during startup.
 Opposite to it, a joint might be configured with only the minimal required interfaces even though the hardware might support additional interfaces (such as "current" or "voltage").
@@ -85,7 +85,7 @@ We don't individually specify them further in this document as they don't have a
 **System**
 A system is meant to be a more complex hardware setup which contains multiple joints and sensors.
 This is mostly used for third-party robotic systems such as robotic arms or industrial setups, which have their own (proprietary) API.
-The implementation of the system hardware resource thus serves as an interface between the hardware and the controller to provide this API.
+The implementation of the system hardware resource serves as an interface between the hardware and the controller to provide this API.
 ```xml
 <ros2_control name="MyComplexRobot" type="system">
   <hardware>
@@ -110,15 +110,15 @@ The implementation of the system hardware resource thus serves as an interface b
 ```
 
 ## Resource Manager
-The resource manager is responsible for parsing the URDF and instantiating the respective hardware resources.
+The resource manager is responsible for parsing the URDF and instantiating the respective hardware resources and logical components.
 It has ownership over the lifetime of these hardware resources and their associated logical joints.
 It serves as the storage backend for the controller manager which can loan resources to the controller.
-The resource manager hereby administrates which controllers claimed which resources.
-If a controller does no longer need access to the claimed resource, that resource is being released and offered for other controllers to be claimed.
+The resource manager keeps a ledger of controllers and their respective claimed resources.
+If a controller no longer needs access to the claimed resource, it is released and returns to the ResourceManager where it may be offered for other controllers.
 
-The resource manager internally maintains a mapping of each individual hardware resources and their interfaces.
+The resource manager internally maintains a mapping of each individual hardware resource and their interfaces.
 This mapping can be indexed through a simple `<logical_component>/<interface_name>` lookup.
-As mentioned previously it abstracts the individual hardware resources from their logical components, such that a user (or controller in that sense) does not have to know which hardware is responsible for commanding a joint.
+`ResourceManager` abstracts the individual hardware resources from their logical components, such that a controller does not have to know which hardware is responsible for commanding which joint.
 
 In the examples above, the actuator command interfaces are being mapped to `base_link/position`, the state interfaces equivalently to `base_link/position`.
 Likewise for the sensor, their interfaces are being mapped to `my_sensor/roll`, `my_sensor/pitch`, `my_sensor/yaw`.
@@ -127,9 +127,9 @@ Likewise for the sensor, their interfaces are being mapped to `my_sensor/roll`, 
 Once the system is bootstrapped and a controller is loaded, it can claim logical components and access their interfaces.
 
 **Generic Access**
-A controller has the chance to access a single interface value by directly indexing the resource manager for the respective key, such as `joint1/effort`, which allows to set effort values during the controllers execution.
+A controller has the chance to access a single interface value via a query to the resource manager for the respective key, such as `joint1/effort`, which - if available - claims the handle that allows to set `effort` values on `joint1` during the execution of this controller.
 ```c++
-void MyController::init(ResourceManager * resource_manager)
+void MyController::init(... resource_manager)
 {
   InterfaceCommandHandle joint1_effort_cmd = resource_manager->claim_command_interface("joint1/effort");
   InterfaceStateHandle joint1_position_state = resource_manager->claim_state_interface("joint1/position");
@@ -140,13 +140,14 @@ void MyController::init(ResourceManager * resource_manager)
 While the above example might suffice for simple setups, one can imagine that there might be quite some handles accumulated, e.g. when dealing with 6D FT/Sensors or IMUs.
 We therefore propose semantic components which wrap a non-zero amount of keys and provide a more meaningful API on top of it.
 ```c++
-void MyController::init(ResourceManager * resource_manager)
+void MyController::init(... resource_manager)
 {
   FTSensor6D ft_sensor(resource_manager,
     "sensor1/fx", "sensor1/fy", "sensor1/fz",  // force values
     "sensor1/tx", "sensor1/ty", "sensor1/tz"); // torque values
 
   std::vector<double> torque = ft_sensor.get_torque_values();
+  geometry_msgs::msg::Wrench wrench_msg = ft_sensor.as_wrench_msg();
 }
 ```
 
