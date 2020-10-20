@@ -7,7 +7,7 @@ Secondly, we provide a real-time safe way of accessing these resources in contro
 ## Hardware Resources
 A hardware resource describes a physical component which is being considered through ros2_control.
 We hereby distinguish between three classes of hardware resources, Actuators, Sensor and System.
-Every individual hardware is loaded at runtime and thus allows a flexible and dynamic composition of the to be controlled setup.
+Each individual hardware is loaded at runtime and thus allows a flexible and dynamic composition of the to-be-controlled setup.
 The hardware is composed and configured solely through the URDF.
 
 **Joint**
@@ -117,7 +117,7 @@ The resource manager keeps a ledger of controllers and their respective claimed 
 If a controller no longer needs access to the claimed resource, it is released and returns to the ResourceManager where it may be offered for other controllers.
 
 The resource manager internally maintains a mapping of each individual hardware resource and their interfaces.
-This mapping can be indexed through a simple `<logical_component>/<interface_name>` lookup.
+This mapping can be indexed through a simple `_logical_component_/_interface_name_` lookup.
 `ResourceManager` abstracts the individual hardware resources from their logical components, such that a controller does not have to know which hardware is responsible for commanding which joint.
 
 In the examples above, the actuator command interfaces are being mapped to `base_link/position`, the state interfaces equivalently to `base_link/position`.
