@@ -66,8 +66,8 @@ The URDF snippet for an actuator might look like the following:
   </hardware>
   <joint name="joint1">
     <command_interface name="position">
-      <param name="max_value">1.57</param>
-      <param name="min_value">-1.57<param>
+      <param name="min">-1.57<param>
+      <param name="max">1.57</param>
     </command>
 
     <state_interface name="position"/>
