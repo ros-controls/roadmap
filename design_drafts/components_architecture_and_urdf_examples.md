@@ -38,7 +38,7 @@ Note:
       <param name="example_param_read_for_sec">2</param>
     </hardware>
     <joint name="joint1">
-      <command_interface  name="position">
+      <command_interface name="position">
         <param name="min">-1</param>
         <param name="max">1</param>
       </command_interface>
@@ -426,14 +426,14 @@ Note:
         <param name="min">-0.5</param>
         <param name="max">0.5</param>
       </command_interface>
-      <command_interface>Kp</command_interface>
-      <command_interface>Kd</command_interface>
-      <command_interface>effort_limit</command_interface>
-      <state_interface>position</state_interface>
-      <state_interface>velocity</state_interface>
-      <state_interface>effort</state_interface>
-      <state_interface>coil_resistance</state_interface>
-      <state_interface>timestamp</state_interface>
+      <command_interface name="Kp"/>
+      <command_interface name="Kd"/>
+      <command_interface name="effort_limit"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+      <state_interface name="coil_resistance"/>
+      <state_interface name="timestamp"/>
     </joint>
     <joint name="front_left_leg_joint2">
       <command_interface name="position">
@@ -448,14 +448,14 @@ Note:
         <param name="min">-0.5</param>
         <param name="max">0.5</param>
       </command_interface>
-      <command_interface>Kp</command_interface>
-      <command_interface>Kd</command_interface>
-      <command_interface>effort_limit</command_interface>
-      <state_interface>position</state_interface>
-      <state_interface>velocity</state_interface>
-      <state_interface>effort</state_interface>
-      <state_interface>coil_resistance</state_interface>
-      <state_interface>timestamp</state_interface>
+      <command_interface name="Kp"/>
+      <command_interface name="Kd"/>
+      <command_interface name="effort_limit"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+      <state_interface name="coil_resistance"/>
+      <state_interface name="timestamp"/>
     </joint>
     <joint name="front_left_leg_joint3">
       <command_interface name="position">
@@ -470,15 +470,15 @@ Note:
         <param name="min">-0.5</param>
         <param name="max">0.5</param>
       </command_interface>
-      <command_interface>Kp</command_interface>
-      <command_interface>Kd</command_interface>
-      <command_interface>effort_limit</command_interface>
-      <state_interface>position</state_interface>
-      <state_interface>velocity</state_interface>
-      <state_interface>effort</state_interface>
-      <state_interface>coil_resistance</state_interface>
-      <state_interface>contact_information</state_interface>
-      <state_interface>timestamp</state_interface>
+      <command_interface name="Kp"/>
+      <command_interface name="Kd"/>
+      <command_interface name="effort_limit"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+      <state_interface name="coil_resistance"/>
+      <state_interface name="contact_information"/>
+      <state_interface name="timestamp"/>
     </joint>
     <joint name="front_right_leg_joint1">
       <command_interface name="position">
@@ -492,15 +492,14 @@ Note:
       <command_interface name="effort">
         <param name="min">-0.5</param>
         <param name="max">0.5</param>
-      </command_interface>
-      <command_interface>Kp</command_interface>
-      <command_interface>Kd</command_interface>
-      <command_interface>effort_limit</command_interface>
-      <state_interface>position</state_interface>
-      <state_interface>velocity</state_interface>
-      <state_interface>effort</state_interface>
-      <state_interface>coil_resistance</state_interface>
-      <state_interface>timestamp</state_interface>
+      <command_interface name="Kp"/>
+      <command_interface name="Kd"/>
+      <command_interface name="effort_limit"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+      <state_interface name="coil_resistance"/>
+      <state_interface name="timestamp"/>
     </joint>
     <joint name="front_right_leg_joint2">
       <command_interface name="position">
@@ -515,14 +514,14 @@ Note:
         <param name="min">-0.5</param>
         <param name="max">0.5</param>
       </command_interface>
-      <command_interface>Kp</command_interface>
-      <command_interface>Kd</command_interface>
-      <command_interface>effort_limit</command_interface>
-      <state_interface>position</state_interface>
-      <state_interface>velocity</state_interface>
-      <state_interface>effort</state_interface>
-      <state_interface>coil_resistance</state_interface>
-      <state_interface>timestamp</state_interface>
+      <command_interface name="Kp"/>
+      <command_interface name="Kd"/>
+      <command_interface name="effort_limit"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+      <state_interface name="coil_resistance"/>
+      <state_interface name="timestamp"/>
     </joint>
     <joint name="front_right_leg_joint3">
       <command_interface name="position">
@@ -537,15 +536,15 @@ Note:
         <param name="min">-0.5</param>
         <param name="max">0.5</param>
       </command_interface>
-      <command_interface>Kp</command_interface>
-      <command_interface>Kd</command_interface>
-      <command_interface>effort_limit</command_interface>
-      <state_interface>position</state_interface>
-      <state_interface>velocity</state_interface>
-      <state_interface>effort</state_interface>
-      <state_interface>coil_resistance</state_interface>
-      <state_interface>contact_information</state_interface>
-      <state_interface>timestamp</state_interface>
+      <command_interface name="Kp"/>
+      <command_interface name="Kd"/>
+      <command_interface name="effort_limit"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+      <state_interface name="coil_resistance"/>
+      <state_interface name="contact_information"/>
+      <state_interface name="timestamp"/>
     </joint>
     <joint name="hind_left_leg_joint1">
       <command_interface name="position">
@@ -560,14 +559,14 @@ Note:
         <param name="min">-0.5</param>
         <param name="max">0.5</param>
       </command_interface>
-      <command_interface>Kp</command_interface>
-      <command_interface>Kd</command_interface>
-      <command_interface>effort_limit</command_interface>
-      <state_interface>position</state_interface>
-      <state_interface>velocity</state_interface>
-      <state_interface>effort</state_interface>
-      <state_interface>coil_resistance</state_interface>
-      <state_interface>timestamp</state_interface>
+      <command_interface name="Kp"/>
+      <command_interface name="Kd"/>
+      <command_interface name="effort_limit"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+      <state_interface name="coil_resistance"/>
+      <state_interface name="timestamp"/>
     </joint>
     <joint name="hind_left_leg_joint2">
       <command_interface name="position">
@@ -582,14 +581,14 @@ Note:
         <param name="min">-0.5</param>
         <param name="max">0.5</param>
       </command_interface>
-      <command_interface>Kp</command_interface>
-      <command_interface>Kd</command_interface>
-      <command_interface>effort_limit</command_interface>
-      <state_interface>position</state_interface>
-      <state_interface>velocity</state_interface>
-      <state_interface>effort</state_interface>
-      <state_interface>coil_resistance</state_interface>
-      <state_interface>timestamp</state_interface>
+      <command_interface name="Kp"/>
+      <command_interface name="Kd"/>
+      <command_interface name="effort_limit"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+      <state_interface name="coil_resistance"/>
+      <state_interface name="timestamp"/>
     </joint>
     <joint name="hind_left_leg_joint3">
       <command_interface name="position">
@@ -603,16 +602,15 @@ Note:
       <command_interface name="effort">
         <param name="min">-0.5</param>
         <param name="max">0.5</param>
-      </command_interface>
-      <command_interface>Kp</command_interface>
-      <command_interface>Kd</command_interface>
-      <command_interface>effort_limit</command_interface>
-      <state_interface>position</state_interface>
-      <state_interface>velocity</state_interface>
-      <state_interface>effort</state_interface>
-      <state_interface>coil_resistance</state_interface>
-      <state_interface>contact_information</state_interface>
-      <state_interface>timestamp</state_interface>
+      <command_interface name="Kp"/>
+      <command_interface name="Kd"/>
+      <command_interface name="effort_limit"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+      <state_interface name="coil_resistance"/>
+      <state_interface name="contact_information"/>
+      <state_interface name="timestamp"/>
     </joint>
 
     <joint name="hind_right_leg_joint1">
@@ -628,14 +626,14 @@ Note:
         <param name="min">-0.5</param>
         <param name="max">0.5</param>
       </command_interface>
-      <command_interface>Kp</command_interface>
-      <command_interface>Kd</command_interface>
-      <command_interface>effort_limit</command_interface>
-      <state_interface>position</state_interface>
-      <state_interface>velocity</state_interface>
-      <state_interface>effort</state_interface>
-      <state_interface>coil_resistance</state_interface>
-      <state_interface>timestamp</state_interface>
+      <command_interface name="Kp"/>
+      <command_interface name="Kd"/>
+      <command_interface name="effort_limit"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+      <state_interface name="coil_resistance"/>
+      <state_interface name="timestamp"/>
     </joint>
     <joint name="hind_right_leg_joint2">
       <command_interface name="position">
@@ -650,14 +648,14 @@ Note:
         <param name="min">-0.5</param>
         <param name="max">0.5</param>
       </command_interface>
-      <command_interface>Kp</command_interface>
-      <command_interface>Kd</command_interface>
-      <command_interface>effort_limit</command_interface>
-      <state_interface>position</state_interface>
-      <state_interface>velocity</state_interface>
-      <state_interface>effort</state_interface>
-      <state_interface>coil_resistance</state_interface>
-      <state_interface>timestamp</state_interface>
+      <command_interface name="Kp"/>
+      <command_interface name="Kd"/>
+      <command_interface name="effort_limit"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+      <state_interface name="coil_resistance"/>
+      <state_interface name="timestamp"/>
     </joint>
     <joint name="hind_right_leg_joint3">
       <command_interface name="position">
@@ -671,16 +669,15 @@ Note:
       <command_interface name="effort">
         <param name="min">-0.5</param>
         <param name="max">0.5</param>
-      </command_interface>
-      <command_interface>Kp</command_interface>
-      <command_interface>Kd</command_interface>
-      <command_interface>effort_limit</command_interface>
-      <state_interface>position</state_interface>
-      <state_interface>velocity</state_interface>
-      <state_interface>effort</state_interface>
-      <state_interface>coil_resistance</state_interface>
-      <state_interface>contact_information</state_interface>
-      <state_interface>timestamp</state_interface>
+      <command_interface name="Kp"/>
+      <command_interface name="Kd"/>
+      <command_interface name="effort_limit"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+      <state_interface name="coil_resistance"/>
+      <state_interface name="contact_information"/>
+      <state_interface name="timestamp"/>
     </joint>
 
     <sensor name="sensor1">
