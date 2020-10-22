@@ -45,7 +45,7 @@ Note:
       <state_interface name="position"/>
     </joint>
     <joint name="joint2">
-      <command_interface  name="position">
+      <command_interface name="position">
         <param name="min">-1</param>
         <param name="max">1</param>
       </command_interface>
@@ -67,7 +67,7 @@ Note:
       <param name="example_param_read_for_sec">2</param>
     </hardware>
     <joint name="joint1">
-      <command_interface  name="position">
+      <command_interface name="position">
         <param name="min">-1</param>
         <param name="max">1</param>
       </command_interface>
@@ -157,14 +157,14 @@ Note:
       <param name="example_param_read_for_sec">2</param>
     </hardware>
     <joint name="joint1">
-      <command_interface  name="position">
+      <command_interface name="position">
         <param name="min">-1</param>
         <param name="max">1</param>
       </command_interface>
       <state_interface name="position"/>
     </joint>
     <joint name="joint2">
-      <command_interface  name="position">
+      <command_interface name="position">
         <param name="min">-1</param>
         <param name="max">1</param>
       </command_interface>
@@ -193,14 +193,14 @@ Note:
       <param name="example_param_read_for_sec">2</param>
     </hardware>
     <joint name="joint1">
-      <command_interface  name="position">
+      <command_interface name="position">
         <param name="min">-1</param>
         <param name="max">1</param>
       </command_interface>
       <state_interface name="position"/>
     </joint>
     <joint name="joint2">
-      <command_interface  name="position">
+      <command_interface name="position">
         <param name="min">-1</param>
         <param name="max">1</param>
       </command_interface>
@@ -234,7 +234,7 @@ Note:
       <param name="example_param_read_for_sec">3</param>
     </hardware>
     <joint name="joint1">
-      <command_interface  name="position">
+      <command_interface name="position">
         <param name="min">-1</param>
         <param name="max">1</param>
       </command_interface>
@@ -248,7 +248,7 @@ Note:
       <param name="example_param_read_for_sec">3</param>
     </hardware>
     <joint name="joint2">
-      <command_interface  name="position">
+      <command_interface name="position">
         <param name="min">-1</param>
         <param name="max">1</param>
       </command_interface>
@@ -329,14 +329,14 @@ Note:
       <param name="example_param_read_for_sec">3</param>
     </hardware>
     <joint name="joint1">
-      <command_interface  name="position">
+      <command_interface name="position">
         <param name="min">-1</param>
         <param name="max">1</param>
       </command_interface>
       <state_interface name="position"/>
     </joint>
     <joint name="joint2">
-      <command_interface  name="position">
+      <command_interface name="position">
         <param name="min">-1</param>
         <param name="max">1</param>
       </command_interface>
