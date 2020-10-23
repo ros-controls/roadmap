@@ -682,9 +682,15 @@ Note:
 
     <sensor name="sensor1">
       <classType>ros2_control_components/IMUSensor</classType>
-      <state_interface>orientation</state_interface>
-      <state_interface>velocity</state_interface>
-      <state_interface>acceleration</state_interface>
+      <state_interface name="orientation">
+          <param name="min">-54</param>
+          <param name="max">23</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="acceleration">
+          <param name="min">-10</param>
+          <param name="max">10</param>
+      </state_interface>
       <param name="min">-54</param>
       <param name="max">23</param>
       <param name="min_acceleration_value">-10</param>
