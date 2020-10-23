@@ -170,7 +170,6 @@ Note:
       <state_interface name="position"/>
     </joint>
     <sensor name="tcp_fts_sensor">
-      <plugin>ros2_control_components/ForceTorqueSensor</plugin>
       <state_interface name="fx"/>
       <state_interface name="fy"/>
       <state_interface name="fz"/>
@@ -218,7 +217,6 @@ Note:
       <param name="example_param_read_for_sec">0.43</param>
     </hardware>
     <sensor name="tcp_fts_sensor">
-      <plugin>ros2_control_components/ForceTorqueSensor</plugin>
       <state_interface name="fx"/>
       <state_interface name="fy"/>
       <state_interface name="fz"/>
@@ -376,13 +374,11 @@ Note:
       <param name="example_param_read_for_sec">2</param>
     </hardware>
     <sensor name="sensor1">
-      <plugin>ros2_control_components/IMUSensor</plugin>
       <state_interface name="roll"/>
       <state_interface name="pitch"/>
       <state_interface name="yaw"/>
     </sensor>
     <sensor name="sensor2">
-      <plugin>ros2_control_components/2DImageSensor</plugin>
       <state_interface name="image"/>
     </sensor>
   </ros2_control>
@@ -692,7 +688,6 @@ Note:
     </joint>
 
     <sensor name="sensor1">
-      <plugin>ros2_control_components/IMUSensor</plugin>
       <state_interface name="orientation">
           <param name="min">-54</param>
           <param name="max">23</param>
