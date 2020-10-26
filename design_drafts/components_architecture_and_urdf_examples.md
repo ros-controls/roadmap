@@ -22,7 +22,7 @@ ros2_control implementation examples are presented for the following robot/robot
 9. Actuator Only
 
 Note:
-  * Everything within the `<classType>` tag is implemented as a plugin.
+  * Everything within the `<plugin>` tag is implemented as a plugin.
   * The examples below have some `<param>` tags defined. The names in those tags are primarily for demonstration, not part of a pre-defined XML schema. Each component may define their names inside the `<param>` tag.
 
 #### 1. Industrial Robots with only one interface
@@ -33,7 +33,7 @@ Note:
 ```xml
   <ros2_control name="RRBotSystemPositionOnly" type="system">
     <hardware>
-      <classType>ros2_control_demo_hardware/RRBotSystemPositionOnlyHardware</classType>
+      <plugin>ros2_control_demo_hardware/RRBotSystemPositionOnlyHardware</plugin>
       <param name="example_param_write_for_sec">2</param>
       <param name="example_param_read_for_sec">2</param>
     </hardware>
@@ -62,7 +62,7 @@ Note:
 ```xml
   <ros2_control name="RRBotSystemMultiInterface" type="system">
     <hardware>
-      <classType>ros2_control_demo_hardware/RRBotSystemMultiInterfaceHardware</classType>
+      <plugin>ros2_control_demo_hardware/RRBotSystemMultiInterfaceHardware</plugin>
       <param name="example_param_write_for_sec">2</param>
       <param name="example_param_read_for_sec">2</param>
     </hardware>
@@ -108,7 +108,7 @@ Note:
 ```xml
   <ros2_control name="RRBotSystemMultiInterface" type="system">
     <hardware>
-      <classType>ros2_control_demo_hardware/RRBotSystemMultiInterfaceMultiWriteHardware</classType>
+      <plugin>ros2_control_demo_hardware/RRBotSystemMultiInterfaceMultiWriteHardware</plugin>
       <param name="example_param_write_for_sec">2</param>
       <param name="example_param_read_for_sec">2</param>
     </hardware>
@@ -142,7 +142,6 @@ Note:
 ```
 
 
-
 #### 3. Industrial Robots with integrated sensor
   * the communication is done using proprietary API
   * Data for all joints is exchanged in batch (at once)
@@ -152,7 +151,7 @@ Note:
 ```xml
   <ros2_control name="RRBotSystemWithSensor" type="system">
     <hardware>
-      <classType>ros2_control_demo_hardware/RRBotSystemWithSensorHardware</classType>
+      <plugin>ros2_control_demo_hardware/RRBotSystemWithSensorHardware</plugin>
       <param name="example_param_write_for_sec">2</param>
       <param name="example_param_read_for_sec">2</param>
     </hardware>
@@ -171,7 +170,13 @@ Note:
       <state_interface name="position"/>
     </joint>
     <sensor name="tcp_fts_sensor">
-      <classType>ros2_control_components/ForceTorqueSensor</classType>
+      <plugin>ros2_control_components/ForceTorqueSensor</plugin>
+      <state_interface name="fx"/>
+      <state_interface name="fy"/>
+      <state_interface name="fz"/>
+      <state_interface name="tx"/>
+      <state_interface name="ty"/>
+      <state_interface name="tz"/>
       <param name="frame_id">kuka_tcp</param>
       <param name="lower_limits">-100</param>
       <param name="upper_limits">100</param>
@@ -188,7 +193,7 @@ Note:
 ```xml
   <ros2_control name="RRBotSystemPositionOnlyWithExternalSensor" type="system">
     <hardware>
-      <classType>ros2_control_demo_hardware/RRBotSystemPositionOnlyHardware</classType>
+      <plugin>ros2_control_demo_hardware/RRBotSystemPositionOnlyHardware</plugin>
       <param name="example_param_write_for_sec">2</param>
       <param name="example_param_read_for_sec">2</param>
     </hardware>
@@ -209,11 +214,17 @@ Note:
   </ros2_control>
   <ros2_control name="RRBotForceTorqueSensor2D" type="sensor">
     <hardware>
-      <classType>ros2_control_demo_hardware/ForceTorqueSensor2DHardware</classType>
+      <plugin>ros2_control_demo_hardware/ForceTorqueSensor2DHardware</plugin>
       <param name="example_param_read_for_sec">0.43</param>
     </hardware>
     <sensor name="tcp_fts_sensor">
-      <classType>ros2_control_components/ForceTorqueSensor</classType>
+      <plugin>ros2_control_components/ForceTorqueSensor</plugin>
+      <state_interface name="fx"/>
+      <state_interface name="fy"/>
+      <state_interface name="fz"/>
+      <state_interface name="tx"/>
+      <state_interface name="ty"/>
+      <state_interface name="tz"/>
       <param name="frame_id">kuka_tcp</param>
       <param name="lower_limits">-100</param>
       <param name="upper_limits">100</param>
@@ -229,7 +240,7 @@ Note:
 ```xml
   <ros2_control name="RRBotModularJoint1"  type="actuator">
     <hardware>
-      <classType>ros2_control_demo_hardware/PositionActuatorHadware</classType>
+      <plugin>ros2_control_demo_hardware/PositionActuatorHadware</plugin>
       <param name="example_param_write_for_sec">1.23</param>
       <param name="example_param_read_for_sec">3</param>
     </hardware>
@@ -243,7 +254,7 @@ Note:
   </ros2_control>
   <ros2_control name="RRBotModularJoint2"  type="actuator">
     <hardware>
-      <classType>ros2_control_demo_hardware/PositionActuatorHadware</classType>
+      <plugin>ros2_control_demo_hardware/PositionActuatorHadware</plugin>
       <param name="example_param_write_for_sec">1.23</param>
       <param name="example_param_read_for_sec">3</param>
     </hardware>
@@ -265,7 +276,7 @@ Note:
 ```xml
   <ros2_control name="RRBotModularJoint1"  type="actuator">
     <hardware>
-      <classType>ros2_control_demo_hardware/VelocityActuatorHadware</classType>
+      <plugin>ros2_control_demo_hardware/VelocityActuatorHadware</plugin>
       <param name="example_param_write_for_sec">1.23</param>
       <param name="example_param_read_for_sec">3</param>
     </hardware>
@@ -277,13 +288,13 @@ Note:
       <state_interface name="velocity"/>
     </joint>
     <transmission name="transmission1">
-      <classType>transmission_interface/SimpleTansmission</classType>
+      <plugin>transmission_interface/SimpleTansmission</plugin>
       <param name="joint_to_actuator">${1024/PI}</param>
     </transmission>
   </ros2_control>
   <ros2_control name="RRBotModularJoint2"  type="actuator">
     <hardware>
-      <classType>ros2_control_demo_hardware/VelocityActuatorHadware</classType>
+      <plugin>ros2_control_demo_hardware/VelocityActuatorHadware</plugin>
       <param name="example_param_write_for_sec">1.23</param>
       <param name="example_param_read_for_sec">3</param>
     </hardware>
@@ -297,7 +308,7 @@ Note:
   </ros2_control>
   <ros2_control name="RRBotModularPositionSensorJoint1" type="sensor">
     <hardware>
-      <classType>ros2_control_demo_hardware/PositionSensorHardware</classType>
+      <plugin>ros2_control_demo_hardware/PositionSensorHardware</plugin>
       <param name="example_param_read_for_sec">2</param>
     </hardware>
     <joint name="joint1">
@@ -306,7 +317,7 @@ Note:
   </ros2_control>
   <ros2_control name="RRBotModularPositionSensorJoint2" type="sensor">
     <hardware>
-      <classType>ros2_control_demo_hardware/PositionSensorHardware</classType>
+      <plugin>ros2_control_demo_hardware/PositionSensorHardware</plugin>
       <param name="example_param_read_for_sec">2</param>
     </hardware>
     <joint name="joint2">
@@ -324,7 +335,7 @@ Note:
 ```xml
   <ros2_control name="RRBotModularWrist"  type="system">
     <hardware>
-      <classType>ros2_control_demo_hardware/ActuatorHadwareMultiDOF</classType>
+      <plugin>ros2_control_demo_hardware/ActuatorHadwareMultiDOF</plugin>
       <param name="example_param_write_for_sec">1.23</param>
       <param name="example_param_read_for_sec">3</param>
     </hardware>
@@ -343,7 +354,7 @@ Note:
       <state_interface name="position"/>
     </joint>
     <transmission name="transmission1">
-      <classType>transmission_interface/SomeComplex2by2Transmission</classType>
+      <plugin>transmission_interface/SomeComplex2by2Transmission</plugin>
       <param name="joints">{joint1, joint2}</param>
       <param name="output">{output2, output2}</param>
       <param name="joint1_output1">1.5</param>
@@ -361,16 +372,17 @@ Note:
 ```xml
   <ros2_control name="CameraWithIMU"  type="sensor">
     <hardware>
-      <classType>ros2_control_demo_hardware/CameraWithIMUSensor</classType>
+      <plugin>ros2_control_demo_hardware/CameraWithIMUSensor</plugin>
       <param name="example_param_read_for_sec">2</param>
     </hardware>
     <sensor name="sensor1">
-      <classType>ros2_control_components/IMUSensor</classType>
-      <state_interface name="velocity"/>
-      <state_interface name="acceleration"/>
+      <plugin>ros2_control_components/IMUSensor</plugin>
+      <state_interface name="roll"/>
+      <state_interface name="pitch"/>
+      <state_interface name="yaw"/>
     </sensor>
     <sensor name="sensor2">
-      <classType>ros2_control_components/2DImageSensor</classType>
+      <plugin>ros2_control_components/2DImageSensor</plugin>
       <state_interface name="image"/>
     </sensor>
   </ros2_control>
@@ -384,7 +396,7 @@ Note:
 ```xml
   <ros2_control name="ActuatorModularJoint1"  type="actuator">
     <hardware>
-      <classType>ros2_control_demo_hardware/VelocityActuatorHadware</classType>
+      <plugin>ros2_control_demo_hardware/VelocityActuatorHadware</plugin>
       <param name="example_param_write_for_sec">1.13</param>
       <param name="example_param_read_for_sec">3</param>
     </hardware>
@@ -396,7 +408,7 @@ Note:
       <state_interface name="velocity"/>
     </joint>
     <transmission name="transmission1">
-      <classType>transmission_interface/RotationToLinerTansmission</classType>
+      <plugin>transmission_interface/RotationToLinerTansmission</plugin>
       <param name="joint_to_actuator">${1024/PI}</param>
     </transmission>
   </ros2_control>
@@ -409,7 +421,7 @@ Note:
 ```xml
   <ros2_control name="SOLO/12DOFLeggedSystemRobotMultiInterface" type="system">
     <hardware>
-      <classType>solo_control/SoloRobotHardware</classType>
+      <plugin>solo_control/SoloRobotHardware</plugin>
       <param name="write_for_sec">0.001</param>
       <param name="read_for_sec">0.001</param>
     </hardware>
@@ -612,7 +624,6 @@ Note:
       <state_interface name="contact_information"/>
       <state_interface name="timestamp"/>
     </joint>
-
     <joint name="hind_right_leg_joint1">
       <command_interface name="position">
         <param name="min">-1</param>
@@ -681,7 +692,7 @@ Note:
     </joint>
 
     <sensor name="sensor1">
-      <classType>ros2_control_components/IMUSensor</classType>
+      <plugin>ros2_control_components/IMUSensor</plugin>
       <state_interface name="orientation">
           <param name="min">-54</param>
           <param name="max">23</param>
