@@ -363,7 +363,7 @@ Note:
   </ros2_control>
 ```
 
-#### 9. Sensor only
+#### 8. Sensor only
   * the communication is done on a sensor level using proprietary or standardized API
   * Examples: Camera, ForceTorqueSensor, Distance Sensors, IMU, etc.
 
