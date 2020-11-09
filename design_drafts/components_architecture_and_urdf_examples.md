@@ -236,9 +236,9 @@ Note:
   * Examples: Mara, Arduino-based-robots
 
 ```xml
-  <ros2_control name="RRBotModularJoint1"  type="actuator">
+  <ros2_control name="RRBotModularJoint1" type="actuator">
     <hardware>
-      <plugin>ros2_control_demo_hardware/PositionActuatorHadware</plugin>
+      <plugin>ros2_control_demo_hardware/PositionActuatorHardware</plugin>
       <param name="example_param_write_for_sec">1.23</param>
       <param name="example_param_read_for_sec">3</param>
     </hardware>
@@ -250,9 +250,9 @@ Note:
       <state_interface name="position"/>
     </joint>
   </ros2_control>
-  <ros2_control name="RRBotModularJoint2"  type="actuator">
+  <ros2_control name="RRBotModularJoint2" type="actuator">
     <hardware>
-      <plugin>ros2_control_demo_hardware/PositionActuatorHadware</plugin>
+      <plugin>ros2_control_demo_hardware/PositionActuatorHardware</plugin>
       <param name="example_param_write_for_sec">1.23</param>
       <param name="example_param_read_for_sec">3</param>
     </hardware>
@@ -272,9 +272,9 @@ Note:
   * Examples: Arduino-based-robots, custom robots
 
 ```xml
-  <ros2_control name="RRBotModularJoint1"  type="actuator">
+  <ros2_control name="RRBotModularJoint1" type="actuator">
     <hardware>
-      <plugin>ros2_control_demo_hardware/VelocityActuatorHadware</plugin>
+      <plugin>ros2_control_demo_hardware/VelocityActuatorHardware</plugin>
       <param name="example_param_write_for_sec">1.23</param>
       <param name="example_param_read_for_sec">3</param>
     </hardware>
@@ -290,9 +290,9 @@ Note:
       <param name="joint_to_actuator">${1024/PI}</param>
     </transmission>
   </ros2_control>
-  <ros2_control name="RRBotModularJoint2"  type="actuator">
+  <ros2_control name="RRBotModularJoint2" type="actuator">
     <hardware>
-      <plugin>ros2_control_demo_hardware/VelocityActuatorHadware</plugin>
+      <plugin>ros2_control_demo_hardware/VelocityActuatorHardware</plugin>
       <param name="example_param_write_for_sec">1.23</param>
       <param name="example_param_read_for_sec">3</param>
     </hardware>
@@ -331,9 +331,9 @@ Note:
   * Examples: Wrist of a humanoid robot
 
 ```xml
-  <ros2_control name="RRBotModularWrist"  type="system">
+  <ros2_control name="RRBotModularWrist" type="system">
     <hardware>
-      <plugin>ros2_control_demo_hardware/ActuatorHadwareMultiDOF</plugin>
+      <plugin>ros2_control_demo_hardware/ActuatorHardwareMultiDOF</plugin>
       <param name="example_param_write_for_sec">1.23</param>
       <param name="example_param_read_for_sec">3</param>
     </hardware>
@@ -368,7 +368,7 @@ Note:
   * Examples: Camera, ForceTorqueSensor, Distance Sensors, IMU, etc.
 
 ```xml
-  <ros2_control name="CameraWithIMU"  type="sensor">
+  <ros2_control name="CameraWithIMU" type="sensor">
     <hardware>
       <plugin>ros2_control_demo_hardware/CameraWithIMUSensor</plugin>
       <param name="example_param_read_for_sec">2</param>
@@ -390,9 +390,9 @@ Note:
   * Examples: Small Conveyor, Motor, etc.
 
 ```xml
-  <ros2_control name="ActuatorModularJoint1"  type="actuator">
+  <ros2_control name="ActuatorModularJoint1" type="actuator">
     <hardware>
-      <plugin>ros2_control_demo_hardware/VelocityActuatorHadware</plugin>
+      <plugin>ros2_control_demo_hardware/VelocityActuatorHardware</plugin>
       <param name="example_param_write_for_sec">1.13</param>
       <param name="example_param_read_for_sec">3</param>
     </hardware>
