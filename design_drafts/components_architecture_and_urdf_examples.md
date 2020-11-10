@@ -176,9 +176,19 @@ Note:
       <state_interface name="tx"/>
       <state_interface name="ty"/>
       <state_interface name="tz"/>
-      <param name="frame_id">kuka_tcp</param>
-      <param name="lower_limits">-100</param>
-      <param name="upper_limits">100</param>
+      <param name="frame_id">rrbot_tcp</param>
+      <param name="min_fx">-100</param>
+      <param name="max_fx">100</param>
+      <param name="min_fy">-100</param>
+      <param name="max_fy">100</param>
+      <param name="min_fz">-200</param>
+      <param name="max_fz">200</param>
+      <param name="min_tx">-10</param>
+      <param name="max_tx">10</param>
+      <param name="min_ty">-10</param>
+      <param name="max_ty">10</param>
+      <param name="min_tz">-15</param>
+      <param name="max_tz">15</param>
     </sensor>
   </ros2_control>
 ```
@@ -223,9 +233,19 @@ Note:
       <state_interface name="tx"/>
       <state_interface name="ty"/>
       <state_interface name="tz"/>
-      <param name="frame_id">kuka_tcp</param>
-      <param name="lower_limits">-100</param>
-      <param name="upper_limits">100</param>
+      <param name="frame_id">rrbot_tcp</param>
+      <param name="min_fx">-100</param>
+      <param name="max_fx">100</param>
+      <param name="min_fy">-100</param>
+      <param name="max_fy">100</param>
+      <param name="min_fz">-200</param>
+      <param name="max_fz">200</param>
+      <param name="min_tx">-10</param>
+      <param name="max_tx">10</param>
+      <param name="min_ty">-10</param>
+      <param name="max_ty">10</param>
+      <param name="min_tz">-15</param>
+      <param name="max_tz">15</param>
     </sensor>
   </ros2_control>
 ```
