@@ -57,7 +57,7 @@ Note:
 #### 2. Industrial Robots with multiple interfaces (can not be written at the same time)
   * the communication is done using proprietary API to communicate with robot control box
   * Data for all joints is exchanged in batch (at once)
-  * Examples: KUKA FRI, ABB Yummy, Schunk LWA4p, etc.
+  * Examples: KUKA FRI, ABB Yumi, Schunk LWA4p, etc.
 
 ```xml
   <ros2_control name="RRBotSystemMultiInterface" type="system">
