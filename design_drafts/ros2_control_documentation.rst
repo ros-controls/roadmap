@@ -5,28 +5,45 @@ ros2_control Framework
 The ros2_control is a framework for (real-time) control of robot using `ROS` (`Robot Operating System <http://ros.org>`__).
 Its packages are a rewrite of `ros_control <http://wiki.ros.org/ros_control>`__ packages to simplify integration of a new hardware and overcome some drawbacks.
 
+If you are not familiar with the control theory, please get some idea about it (e.g. at `Wikipedia <https://en.wikipedia.org/wiki/Control_theory>`) to get familiar with the terms used in this manual.
+
 .. contents:: Table of Contents
    :depth: 2
    
 Overview
 ========
 
+The ros2_control framework's source can be found in `ros-controlls/ros2_control`_ and `ros-controls/ros2_controllers`_ GitHub-repositories.
 The following figure shows the Archtecture of ros2_control framework.
 
-![ros2_control Achitecture][ros2_control_framework_architecture]
-
-[ros2_control_arch_resource_manager]: images/components_architecture.png "ros2_control Architecture"
+|ros2_control_architecture|
 
 Controller Manager
 ------------------
+The `Controller Manager`_ (CM) connects the controllers' and hardware-abstraction sides of the ros2_control framework.
+It also serves as the entry-point for users through ROS services.
+The CM implements a node without an executor so it can be integrated in custom setup.
+Still, for standard user it is recommended to use default node-setup implemented in `ros2_control_node <https://github.com/ros-controls/ros2_control/blob/master/controller_manager/src/ros2_control_node.cpp>`_ file from the ``controller_manager`` package.
+This manual assumes that you use this default node-setup.
+
+On the one side, CM manages (e.g., loading, activating, deactivating, unloading) controllers and from them required interfaces.
+On the other side, it has access to the hardware components (through Resource Manager), i.e., the interfaces provided by them.
+The Controller Manager matches those two sides, enables controller to access the hardware's interfaces when activated or reports an error if there is a access conflict.
 
 
 Resource Manager
 ----------------
+The 
 
 
+.. _overview-controllers:
 Controllers
 -----------
+The controlles are objects derived from `ControllerInterface`_ (``controller_interface`` package in `ros-controls/ros2_control`_) and exported as plugins using ``pluginlib``-library.
+For example of on controller check `ForwardCommandController implementation`_ in the `ros-controls/ros2_controllers`_ repository.
+
+User Interfaces
+---------------
 
 
 Hardware Components
@@ -71,3 +88,16 @@ Also, the controllers does not have direct access to hardware anymore, but they 
 
 Migration Guide
 ---------------
+
+
+
+.. _ros-controls/ros2_control: https://github.com/ros-controls/ros2_control
+.. _ros-controls/ros2_controllers: https://github.com/ros-controls/ros2_controllers
+.. _ros-controls/ros2_control_demos: https://github.com/ros-controls/ros2_control_demos
+.. _Controller Manager: https://github.com/ros-controls/ros2_control/blob/master/controller_manager/src/controller_manager.cpp
+.. _ControllerInterface: https://github.com/ros-controls/ros2_control/blob/master/controller_interface/include/controller_interface/controller_interface.hpp
+.. _ForwardCommandController implementation: https://github.com/ros-controls/ros2_controllers/blob/master/forward_command_controller/src/forward_command_controller.cpp
+.. _Resource Manager: 
+
+.. |ros2_control_architecture| image:: images/components_architecture.png
+   :alt: "ros2_control Architecture"
