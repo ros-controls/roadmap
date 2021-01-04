@@ -5,14 +5,13 @@ ros2_control Framework
 The ros2_control is a framework for (real-time) control of robot using `ROS` (`Robot Operating System <http://ros.org>`__).
 Its packages are a rewrite of `ros_control <http://wiki.ros.org/ros_control>`__ packages to simplify integration of a new hardware and overcome some drawbacks.
 
-If you are not familiar with the control theory, please get some idea about it (e.g. at `Wikipedia <https://en.wikipedia.org/wiki/Control_theory>`) to get familiar with the terms used in this manual.
+If you are not familiar with the control theory, please get some idea about it (e.g. at `Wikipedia <https://en.wikipedia.org/wiki/Control_theory>`_) to get familiar with the terms used in this manual.
 
 .. contents:: Table of Contents
    :depth: 2
    
 Overview
 ========
-
 The ros2_control framework's source can be found in `ros-controlls/ros2_control`_ and `ros-controls/ros2_controllers`_ GitHub-repositories.
 The following figure shows the Archtecture of ros2_control framework.
 
@@ -27,20 +26,30 @@ Still, for standard user it is recommended to use default node-setup implemented
 This manual assumes that you use this default node-setup.
 
 On the one side, CM manages (e.g., loading, activating, deactivating, unloading) controllers and from them required interfaces.
-On the other side, it has access to the hardware components (through Resource Manager), i.e., the interfaces provided by them.
-The Controller Manager matches those two sides, enables controller to access the hardware's interfaces when activated or reports an error if there is a access conflict.
+On the other side, it has access to the hardware components (through Resource Manager), i.e., their interfaces.
+The Controller Manager matches *required* and *provided* interfaces, gives controllers access to hardware's when activated or reports an error if there is a access conflict.
 
+The execution of the control-loop is managed by the CM's ``update()`` method.
+The method reads data from the hardware components, updates outputs of all active controllers and write the result to the components.
 
 Resource Manager
 ----------------
-The 
+The `Resource Manager`_ (RM) abstracts physical hardware and its drivers (called *hardware components*) for ros2_control framework.
+The RM loads the components using ``pluginlib``-library, manages their lifecycle and components' state and command interfaces.
+This abstraction provided by RM enables re-usability of implemented hardware components, e.g., robot and gripper, without any implemenatation and flexible hardware application for state and command interfaces, e.g., separate hardware/communication libraries for motor control and encoder reading.
 
+For the execution of the control-loop the RM's ``read()`` and ``write()`` methods deal with communication to the hardware components.
 
 .. _overview-controllers:
 Controllers
 -----------
+The controllers in ros2_control framework have the same functionality as defined in the control theory, they compare the reference value with the measured output and based on this error calculate an system's input (for more details visit `Wikipedia <https://en.wikipedia.org/wiki/Control_theory>`_).
 The controlles are objects derived from `ControllerInterface`_ (``controller_interface`` package in `ros-controls/ros2_control`_) and exported as plugins using ``pluginlib``-library.
 For example of on controller check `ForwardCommandController implementation`_ in the `ros-controls/ros2_controllers`_ repository.
+The controllers' lifecycle is based on the `LifecycleNode-Class`_ implementing the state machine as described in `Node Lifecycle Design`_ document.
+
+When executing the control-loop ``update()`` method is called.
+The method has access to the latest interface states and enables controller to write the hardware's command interfaces.
 
 User Interfaces
 ---------------
@@ -97,7 +106,9 @@ Migration Guide
 .. _Controller Manager: https://github.com/ros-controls/ros2_control/blob/master/controller_manager/src/controller_manager.cpp
 .. _ControllerInterface: https://github.com/ros-controls/ros2_control/blob/master/controller_interface/include/controller_interface/controller_interface.hpp
 .. _ForwardCommandController implementation: https://github.com/ros-controls/ros2_controllers/blob/master/forward_command_controller/src/forward_command_controller.cpp
-.. _Resource Manager: 
+.. _Resource Manager: https://github.com/ros-controls/ros2_control/blob/master/hardware_interface/src/resource_manager.cpp
+.. _LifecycleNode-Class: https://github.com/ros2/rclcpp/blob/master/rclcpp_lifecycle/include/rclcpp_lifecycle/lifecycle_node.hpp
+.. _Node Lifecycle Design: https://design.ros2.org/articles/node_lifecycle.html
 
 .. |ros2_control_architecture| image:: images/components_architecture.png
    :alt: "ros2_control Architecture"
