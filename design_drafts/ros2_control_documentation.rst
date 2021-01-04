@@ -49,15 +49,31 @@ For example of on controller check `ForwardCommandController implementation`_ in
 The controllers' lifecycle is based on the `LifecycleNode-Class`_ implementing the state machine as described in `Node Lifecycle Design`_ document.
 
 When executing the control-loop ``update()`` method is called.
-The method has access to the latest interface states and enables controller to write the hardware's command interfaces.
+The method has access to the latest hardware's states and enables controller to write the hardware's command interfaces.
 
 User Interfaces
 ---------------
+Users interact with the ros2_control framework using `Controller Manager`_'s services.
+Those can be used directly or through "cli"-interface (base command: ``ros2 control``).
+The "cli"-interface is more user-friendly for direct interaction, i.e., outside of a node.
+
+For list of services and their definitions check ``srv`` folder in `controller_manager_msgs`_ package.
+
+For the description of the "cli"-interface see ``README.md`` file of the `ros2controlcli`_ package.
 
 
 Hardware Components
 ===================
+The *hardware components* realize communication to physical hardware and represent its abstraction in ros2_control framework.
+The components have to be exported as plugins using ``pluginlib``-library.
+The `Resource Manager`_ dynamically loads those plugins and manages their lifecycle.
 
+There are three basic types of components:
+
+System
+  Impl
+
+A detailed explanation of hardware components is given in the `Hardware Access through Controllers design document`_.
 
 Hardware Description in URDF
 ----------------------------
@@ -104,11 +120,15 @@ Migration Guide
 .. _ros-controls/ros2_controllers: https://github.com/ros-controls/ros2_controllers
 .. _ros-controls/ros2_control_demos: https://github.com/ros-controls/ros2_control_demos
 .. _Controller Manager: https://github.com/ros-controls/ros2_control/blob/master/controller_manager/src/controller_manager.cpp
+.. _controller_manager_msgs: https://github.com/ros-controls/ros2_control/tree/master/controller_manager_msgs
 .. _ControllerInterface: https://github.com/ros-controls/ros2_control/blob/master/controller_interface/include/controller_interface/controller_interface.hpp
 .. _ForwardCommandController implementation: https://github.com/ros-controls/ros2_controllers/blob/master/forward_command_controller/src/forward_command_controller.cpp
 .. _Resource Manager: https://github.com/ros-controls/ros2_control/blob/master/hardware_interface/src/resource_manager.cpp
 .. _LifecycleNode-Class: https://github.com/ros2/rclcpp/blob/master/rclcpp_lifecycle/include/rclcpp_lifecycle/lifecycle_node.hpp
 .. _Node Lifecycle Design: https://design.ros2.org/articles/node_lifecycle.html
+.. _ros2controlcli: https://github.com/ros-controls/ros2_control/tree/master/ros2controlcli
+.. _Hardware Access through Controllers design document: https://github.com/ros-controls/roadmap/blob/master/design_drafts/hardware_access.md
+
 
 .. |ros2_control_architecture| image:: images/components_architecture.png
    :alt: "ros2_control Architecture"
