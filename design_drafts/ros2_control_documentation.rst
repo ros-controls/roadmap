@@ -148,6 +148,18 @@ For more examples and detaild explanations check `ros-controls/ros2_control_demo
 </ros2_control>
 
 
+Running the Framework for Your Robot
+------------------------------------
+To run the ros2_control framework do the following.
+The example files can be found in the `ros2_control_demos`_ repository.
+
+#. Create yaml file with configuration of the controller manager and controllers. (`Example for RRBot <https://github.com/ros-controls/ros2_control_demos/blob/master/ros2_control_demo_robot/controllers/rrbot_forward_controller_position.yaml>`_)
+#. Extend the robot's URDF description with needed ``<ros2_control>`` tags.
+   It is recommended to use xacro files insted of pure URDF. (`Example for RRBot <https://github.com/ros-controls/ros2_control_demos/blob/master/ros2_control_demo_robot/description/rrbot_system_position_only.urdf.xacro>`_)
+#. Create launch file to start the node with `Controller Manager`_.
+   You can use a default `ros2_control node`_ (recommended) or integrate the controller manager in your software stack.
+   (`Example launch file for RRBot <https://github.com/ros-controls/ros2_control_demos/blob/master/ros2_control_demo_robot/launch/rrbot_system_position_only.launch.py>`_)
+   
 Repositories
 ============
 The ros2_control framework consist of the following repositories:
@@ -197,7 +209,7 @@ Migration Guide to ros2_control
 
 RobotHardware to Components
 ---------------------------
-#. Forget your impolementation or ``RobotHW`` interface this is not used any more. (Do not delete it, you can still extract some code.)
+#. Forget your implementation or ``RobotHW`` interface this is not used any more. (Do not delete it, you can still extract some code.)
 #. Decide which component type is suitable for your case. Maybe it makes sence to separate ``RobotHW`` into multiple components.
 #. Implement `ActuatorInterface`_, `SensorInterface`_ or `SystemInterface`_ classes as follows:
    
@@ -213,19 +225,39 @@ RobotHardware to Components
       This methos are equivalent to those from `ŔobotHW`-class in ROS1.
    #. Do not forget ``PLUGINLIB_EXPORT_CLASS`` macro at the end of the .cpp file.
 #. Create .xml library description for the pluginlib, for example see `RRBotSystemPositionOnlyHardware <https://github.com/ros-controls/ros2_control_demos/blob/master/ros2_control_demo_hardware/ros2_control_demo_hardware.xml>`_.
-   
+
+
+Controller Migration
+--------------------
+A good example of migrated controller is the `JointTrajectoryController`_.
+The real-time critical methods are marked as such.
+
+#. Implement `ControllerInterface`_ class as follows:
+   #. If there are any member variables, initialized those in the constructor.
+   #. In the `init` method first call ``ControllerInterface::init`` initialize lifecycle of the controller.
+      Than declare all parameters defining their default values.
+   #. Define ``*_interface_configuration`` methods for required command and state interfaces.
+   #. Implement ``update`` function for the controller. (**real-time**)
+   #. Then implement required lifecycle methods (others are optional):
+      * ``on_configure`` - reads parameters and configures controller.
+      * ``on_activate`` - called when contoroller should be activated (started) (**real-time**)
+      * ``on_deactivate`` - called when controller should be deactivated (stopped) (**real-time**)
+   #. Do not forget ``PLUGINLIB_EXPORT_CLASS`` macro at the end of the .cpp file.
+#. Create .xml library description for the pluginlib, for example see `JointTrajectoryController <https://github.com/ros-controls/ros2_controllers/blob/master/joint_trajectory_controller/joint_trajectory_plugin.xml>`_.
 
 
 
 .. _ros-controls/ros2_control: https://github.com/ros-controls/ros2_control
 .. _ros-controls/ros2_controllers: https://github.com/ros-controls/ros2_controllers
 .. _ros-controls/ros2_control_demos: https://github.com/ros-controls/ros2_control_demos
-.. _Controller Manager: https://github.com/ros-controls/ros2_control/blob/master/controller_manager/src/controller_manager.cpp
 .. _controller_manager_msgs: https://github.com/ros-controls/ros2_control/tree/master/controller_manager_msgs
+.. _Controller Manager: https://github.com/ros-controls/ros2_control/blob/master/controller_manager/src/controller_manager.cpp
 .. _ControllerInterface: https://github.com/ros-controls/ros2_control/blob/master/controller_interface/include/controller_interface/controller_interface.hpp
+.. _ros2_control node: https://github.com/ros-controls/ros2_control/blob/master/controller_manager/src/ros2_control_node.cpp
 .. _ForwardCommandController implementation: https://github.com/ros-controls/ros2_controllers/blob/master/forward_command_controller/src/forward_command_controller.cpp
 .. _Resource Manager: https://github.com/ros-controls/ros2_control/blob/master/hardware_interface/src/resource_manager.cpp
 .. _LifecycleNode-Class: https://github.com/ros2/rclcpp/blob/master/rclcpp_lifecycle/include/rclcpp_lifecycle/lifecycle_node.hpp
+.. _JointTrajectoryController: https://github.com/ros-controls/ros2_controllers/blob/master/joint_trajectory_controller/src/joint_trajectory_controller.cpp
 .. _Node Lifecycle Design: https://design.ros2.org/articles/node_lifecycle.html
 .. _ros2controlcli: https://github.com/ros-controls/ros2_control/tree/master/ros2controlcli
 .. _Hardware Access through Controllers design document: https://github.com/ros-controls/roadmap/blob/master/design_drafts/hardware_access.md
