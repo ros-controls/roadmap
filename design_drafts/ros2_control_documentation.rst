@@ -70,15 +70,96 @@ The `Resource Manager`_ dynamically loads those plugins and manages their lifecy
 
 There are three basic types of components:
 
+Actuators
+  Simple (1 DOF) robotic hardware like motors, valves, and similar. 
+  An acutator implementation is related to only one joint.
+  This component type has reading and writing capabilities, where reading is not mandatory if not possible (e.g., DC motor control with Arduino board).
+  The actuator type can also be used with a multi-DOF robot if its hardware enables modular design, e.g., CAN-communication with each motor independantly.
+  
+Sensors
+  Robotic hardware used for sensing its environment.
+  A sensor component is related to an joint (e.g., encoder) of link (e.g., force-torque sensor).
+  This component type hase only reading capabilities.
+  
 System
-  Impl
+  Complex (multi-DOF) robotic hardware like industrial robots.
+  The main differenct between *Acutator* component is possiblity to use complex transmissions like need in humanoid hands.
+  This components hat reading and writing capabilities.
+  It is used when the is only one logical communicaiton channel to the hardware (e.g., KUKA-RSI).  
 
 A detailed explanation of hardware components is given in the `Hardware Access through Controllers design document`_.
 
 Hardware Description in URDF
 ----------------------------
+The ros2_control framework uses ``<ros2_control>``-tag in the robot's URDF file to describe its components, i.e., the hardware setup.
+The coosen structure enables stracking togather mutliple `xacro`-macros into one without any changes. 
+The example hereunder shows an position-controlled robot with 2-DOF (RRBot), an external 1-DOF force-torque sensor and an externally controlled 1-DOF parallel gripper its end-effector.
+For more examples and detaild explanations check `ros-controls/ros2_control_demos`_ repository and `ROS2 Control Components URDF Examples design document`_.
+
+.. code:: xml
+
+<ros2_control name="RRBotSystemPositionOnly" type="system">
+ <hardware>
+   <plugin>ros2_control_demo_hardware/RRBotSystemPositionOnlyHardware</plugin>
+   <param name="example_param_write_for_sec">2</param>
+   <param name="example_param_read_for_sec">2</param>
+ </hardware>
+ <joint name="joint1">
+   <command_interface name="position">
+     <param name="min">-1</param>
+     <param name="max">1</param>
+   </command_interface>
+   <state_interface name="position"/>
+ </joint>
+ <joint name="joint2">
+   <command_interface name="position">
+     <param name="min">-1</param>
+     <param name="max">1</param>
+   </command_interface>
+   <state_interface name="position"/>
+ </joint>
+</ros2_control>
+<ros2_control name="RRBotForceTorqueSensor1D" type="sensor">
+ <hardware>
+   <plugin>ros2_control_demo_hardware/ForceTorqueSensor1DHardware</plugin>
+   <param name="example_param_read_for_sec">0.43</param>
+ </hardware>
+ <sensor name="tcp_fts_sensor">
+   <state_interface name="force"/>
+   <param name="frame_id">rrbot_tcp</param>
+   <param name="min_force">-100</param>
+   <param name="max_force">100</param>
+ </sensor>
+</ros2_control>
+<ros2_control name="RRBotGripper" type="actuator">
+ <hardware>
+   <plugin>ros2_control_demo_hardware/PositionActuatorHardware</plugin>
+   <param name="example_param_write_for_sec">1.23</param>
+   <param name="example_param_read_for_sec">3</param>
+ </hardware>
+ <joint name="gripper_joint ">
+   <command_interface name="position">
+     <param name="min">0</param>
+     <param name="max">50</param>
+   </command_interface>
+   <state_interface name="position"/>
+   <state_interface name="velocity"/>
+ </joint>
+</ros2_control>
 
 
+Repositories
+============
+The ros2_control framework consist of the following repositories:
+
+ros2_control
+  The `ros2_control`_ repository implements the main interfaces and components of the framework mentioned in the previous sections.
+  
+ros2_controllers
+  The `ros2_controllers`_ repository implements widely used controllers, e.g., forward controller, joint trajecotry controller, differential drive controller, etc.
+  
+ros2_control_demos
+  The `ros2_control_demos`_ repository provides examples how to use the framework and templates for smooth start with it.
 
 Differences to ros_control (ROS1)
 =================================
@@ -111,8 +192,28 @@ The hardware itself than took care about registered interfaces and resource conf
 In ros2_control ``ResourceManager`` takes care about state of available interfaces in the framework and enable controller to access the hardware.
 Also, the controllers does not have direct access to hardware anymore, but they register their interfaces to the `ControllerManager`.
 
-Migration Guide
----------------
+Migration Guide to ros2_control
+===============================
+
+RobotHardware to Components
+---------------------------
+#. Forget your impolementation or ``RobotHW`` interface this is not used any more. (Do not delete it, you can still extract some code.)
+#. Decide which component type is suitable for your case. Maybe it makes sence to separate ``RobotHW`` into multiple components.
+#. Implement `ActuatorInterface`_, `SensorInterface`_ or `SystemInterface`_ classes as follows:
+   
+   #. In the constructor initialized all variables needed for communication with our hardware, or just define the default one.
+   #. In the configure function read all the parameters your hardware need from the parsed URDF snippet (i.e., from the `HardwareInfo`_ structure). Here you can cross-check if all joint and interfaces in URDF have allowed values, or combination of values.
+   #. Define interfaces to and from your hardware using ``export_*_interfaces`` functions. 
+      The names are ``<joint>/<interface>`` (e.g., ``joint_a2/position``).
+      This can be extracted from the `HardwareInfo`_ structure, or be hard-coded if sensible.
+   #. Implement ``start`` and ``stop`` methods for you hardware.
+      This usually includes changing of hardware state to be ready to receive commands or setting it into safe state before interupting commands stream. 
+      It can also include starting and stoping of the communication.
+   #. Implement `read` and `write` methods to exchange commands with the hardware.
+      This methos are equivalent to those from `ŔobotHW`-class in ROS1.
+   #. Do not forget ``PLUGINLIB_EXPORT_CLASS`` macro at the end of the .cpp file.
+#. Create .xml library description for the pluginlib, for example see `RRBotSystemPositionOnlyHardware <https://github.com/ros-controls/ros2_control_demos/blob/master/ros2_control_demo_hardware/ros2_control_demo_hardware.xml>`_.
+   
 
 
 
@@ -128,6 +229,12 @@ Migration Guide
 .. _Node Lifecycle Design: https://design.ros2.org/articles/node_lifecycle.html
 .. _ros2controlcli: https://github.com/ros-controls/ros2_control/tree/master/ros2controlcli
 .. _Hardware Access through Controllers design document: https://github.com/ros-controls/roadmap/blob/master/design_drafts/hardware_access.md
+.. _ROS2 Control Components URDF Examples design document: https://github.com/ros-controls/roadmap/blob/master/design_drafts/components_architecture_and_urdf_examples.md
+
+.. _ActuatorInterface: https://github.com/ros-controls/ros2_control/blob/master/hardware_interface/include/hardware_interface/actuator_interface.hpp
+.. _SensorInterface: https://github.com/ros-controls/ros2_control/blob/master/hardware_interface/include/hardware_interface/sensor_interface.hpp
+.. _SystemInterface: https://github.com/ros-controls/ros2_control/blob/master/hardware_interface/include/hardware_interface/system_interface.hpp
+.. _HardwareInfo: https://github.com/ros-controls/ros2_control/blob/master/hardware_interface/include/hardware_interface/hardware_info.hpp
 
 
 .. |ros2_control_architecture| image:: images/components_architecture.png
