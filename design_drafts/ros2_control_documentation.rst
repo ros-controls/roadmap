@@ -210,7 +210,9 @@ Migration Guide to ros2_control
 
 RobotHardware to Components
 ---------------------------
-#. Forget your implementation or the ``RobotHW`` interface. This is not used anymore. (Do not delete it, you can still extract some code.)
+#. The implementation of ``RobotHW`` is not used anymore.
+   This should be migrated to SystemInterface`_ class, or to have more granularity, `SensorInterface`_ and `ActuatorInterface`_.
+   See above description of "Hardware Components" to chose the suitable strategy.
 #. Decide which component type is suitable for your case. Maybe it makes sense to separate ``RobotHW`` into multiple components.
 #. Implement `ActuatorInterface`_, `SensorInterface`_ or `SystemInterface`_ classes as follows:
    
