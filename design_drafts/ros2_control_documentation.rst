@@ -180,10 +180,10 @@ Differences to ros_control (ROS1)
 Hardware Structures - classes
 -----------------------------
 
-The ros_control uses the ``RobotHW`` class as a rigid structure to handle any hardware.
+The ros_control framework uses the ``RobotHW`` class as a rigid structure to handle any hardware.
 This makes it impossible to extend the existing robot with additional hardware, like sensors, actuators, and tools, without coding.
 
-The ros2_control defines three different types of hardware ``Actuator``, ``Sensor`` and ``System``.
+The ros2_control framework defines three different types of hardware ``Actuator``, ``Sensor`` and ``System``.
 Using a combination (composition) of those basic components, any physical robotic cell (robot and its surrounding) can be described.
 This also means that multi-robot, robot-sensor, robot-gripper combinations are supported out of the box.
 Section `Hardware Components <#hardware-components>`__ describes this in detail.
@@ -237,12 +237,12 @@ The real-time critical methods are marked as such.
    #. If there are any member variables, initialized those in the constructor.
    #. In the `init` method, first call ``ControllerInterface::init`` initialize lifecycle of the controller.
       Then declare all parameters defining their default values.
-   #. Define ``*_interface_configuration`` methods for required command and state interfaces.
-   #. Implement ``update`` function for the controller. (**real-time**)
+   #. Implement the ``state_interface_configuration()`` and ``command_interface_configuration()`` methods.
+   #. Implement ``update()`` function for the controller. (**real-time**)
    #. Then implement required lifecycle methods (others are optional):
       * ``on_configure`` - reads parameters and configures controller.
-      * ``on_activate`` - called when contoroller should be activated (started) (**real-time**)
-      * ``on_deactivate`` - called when controller should be deactivated (stopped) (**real-time**)
+      * ``on_activate`` - called when controller is activated (started) (**real-time**)
+      * ``on_deactivate`` - called when controller is deactivated (stopped) (**real-time**)
    #. Do not forget ``PLUGINLIB_EXPORT_CLASS`` macro at the end of the .cpp file.
 #. Create .xml library description for the pluginlib, for example see `JointTrajectoryController <https://github.com/ros-controls/ros2_controllers/blob/master/joint_trajectory_controller/joint_trajectory_plugin.xml>`_.
 
