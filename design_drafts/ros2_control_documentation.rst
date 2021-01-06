@@ -238,6 +238,7 @@ An excellent example of a migrated controller is the `JointTrajectoryController`
 The real-time critical methods are marked as such.
 
 #. Implement `ControllerInterface`_ class as follows:
+
    #. If there are any member variables, initialized those in the constructor.
    #. In the `init` method, first call ``ControllerInterface::init`` initialize lifecycle of the controller.
       Then declare all parameters defining their default values.
