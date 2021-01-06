@@ -49,7 +49,7 @@ For example of on controller check `ForwardCommandController implementation`_ in
 The controllers' lifecycle is based on the `LifecycleNode-Class`_ implementing the state machine as described in the `Node Lifecycle Design`_ document.
 
 When executing the control-loop ``update()`` method is called.
-The method can access the latest hardware states and enables the controller to write the hardware's command interfaces.
+The method can access the latest hardware states and enable the controller to write the hardware's command interfaces.
 
 User Interfaces
 ---------------
@@ -99,54 +99,54 @@ For more examples and detailed explanations, check `ros-controls/ros2_control_de
 
 .. code:: xml
 
-<ros2_control name="RRBotSystemPositionOnly" type="system">
- <hardware>
-   <plugin>ros2_control_demo_hardware/RRBotSystemPositionOnlyHardware</plugin>
-   <param name="example_param_write_for_sec">2</param>
-   <param name="example_param_read_for_sec">2</param>
- </hardware>
- <joint name="joint1">
-   <command_interface name="position">
-     <param name="min">-1</param>
-     <param name="max">1</param>
-   </command_interface>
-   <state_interface name="position"/>
- </joint>
- <joint name="joint2">
-   <command_interface name="position">
-     <param name="min">-1</param>
-     <param name="max">1</param>
-   </command_interface>
-   <state_interface name="position"/>
- </joint>
-</ros2_control>
-<ros2_control name="RRBotForceTorqueSensor1D" type="sensor">
- <hardware>
-   <plugin>ros2_control_demo_hardware/ForceTorqueSensor1DHardware</plugin>
-   <param name="example_param_read_for_sec">0.43</param>
- </hardware>
- <sensor name="tcp_fts_sensor">
-   <state_interface name="force"/>
-   <param name="frame_id">rrbot_tcp</param>
-   <param name="min_force">-100</param>
-   <param name="max_force">100</param>
- </sensor>
-</ros2_control>
-<ros2_control name="RRBotGripper" type="actuator">
- <hardware>
-   <plugin>ros2_control_demo_hardware/PositionActuatorHardware</plugin>
-   <param name="example_param_write_for_sec">1.23</param>
-   <param name="example_param_read_for_sec">3</param>
- </hardware>
- <joint name="gripper_joint ">
-   <command_interface name="position">
-     <param name="min">0</param>
-     <param name="max">50</param>
-   </command_interface>
-   <state_interface name="position"/>
-   <state_interface name="velocity"/>
- </joint>
-</ros2_control>
+   <ros2_control name="RRBotSystemPositionOnly" type="system">
+    <hardware>
+      <plugin>ros2_control_demo_hardware/RRBotSystemPositionOnlyHardware</plugin>
+      <param name="example_param_write_for_sec">2</param>
+      <param name="example_param_read_for_sec">2</param>
+    </hardware>
+    <joint name="joint1">
+      <command_interface name="position">
+        <param name="min">-1</param>
+        <param name="max">1</param>
+      </command_interface>
+      <state_interface name="position"/>
+    </joint>
+    <joint name="joint2">
+      <command_interface name="position">
+        <param name="min">-1</param>
+        <param name="max">1</param>
+      </command_interface>
+      <state_interface name="position"/>
+    </joint>
+   </ros2_control>
+   <ros2_control name="RRBotForceTorqueSensor1D" type="sensor">
+    <hardware>
+      <plugin>ros2_control_demo_hardware/ForceTorqueSensor1DHardware</plugin>
+      <param name="example_param_read_for_sec">0.43</param>
+    </hardware>
+    <sensor name="tcp_fts_sensor">
+      <state_interface name="force"/>
+      <param name="frame_id">rrbot_tcp</param>
+      <param name="min_force">-100</param>
+      <param name="max_force">100</param>
+    </sensor>
+   </ros2_control>
+   <ros2_control name="RRBotGripper" type="actuator">
+    <hardware>
+      <plugin>ros2_control_demo_hardware/PositionActuatorHardware</plugin>
+      <param name="example_param_write_for_sec">1.23</param>
+      <param name="example_param_read_for_sec">3</param>
+    </hardware>
+    <joint name="gripper_joint ">
+      <command_interface name="position">
+        <param name="min">0</param>
+        <param name="max">50</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+   </ros2_control>
 
 
 Running the Framework for Your Robot
@@ -182,8 +182,10 @@ Hardware Structures - classes
 
 The ros_control framework uses the ``RobotHW`` class as a rigid structure to handle any hardware.
 This makes it impossible to extend the existing robot with additional hardware, like sensors, actuators, and tools, without coding.
+The ``CombinedRobotHardware`` corrects this drawback.
+Still, this solution is not optimal, especially when combining robots with external sensors.
 
-The ros2_control framework defines three different types of hardware ``Actuator``, ``Sensor`` and ``System``.
+The ros2_control framework defines three types of hardware ``Actuator``, ``Sensor`` and ``System``.
 Using a combination (composition) of those basic components, any physical robotic cell (robot and its surrounding) can be described.
 This also means that multi-robot, robot-sensor, robot-gripper combinations are supported out of the box.
 Section `Hardware Components <#hardware-components>`__ describes this in detail.
@@ -211,8 +213,8 @@ Migration Guide to ros2_control
 RobotHardware to Components
 ---------------------------
 #. The implementation of ``RobotHW`` is not used anymore.
-   This should be migrated to SystemInterface`_ class, or to have more granularity, `SensorInterface`_ and `ActuatorInterface`_.
-   See above description of "Hardware Components" to chose the suitable strategy.
+   This should be migrated to SystemInterface`_ class or, for more granularity, `SensorInterface`_ and `ActuatorInterface`_.
+   See the above description of "Hardware Components" to choose a suitable strategy.
 #. Decide which component type is suitable for your case. Maybe it makes sense to separate ``RobotHW`` into multiple components.
 #. Implement `ActuatorInterface`_, `SensorInterface`_ or `SystemInterface`_ classes as follows:
    
