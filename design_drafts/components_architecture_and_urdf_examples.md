@@ -34,8 +34,9 @@ Note:
   <ros2_control name="RRBotSystemPositionOnly" type="system">
     <hardware>
       <plugin>ros2_control_demo_hardware/RRBotSystemPositionOnlyHardware</plugin>
-      <param name="example_param_write_for_sec">2</param>
-      <param name="example_param_read_for_sec">2</param>
+      <param name="example_param_hw_start_duration_sec">2.0</param>
+      <param name="example_param_hw_stop_duration_sec">3.0</param>
+      <param name="example_param_hw_slowdown">2.0</param>
     </hardware>
     <joint name="joint1">
       <command_interface name="position">
