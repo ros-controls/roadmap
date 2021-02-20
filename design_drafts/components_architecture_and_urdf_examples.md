@@ -173,10 +173,8 @@ Note:
       <state_interface name="fx"/>
       <state_interface name="tz"/>
       <param name="frame_id">rrbot_tcp</param>
-      <param name="min_fx">-100</param>
-      <param name="max_fx">100</param>
-      <param name="min_tz">-15</param>
-      <param name="max_tz">15</param>
+      <param name="fx_range">100</param>
+      <param name="tz_range">15</param>
     </sensor>
   </ros2_control>
 ```
@@ -218,10 +216,8 @@ Note:
       <state_interface name="fx"/>
       <state_interface name="tz"/>
       <param name="frame_id">rrbot_tcp</param>
-      <param name="min_fx">-100</param>
-      <param name="max_fx">100</param>
-      <param name="min_tz">-15</param>
-      <param name="max_tz">15</param>
+      <param name="fx_range">100</param>
+      <param name="tz_range">15</param>
     </sensor>
   </ros2_control>
 ```
