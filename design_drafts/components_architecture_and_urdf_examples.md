@@ -172,14 +172,10 @@ Note:
     </joint>
     <sensor name="tcp_fts_sensor">
       <state_interface name="fx"/>
-      <state_interface name="fy"/>
-      <state_interface name="fz"/>
-      <state_interface name="tx"/>
-      <state_interface name="ty"/>
       <state_interface name="tz"/>
-      <param name="frame_id">kuka_tcp</param>
-      <param name="lower_limits">-100</param>
-      <param name="upper_limits">100</param>
+      <param name="frame_id">rrbot_tcp</param>
+      <param name="fx_range">100</param>
+      <param name="tz_range">15</param>
     </sensor>
   </ros2_control>
 ```
@@ -191,7 +187,7 @@ Note:
   * Examples: KUKA RSI and FTS connected to ROS-PC
 
 ```xml
-  <ros2_control name="RRBotSystemPositionOnlyWithExternalSensor" type="system">
+  <ros2_control name="RRBotSystemWithExternalSensor" type="system">
     <hardware>
       <plugin>ros2_control_demo_hardware/RRBotSystemPositionOnlyHardware</plugin>
       <param name="example_param_write_for_sec">2</param>
@@ -219,14 +215,10 @@ Note:
     </hardware>
     <sensor name="tcp_fts_sensor">
       <state_interface name="fx"/>
-      <state_interface name="fy"/>
-      <state_interface name="fz"/>
-      <state_interface name="tx"/>
-      <state_interface name="ty"/>
       <state_interface name="tz"/>
-      <param name="frame_id">kuka_tcp</param>
-      <param name="lower_limits">-100</param>
-      <param name="upper_limits">100</param>
+      <param name="frame_id">rrbot_tcp</param>
+      <param name="fx_range">100</param>
+      <param name="tz_range">15</param>
     </sensor>
   </ros2_control>
 ```
