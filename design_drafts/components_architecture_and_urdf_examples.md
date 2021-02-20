@@ -200,7 +200,7 @@ Note:
   * Examples: KUKA RSI and FTS connected to ROS-PC
 
 ```xml
-  <ros2_control name="RRBotSystemPositionOnlyWithExternalSensor" type="system">
+  <ros2_control name="RRBotSystemWithExternalSensor" type="system">
     <hardware>
       <plugin>ros2_control_demo_hardware/RRBotSystemPositionOnlyHardware</plugin>
       <param name="example_param_write_for_sec">2</param>
