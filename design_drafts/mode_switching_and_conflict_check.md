@@ -47,9 +47,27 @@ It is typically the case in new AC motor with recent power electronics.
 
 ## Software properties
 
+### General properties 
 A control mode is a control scheme applied to an actuator. It can uses one or several state and control interfaces. 
 It is *NOT* possible to mix control mode together for one actuator. 
 
-To switch from one control mode to another control mode on one actuator, it is necessary to check if this is feasible from the viewpoint of the actuator itself. If this is dangerous for several actuators together (due to self collision for instance) this is at the system level (controllers + hardware) that such safety should be checked. 
+To switch from one control mode to another control mode on one actuator, it is necessary to check if this is feasible from the viewpoint of the actuator itself. 
+
+Often this is dangerous for several actuators to switch from one control mode to another together (due to self collision for instance).
+The robot has to be in a specific state. This is usually done at the system level (controllers + hardware) that such safety is enforced. 
+This can not be done at the control mode switching.
+
+### Mode switching for an actuator
+
+To be accepted the mode switching for a node can go through a method called:
+```
+return_type
+RRBotSystemQuadrupedHardware::accept_command_resource_claim
+(const std::vector<std::string> & interfaces)
+```
+where the set of control interfaces needed for the mode is provided in the interface.
+
+
+
 
 
