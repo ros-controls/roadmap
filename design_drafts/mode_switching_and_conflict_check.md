@@ -66,8 +66,4 @@ RRBotSystemQuadrupedHardware::accept_command_resource_claim
 (const std::vector<std::string> & interfaces)
 ```
 where the set of control interfaces needed for the mode is provided in the interface.
-
-
-
-
-
+This follows the proposal of @mahaarbo https://github.com/ros-controls/ros2_control/pull/322
