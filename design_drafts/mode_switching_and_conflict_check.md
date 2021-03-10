@@ -7,7 +7,7 @@
 A control mode for a joint is the low level control mode applied to an actuator. It can be realized by a power electronics board with a micro controller, an embedded computer with a real-time operating system, a composition of system.
 
 The simplest system is usually the power electronics with a micro controller.
-For a DC motor it typically implements a Power Width Modulation system taking as an input a voltage and providing current as an output.
+For a DC motor it typically implements a Pulse Width Modulation system taking as an input a voltage and providing current as an output.
 If voltage is available it is almost directly equivalent to current.
 
 The simplest control mode in this case is the so called effort mode in ROS-1 which is voltage multiply by a scalar to get current.
