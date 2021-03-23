@@ -11,6 +11,6 @@ The ros2_control supports only `double` variable type to exchnage data between h
 This is confusing for users and it would be clearer if also boolean and integer values can be transported.
 
 ## Possible solution
-Extend [`ReadOnlyHandle`](https://github.com/ros-controls/ros2_control/blob/93b15787f1d2e16dd41d202cebff5fdbef56e19d/hardware_interface/include/hardware_interface/handle.hpp#L31) to aceept other privitive types like `bool`, `int`, and `uint`.
+Extend [`ReadOnlyHandle`](https://github.com/ros-controls/ros2_control/blob/93b15787f1d2e16dd41d202cebff5fdbef56e19d/hardware_interface/include/hardware_interface/handle.hpp#L31) to accept other primitive types like `bool`, `int`, and unsigned types.
 This could be simply done by templating the class, or to keep it restricted implementing constructors, getters and setters for those types.
 The latter could become complex to keep track about specific types.
