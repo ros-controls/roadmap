@@ -4,10 +4,10 @@ For introduction the file about general [purpose inputs/outputs in ros2_control]
 
 ## Motivation
 Many GPIO values used in modern robots are logical and not numeric values.
-For example vacuum valve at the robot has "on" (true) and "off" (false) states.
+For example, a vacuum valve at the robot has "on" (true) and "off" (false) states.
 
 ## Problem
-The ros2_control supports only `double` variable type to exchnage data between hardware and controllers.
+Currently, the `ros2_control` framework supports only the `double` type to exchange data between hardware and controllers.
 This is confusing for users and it would be clearer if also boolean and integer values can be transported.
 
 ## Possible solution
