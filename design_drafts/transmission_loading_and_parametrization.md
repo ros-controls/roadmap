@@ -94,6 +94,10 @@ It is however still unclear if there is any use to define actuator names outside
 
 Where to place `mechanical_reduction`?
 
+The mandatory parameters within the `<transmission>` tag should `<plugin>` and at least one `<joint>` and `<actuator>` tag.
+
+The parametrization of `<joint>` and `<actuator>` should contain `name` and `role` at all times but additional parameters should be allowed to be freely defined as different transmission may require/support different ones, let them report if they are unhappy with the configuration they were given.
+
 ### Proposal 1
 
 Merging the current ros2_control xml format with the ROS1 transmissions:
