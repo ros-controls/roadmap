@@ -20,6 +20,8 @@ Disclaimer: The `transmission_interface` library is not always required. It main
 
 ## How it works in ROS Noetic and problems
 
+To facilitate extendability, transmissions are implemented as plugins that are loaded and configured at startup time. This allows anyone to implement their custom transmission plugins in any ROS package without having to change `ros_control`.
+
 ### XML format
 
 An additional XML description for each joint has to be added to the URDF in order to define transmissions on them.
@@ -84,6 +86,14 @@ There are some minor issues that cause confusion from time to time:
 
 ## Proposals for ROS2 XML format
 
+The plugin-based system should be kept for transmissions. The tag `type` was replaced with `plugin` in the xml format for clarity and consistency with the rest of `ros2_control`.
+
+The parametrization should become simpler as it doesn't need to concern itself anymore with the joint command interface types as they are defined elsewhere.
+
+It is however still unclear if there is any use to define actuator names outside the transmission scope.
+
+Where to place `mechanical_reduction`?
+
 ### Proposal 1
 
 Merging the current ros2_control xml format with the ROS1 transmissions:
@@ -122,11 +132,11 @@ Merging the current ros2_control xml format with the ROS1 transmissions:
       <joint name="joint1">
         <role>joint1</role>
         <offset>0.5</offset>
-        <mechanicalReduction>10</mechanicalReduction>
+        <mechanical_reduction>10</mechanical_reduction>
       </joint>
       <joint name="joint2">
         <role>joint2</role>
-        <mechanicalReduction>50</mechanicalReduction>
+        <mechanical_reduction>50</mechanical_reduction>
       </joint>
     </transmission>
   </ros2_control>
@@ -165,10 +175,10 @@ Merging the current ros2_control xml format with the ROS1 transmissions but maki
       <actuator name="joint2_motor" role="actuator2"/>
       <joint name="joint1" role="joint1">
         <offset>0.5</offset>
-        <mechanicalReduction>10</mechanicalReduction>
+        <mechanical_reduction>10</mechanical_reduction>
       </joint>
       <joint name="joint2" role="joint2">
-        <mechanicalReduction>50</mechanicalReduction>
+        <mechanical_reduction>50</mechanical_reduction>
       </joint>
     </transmission>
   </ros2_control>
