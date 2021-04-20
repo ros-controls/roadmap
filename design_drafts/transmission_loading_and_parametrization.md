@@ -148,7 +148,7 @@ Merging the current ros2_control xml format with the ROS1 transmissions:
 
 ### Proposal 2
 
-Merging the current ros2_control xml format with the ROS1 transmissions but making `role` tags mandatory and one-liners:
+Merging the current ros2_control xml format with the ROS1 transmissions but making `role`  and `mechanical_reduction` tags mandatory and one-liners:
 
 ```xml
   <ros2_control name="RRBotSystemPositionOnly" type="system">
@@ -177,13 +177,10 @@ Merging the current ros2_control xml format with the ROS1 transmissions but maki
       <plugin>transmission_interface/DifferentialTransmission</plugin>
       <actuator name="joint1_motor" role="actuator1"/>
       <actuator name="joint2_motor" role="actuator2"/>
-      <joint name="joint1" role="joint1">
+      <joint name="joint1" role="joint1" mechanical_reduction="10">
         <offset>0.5</offset>
-        <mechanical_reduction>10</mechanical_reduction>
       </joint>
-      <joint name="joint2" role="joint2">
-        <mechanical_reduction>50</mechanical_reduction>
-      </joint>
+      <joint name="joint2" role="joint2" mechanical_reduction="50"/>
     </transmission>
   </ros2_control>
 ```
