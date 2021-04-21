@@ -131,3 +131,45 @@ Semantically, they describe values that can not be associated with a joint or a 
    </ros2_control>
    ```
   
+### Solution for robots with many GPIO interfaces by using semantic components
+ 
+The idea of semantic components is introduced in [hardware_access.md](./hardware_access.md) file.
+The semantic components should simplify the management of state and command interfaces on the hardware and controller side by providing standardized structures.
+This is especially useful for cases where long lists of interfaces have to be defined manually in URDF, as GPIOs.
+
+As described above, there are two types of GPIO structures, inputs and outputs.
+Inputs have only one state interface, where output has one command and one state interface.
+Besides that, GPIOs are usually found in "arrays".
+Currently, users need to define each interface individually, which results in much repetitive code.
+
+This could be made shorter by using semantic components on the hardware and controller side.
+Interface from the hardware of this semantic component would be used like:
+
+```
+# In hardware_interface::configure
+my_digital_outputs = GPIO(name = "digital_out", size = "7")   # initialize storage and interfaces for GPIO array
+                                                              # the names are, e.g., "digital_out_1", "digital_out_2", ...
+...
+
+# In hardware_inteface::export_state_interfaces
+state_interfaces_ = my_digital_outputs.get_state_interfaces()
+...
+
+# In hardware_inteface::export_command_interfaces
+command_interfaces_ = my_digital_outputs.get_command_interfaces()
+...
+
+
+# In hardware_inteface::read
+my_digital_output.set_output_state(output_nr = 1, state_from_hw_digital_output_1);
+...
+
+# In hardware_interface::write
+
+if (my_digital_output.is_updated(output_nr = 1)) {
+  set_state_to_hardware_digital_output_1 = my_digital_output.get_digital_output(output_nr = 1);
+}
+
+```
+
+The controller would have a similar logic, but using `LoanedHandles` instead of handles and setting command interfaces and reading state interfaces.
