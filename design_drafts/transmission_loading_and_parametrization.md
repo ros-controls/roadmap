@@ -58,7 +58,7 @@ Let's dissect the XML above:
 
 * `<type>transmission_interface/FourBarLinkageTransmission</type>` defines the transmission plugin to be loaded, parameters are following
 * `<joint name="bar_joint">` defines the role and hardware interface of joints. The joint `bar_joint` should already be defined in the URDF.
-* `<role>joint2</role>` is internal to transmission implementations, we'll not explain that here
+* `<role>joint2</role>` is internal to transmission implementations, used to determine where in a transmission a certain joint or actuator takes it's place in the underlying formulas. Typically this is implemented by ordering joints and actuators according to their role (e.g. `[actuator1, actuator2]` and `[joint1, joint2]`) in the vector that gets passed in the configure stage.
 * `<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>` defines the *joint interface type* which the transmission needs to know for picking the right formula to apply to the values, e.g. a reduction rate may have a different effect to position, velocity or effort values
 * the section enclosed by `<actuator name="foo_actuator">` defines the actuator name, role and mechanical reduction rate to be used in the underlying formula.
 
