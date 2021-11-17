@@ -2,8 +2,12 @@
 
 ## What is an asynchronous controller?
 
-An asynchronous controller is a controller that for some reason cannot (or we don’t want to) perform the operations needed in an update() call.
-For instance if ros control is running at 100Hz, the sum of the execution time of all controllers update() calls must be below 10ms. If a controller requires 15ms it cannot be executed synchronously without affecting the whole ros control update rate.
+An asynchronous controller is a controller that for some reason cannot (or we don’t want to) perform the operations needed in an `update()` call.
+
+## Motivation
+
+An asynchronous controller is a controller that for some reason cannot (or we don’t want to) perform the operations needed in an `update()` call.
+For instance if `ros_control` is running at 100Hz, the sum of the execution time of all controllers' `update()` calls must be below 10ms. If a controller requires 15ms it cannot be executed synchronously without affecting the whole `ros_control` update rate.
 
 ## Abstract implementation description
 Create an AsyncControllerWrapper class that can wrap any Controller without modifying it and makes it run asynchronously seamlessly.
@@ -13,22 +17,22 @@ The wrapped Controller, running on a separate thread, will read and write from t
 This data must be protected by mutexes or similar.
 When new state data is available, the AsyncControllerWrapper will notify the wrapped controller so it is processed on its own thread.
 
-## Implementation guidelines:
+## Implementation guidelines
 
 ### Concurrency risks
 The main risk is handling concurrency, since we want to wrap any controller, which was probably not implemented to support concurrent calls to some of its methods.
-The only method of the wrapped controller that we’ll run in a separate thread, is update().
+The only method of the wrapped controller that we’ll run in a separate thread, is `update()`.
 The rest of the method calls will be forwarded from the AsyncControllerWrapper to the wrapped controller in the main thread.
-We must make sure that the asynchronous update() is not being executed when forwarding other methods.
+We must make sure that the asynchronous `update()` is not being executed when forwarding other methods.
 
-### StateInterfaces and CommandInterfaces
-The second risk we want to control, is that our asynchronous controller has access to State and Command Interfaces, and uses them from its own thread, causing for instance concurrent write of a CommandInterface while the Actuator is reading it.
+### `StateInterfaces` and `CommandInterfaces`
+The second risk we want to control, is that our asynchronous controller has access to `StateInterface` and `CommandInterfaces`, and uses them from its own thread, causing for instance concurrent write of a `CommandInterface` while the Actuator is reading it.
 
 To avoid this, we can create intermediate Interfaces, stored in the AsyncControllerWrapper, that act as a bridge between the wrapped controller and the real State and Command Interfaces.
-This bridge should allow thread safe data storage, and non blocking operations on the ros_control thread. Some containers for this purpose exist in: https://github.com/ros-controls/realtime_tools/tree/ros2_devel/include/realtime_tools
+This bridge should allow thread safe data storage, and non blocking operations on the `ros_control` thread. Some containers for this purpose exist in: https://github.com/ros-controls/realtime_tools/tree/ros2_devel/include/realtime_tools
 
 These interfaces should be created on the assign_interfaces method, and removed on the release_interfaces method. But at the moment those methods are not virtual.
-I’ll assume they will be changed to virtual, but if that cannot be done for ABI compatibility issues, the same could be done in the on_activate and on_deactivate, although it might be less correct.
+I’ll assume they will be changed to virtual, but if that cannot be done for ABI compatibility issues, the same could be done in the `on_activate` and `on_deactivate`, although it might be less correct.
 
 Sample implementation (not tested), we create our own State and Command interfaces, and assign them to the wrapped controller.
 
@@ -102,11 +106,11 @@ Notify the thread that it has new data to run.
 
 And do all this ensuring:
 That the thread is not running and actively reading/writing from the data at the same time
-That the caller thread is not blocked on a mutex waiting for the asynchronous update() to end (as this defeats the purpose of asynchronous controller).
+That the caller thread is not blocked on a mutex waiting for the asynchronous `update()` to end (as this defeats the purpose of asynchronous controller).
 
 
 #### Implementation considerations
 For the asynchronous `update()` calls on the wrapped controller, avoid using std::async as it would create a new thread on each call. This can have a significant overhead on the wrapper.
 A better idea is probably to create a thread, that we wake up when there’s new data.
-For waking up a thread, std::condition_variable is a good solution, although it is not real time safe. For the moment it can be implemented like this and in the future, when the rest of the code is made RT safe, this can be reviewed.
+For waking up a thread, `std::condition_variable` is a good solution, although it is not real time safe. For the moment it can be implemented like this and in the future, when the rest of the code is made RT safe, this can be reviewed.
 Alternatively the wrapped controller could run in a non-blocking periodic thread at a certain rate.
