@@ -27,8 +27,7 @@ The second risk we want to control, is that our asynchronous controller has acce
 To avoid this, we can create intermediate Interfaces, stored in the AsyncControllerWrapper, that act as a bridge between the wrapped controller and the real State and Command Interfaces.
 This bridge should allow thread safe data storage, and non blocking operations on the ros_control thread. Some containers for this purpose exist in: https://github.com/ros-controls/realtime_tools/tree/ros2_devel/include/realtime_tools
 
-These interfaces should be created on the assign_interfaces method, and removed on the release_interfaces method. But at the moment those methods are not virtual.
-I’ll assume they will be changed to virtual, but if that cannot be done for ABI compatibility issues, the same could be done in the on_activate and on_deactivate, although it might be less correct.
+These interfaces should be created on the assign_interfaces method, and removed on the release_interfaces method. But at the moment those methods are not virtual, that will need to change.
 
 Sample implementation (not tested), we create our own State and Command interfaces, and assign them to the wrapped controller.
 
