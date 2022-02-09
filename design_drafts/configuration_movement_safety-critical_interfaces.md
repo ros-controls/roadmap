@@ -76,8 +76,8 @@ This example also depicts the main purpose of two-stage interface availability a
 
 Some ideas about the implementation steps/needs for this feature:
 
-    extension of `hardware_interface/component_parser.cpp` to understand `only_available_when_active` on (command) interfaces
-    extension of `hardware_interface/handle.hpp` to add this attribute into command interface handle (read/write handle)
-    extend `hardware_interface/resource_manager.cpp::configure_hardware` to add only command interfaces that have `only_available_when_active == false`  to `available_command_interfaces_` list
-    extend `hardware_interface/resource_manager.cpp::activate_hardware` to add command interfaces that have `only_available_when_active == true`  to `available_command_interfaces_` list
-    extend `hardware_interface/resource_manager.cpp::deactivate_hardware` and `hardware_interface/resource_manager.cpp::cleanup_hardware` opposite of the above two points
+1. extension of `hardware_interface/component_parser.cpp` to understand `only_available_when_active` on (command) interfaces
+1. extension of `hardware_interface/handle.hpp` to add this attribute into command interface handle (read/write handle)
+1. extend `hardware_interface/resource_manager.cpp::configure_hardware` to add only command interfaces that have `only_available_when_active == false`  to `available_command_interfaces_` list
+1. extend `hardware_interface/resource_manager.cpp::activate_hardware` to add command interfaces that have `only_available_when_active == true`  to `available_command_interfaces_` list
+1. extend `hardware_interface/resource_manager.cpp::deactivate_hardware` and `hardware_interface/resource_manager.cpp::cleanup_hardware` opposite of the above two points
