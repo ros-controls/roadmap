@@ -38,7 +38,7 @@ Architecture - shows the overall architecture of the framework; explaines differ
  
 2. "ros2_control Managers":
    - Controller Manager: purpose, functionality and how can be configured and interacted with
-   - Resouce Manager: purpose, functionality and how can be configured and interacted with
+   - Resource Manager: purpose, functionality and how can be configured and interacted with
    
 3. Controllers - explaines the controllers concept:
    - What is the purpose and how controllers work
