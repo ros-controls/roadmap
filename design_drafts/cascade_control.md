@@ -60,41 +60,24 @@ controller_manager:
   ros__parameters:
     chained_controllers:
 
-      - parallel_group1:
+      - parallel_group_1:
         - controller1_1
         - controller1_2
 
-      - parallel_group2:
+      - parallel_group_2:
         - controller2_1
 
-      - parallel_group3:
+      - parallel_group_3:
         - controller3_1
         - controller3_2
         - controller3_3
 
       ...
 
-      - parallel_groupN:
+      - parallel_group_N:
         - controllerN_1
         - ...
         - controllerN_M
-```
-
-#### Example
-```
-controller_manager:
-  ros__parameters:
-    chained_controllers:
-
-      - parallel_group1:
-        - position_tracking
-
-      - parallel_group2:
-        - diff_drive_controller
-
-      - parallel_group3:
-        - pid_left_wheel
-        - pid_right_wheel
 ```
 
 
