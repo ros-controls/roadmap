@@ -23,9 +23,9 @@ The former has to occur and be seen by the async thread before the update, while
 
 As shown in the above image, there are four different cases to account for, and these are: 
 
-1. The state interfaces aren't written yet by the cm read. In this case, we can be sure that the release flag isn't set, thus the acquire load on the other side will return false - so we'll skip the iteration and the asynchronous controller will sleep until the next iteration. This works as intended.
+1. The state interfaces aren't written yet by the cm read. In this case, we can be sure that the release flag isn't set, thus the acquire load on the other side will return false - so we'll skip the update and the asynchronous controller will sleep until the next iteration. This works as intended.
 
-2. The state interfaces are written in the cm read function, and the release flag is set. It can happen that the state interfaces are visible on the other side, but the flag isn't - in this case, we'll do the same as the first scenario. On the other hand, if the flag is set, then the thread's acquire load will return true if it isn't currently sleeping, and the respective orderings guarantee that the async update will be able to work with the latest state interface values. This is fine too.
+2. The state interfaces are written in the cm read function, and the release flag is set. It can happen that the state interfaces are visible on the controller's side, but the flag isn't - in this case, we'll do the same as the first scenario. On the other hand, if the flag is set, then the thread's acquire load will return true if it isn't currently sleeping, and the respective orderings guarantee that the async update will be able to work with the latest state interface values. This is fine too.
 
 3. After async update, a release store is made to signal that the command interfaces are written. Again, the release ordering guarantees that if the store is visible on the other thread, then so are the command interfaces. If the acquire load of this variable is true right before the cm write function, then we're again working with the latest values, which is the intended outcome.
 
