@@ -14,7 +14,7 @@ The controllers running asynchronously are entirely independent of each other, w
 
 The critical sections are:
 
-* The state interface writes of the Controller Manager's read function
+* The state interface writes from the Controller Manager's read function
 * The command interface writes of the async controller's update function
 
 The former has to occur and be seen by the async thread before the update, while the latter, ideally, has to finish and be seen before the controller manager's write.
