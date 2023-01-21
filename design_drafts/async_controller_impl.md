@@ -23,7 +23,7 @@ The former has to occur and be seen by the async thread before the update, while
 
 The above diagram shows four different concurrency cases to account for:
 
-1. The state interfaces aren't written yet by the cm read. In this case, we can be sure that the release flag isn't set, thus the acquire load on the other side will return false - so we'll skip the update and the asynchronous controller will sleep until the next iteration. This works as intended.
+1. The state interfaces aren't written yet by the CM read. In this case, we can be sure that the release flag isn't set, thus the acquire load on the other side will return false - so we'll skip the update and the asynchronous controller will sleep until the next iteration.
 
 2. The state interfaces are written in the cm read function, and the release flag is set. It can happen that the state interfaces are visible on the controller's side, but the flag isn't - in this case, we'll do the same as the first scenario. On the other hand, if the flag is set, then the thread's acquire load will return true if it isn't currently sleeping, and the respective orderings guarantee that the async update will be able to work with the latest state interface values. This is fine too.
 
