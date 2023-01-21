@@ -21,7 +21,7 @@ The former has to occur and be seen by the async thread before the update, while
 
 ![async_controller](https://user-images.githubusercontent.com/25421074/212979058-5dad88c1-d940-4bc7-ac6f-103711de7210.png)
 
-As shown in the above image, there are four different cases to account for, and these are: 
+The above diagram shows four different concurrency cases to account for:
 
 1. The state interfaces aren't written yet by the cm read. In this case, we can be sure that the release flag isn't set, thus the acquire load on the other side will return false - so we'll skip the update and the asynchronous controller will sleep until the next iteration. This works as intended.
 
