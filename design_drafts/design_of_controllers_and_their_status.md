@@ -13,4 +13,4 @@ This is summarized in the following figure:
 
 ![Control loop with names](images/control_loop_naming.png)
 
-Beside this, every controller **must have** `state` topic where at least the four values mentioned above have to be output (of course if applicable).
+Beside this, every controller **must have** `~/controller_state` topic where at least the four values mentioned above have to be output (of course if applicable).
