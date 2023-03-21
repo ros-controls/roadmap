@@ -13,5 +13,4 @@ This is summarized in the following figure:
 
 ![Control loop with names](images/control_loop_naming.png)
 
-Beside this issue, use of word **state** is not really suitable for outputting controller's debug information.
-Proposal is to rename this topic to **status** which every controller then **must have** outputting at least the four values mentioned above (if applicable).
+Beside this, every controller **must have** `state` topic where at least the four values mentioned above have to be output (of course if applicable).
