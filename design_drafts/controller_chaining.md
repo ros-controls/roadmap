@@ -78,7 +78,7 @@ Since a ControllerGroup inherit from `ChainableController`, they can be chained 
 
 ## Possible Implementations
 
-### ros2 a an inter-controller middleware
+### ros2 as an inter-controller middleware
 
 One idea was to used ros2 topics to communicate between two controllers.
 However, this is not real-time safe, and ros2 topics are asynchronous.
