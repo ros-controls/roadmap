@@ -2,13 +2,13 @@
 
 ## Motivation
 
-Right now, we don't have a way to manage controllers when they fail to perform their task. We might want the robot to perform a different control scheme for the safety of the robot. The goal of the fallback controllers is to take control of the joints, when the main controller fails.
+Right now, we don't have a way to manage controllers when they fail to perform their tasks. We might want the robot to perform a different control scheme for the safety of the robot. The goal of the fallback controllers is to take control of the joints when the primary controller fails.
 
 ### Example 1
-A walking controller for a humanoid is also responsible to maintain the balance of the robot along with footstep execution, however there might be cases where the robot might fall after few steps due to miscalibration or due flexibility in some joints or it could be a different reason. In this case, we might want the robot to go to a safe position and be compliant enough for the impact, if not it might damage some joints or sensors onboard.
+A walking controller for a humanoid is also responsible for maintaining the balance of the robot along with footstep execution, however, there might be cases where the robot might fall after a few steps due to miscalibration or due to flexibility in some joints or it could be a different reason. In this case, we might want the robot to go to a safe position and be compliant enough for the impact, if not it might damage some joints or sensors onboard.
 
 ### Example 2
-A mobile manipulator is performing a trajectory and hits an obstacle and continue to apply force. In this case, we might want to switch to be more compliant mode, so that it doesn't damage the joints of the robot.
+A mobile manipulator is performing a trajectory hits an obstacle and continues to apply force. In this case, we might want to switch to be more compliant mode, so that it doesn't damage the robot's joints.
 
 ## Current implementation
 
@@ -28,7 +28,7 @@ if (controller_ret != controller_interface::return_type::OK)
 
 ## Implementation proposal
 
-Currently, we have a way to handle hardware errors in both `read` and `write` methods by deactivating the controller, but not when the controller returns error. The proposal focuses on the handling of the controller return status properly along with activating new set of controllers, known as fallback controllers.
+Currently, we have a way to handle hardware errors in both `read` and `write` methods by deactivating the controller, but not when the controller returns an **error** type. The proposal focuses on the handling the controller return type properly along with activating a new set of controllers, known as fallback controllers.
 
 ### ControllerInfo with fallback controllers list
 
@@ -71,15 +71,15 @@ struct ControllerInfo
 When trying to activate the controller with fallback controllers, the following checks are needed:
 
 * All the corresponding fallback controllers should be already configured
-* Fallback controllers list should be able to activate without any dependency on other controllers (in case of chaining with different controller) outside the list
-* All the main controller command interfaces should be present in the fallback controllers command interfaces
+* The fallback controllers list should be able to activate without any dependency on other controllers (in case of chaining with a different controller) outside the fallback controllers list
+* All the primary controller command interfaces should be present in the fallback controllers command interfaces
 
-If any of the above checks fail, then activation of the main controller fails. The user will always be able to run them without configuring the fallback controller. 
+If any of the above checks fail, then activation of the primary controller fails. The user will always be able to run the primary controller without configuring the fallback controller.
 
 
 ### The `update()` method
 
-Deactivate the controllers that have return type other than OK, and then activate the already configured fallback controllers from the list, so in the next update cycle, the fallback controllers can act.
+Deactivate the controllers that have a return type other than OK, and then activate the already configured fallback controllers from the list, so that in the next update cycle, the fallback controllers can act.
 
 ```c++
 std::vector<std::string> stop_request = {};
@@ -106,4 +106,4 @@ if(!start_request.empty())
 
 ## Closing remarks
 
-- In future, we should be able to disable all the preceeding control chains prior to the controller that returns other than OK, inorder integrate well with controller chaining. For the initial implementation, it can be limited to the non-chainable controllers.
+- In the future, we should be able to disable all the preceding control chains prior to the controller that returns other than OK, so that it can be integrated well with controller chaining. The initial implementation can be limited to the non-chainable controllers.
