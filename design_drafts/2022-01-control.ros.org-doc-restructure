@@ -1,0 +1,69 @@
+# Restructuring the documentation on control.ros.org
+
+The goal of this document is to provide a place for discussion of documentation restructuring on control.ros.org.
+The document should result with a list of actions that have to be done to make the documentation better.
+
+## Motivation
+
+Current state of documentation is very messy, there is no clear structure and it is hard to find anything there.
+
+
+## Goals/Targets to achieve with documentation
+
+### 1. We need better starting page 
+This page should explain in shortly what is ros2_control and what is its purpose.
+A graphical representaiton of three main parts of the framework: *hardware interfaces/abstraction*, *managers (resouce and controller)*, and *controllers*.
+For sure a graphics would be very, very useful there.
+
+
+### 2. ros2_control concepts should be shown in a clear structure
+The above-mentioned three concepts should be individually explained and shown in the left menu.
+Each of the concepts should have multiple subpages showing details about (see the structure below).
+
+
+
+
+### Proposal of the new structure
+
+This is a page-structure from the perspecitve of the left menu.
+
+Main page (when logo is clicked or control.ros.org navigated) - landing/starting/introduction page
+
+Architecture - shows the overall architecture of the framework; explaines differnet repositories
+
+1. Hardware Interface - explaines the hardware abstraction concepts:
+   - What is the purpose of Hardware Interface and concept of Componets
+   - Hardware Lifecycle
+   - How to utilize different concepts, e.g., Handling erorrs
+ 
+2. "ros2_control Managers":
+   - Controller Manager: purpose, functionality and how can be configured and interacted with
+   - Resource Manager: purpose, functionality and how can be configured and interacted with
+   
+3. Controllers - explaines the controllers concept:
+   - What is the purpose and how controllers work
+   - Controllers Lifecycle
+   - How to utilize differnet concepts, e.g., interface assignement, resetting values
+   - Standard controllers - details on standard controllers in the ros2_control repository
+   
+4. How-To Guides (for definition see [MoveIt documentation](https://moveit.picknik.ai/main/doc/concepts/how_to_guide.html)
+   - Writing `<ros2_control>` part of URDF for a robot
+   - Writing Hardware Interfaces
+   - Writing Controllers
+   - Migration Guides:
+     - migration tutorial for different versions
+     
+5. Tutorials
+   - "Setting up ros2_control for a robot"
+   
+6. Examples
+   - Integration ros2_control_demos repository
+   
+7. Resources
+
+8. Contributing:
+   - Pull Requests (current page)
+   - Code (Rules for repsitories): some general implementation details
+   - Documentation
+   
+9. Acknowledgements
