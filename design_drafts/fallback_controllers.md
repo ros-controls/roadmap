@@ -7,8 +7,24 @@ Right now, we don't have a way to manage controllers when they fail to perform t
 ### Example 1
 A walking controller for a humanoid is also responsible for maintaining the balance of the robot along with footstep execution, however, there might be cases where the robot might fall after a few steps due to miscalibration or due to flexibility in some joints or it could be a different reason. In this case, we might want the robot to go to a safe position and be compliant enough for the impact, if not it might damage some joints or sensors onboard.
 
+---
+
+How would the default controller know that the robot is falling and that it needs to return an ERROR so
+that a fallback controller can be activated?
+
+---
+
 ### Example 2
 A mobile manipulator is performing a trajectory hits an obstacle and continues to apply force. In this case, we might want to switch to be more compliant mode, so that it doesn't damage the robot's joints.
+
+---
+
+This example assume that the hardware is able to still accept commands after returning ERROR.
+Have we considered extending the `return_type` to have different levels of ok / error?
+(we could also consider extending my proposed [hardware_status message](https://docs.google.com/presentation/d/1rgxwsNiNlTIaVrAV20ZQQMJTylHi9SxjnChd6oCg4IA/edit#slide=id.g2292ceb8c50_0_18) to controllers)
+This would allow the developer to trigger a fallback controller before the hardware encounters a fatal fault.
+
+---
 
 ## Current implementation
 
@@ -50,6 +66,13 @@ controller_manager:
       fallback_controllers: ["joint1_position_controller", "joint2_position_controller"]
 ```
 
+---
+
+In this example should all of the fallback's be activated in the case of a fault?
+What is the value in specifying a fallback per joint?
+
+---
+
 ``` c++
 struct ControllerInfo
 {
@@ -75,6 +98,15 @@ When trying to activate the controller with fallback controllers, the following 
 * All the primary controller command interfaces should be present in the fallback controllers command interfaces
 
 If any of the above checks fail, then activation of the primary controller fails. The user will always be able to run the primary controller without configuring the fallback controller.
+
+---
+
+Who would be responsible for ensuring that all fallbacks could be activated?
+For example that each joint is not claimed by more than one controller.
+If a main controllers faults and it attempts to claim a joint that is already in use what should happen?
+Example: leg controller faults and the leg + arm controllers need to switch to compliant mode to protect the robot, but something else is commanding the arm.
+
+---
 
 
 ### The `update()` method
