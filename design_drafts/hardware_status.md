@@ -33,7 +33,7 @@ We separate **real-time status** (fast, small) from **detailed diagnostics** (bu
 | Topic                          | Msg Type                           | Rate     | Intended Use                                |
 | ------------------------------ | ---------------------------------- | -------- | ------------------------------------------- |
 | `/hardware_status`             | `control_msgs/HardwareStatus`      | 1–50 Hz  | Health, ops & safety logic, auto‐monitoring |
-| `/hardware_status/diagnostics` | `control_msgs/HardwareDiagnostics` | 0.1–1 Hz | GUI dashboards, logs, debugging             |
+| `/hardware_diagnostics` | `control_msgs/HardwareDiagnostics` | 0.1–1 Hz | GUI dashboards, logs, debugging             |
 
 ## 3. Structured Status: `HardwareStatus`
 
