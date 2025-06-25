@@ -106,6 +106,27 @@ uint8 CONNECT_DOWN    =2
 uint8 CONNECT_FAILURE =3
 ```
 
+#### 3.2. A Note on a Future Addition 
+
+A potential limitation of the single-value enums above is that a component can only report one state per category at a time. Consider the `error_domain`: what happens if a hardware fault (`ERROR_HW`) immediately causes a communication failure (`ERROR_COMM`)? With the current design, the hardware driver must choose to (or is limited to) report only one.
+
+A potential solution for this in a future iteration would be to define some enums as **bitfields**. This would involve assigning values as powers of 2, allowing multiple states to be combined using a bitwise `OR` operation.
+
+For example, the `ErrorDomain` enum could be redefined as a bitmask:
+```
+# Example ErrorDomain as a bitfield
+uint8 ERROR_NONE    = 0  # 0b00000000
+uint8 ERROR_HW      = 1  # 0b00000001
+uint8 ERROR_FW      = 2  # 0b00000010
+uint8 ERROR_COMM    = 4  # 0b00000100
+uint8 ERROR_POWER   = 8  # 0b00001000
+# ... up to 4 more flags
+```
+
+A publisher could then report both a hardware and power fault simultaneously by setting the value to `ERROR_HW | ERROR_POWER` (which is `9`, or `0b00001001`). A subscriber could then check for a specific error using a bitwise `AND` (e.g., `if (status.error_domain & ERROR_HW)`).
+
+The primary trade-off is that we would be limited by the size of the enum's underlying type. A `uint8` allows for exactly 8 unique flags. While this may be sufficient for now, it's a constraint to keep in mind as we finalize this design. We can add this if we hear from the community that this is needed.
+
 ## 4. Unstructured Diagnostics: `HardwareDiagnostics`
 
 ```
