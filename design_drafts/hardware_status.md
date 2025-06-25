@@ -56,6 +56,12 @@ uint8  connectivity_status   # see ConnectivityStatus enum
 string manufacturer          # e.g. "Bosch"
 string model                 # e.g. "Lidar-XYZ-v2"
 string firmware_version      # e.g. "1.2.3"
+
+# ——— Optional Details for Context —————————————————————————————————
+# Provides specific quantitative values related to the enums above.
+# e.g., for power_state, could have {key: "voltage", value: "24.1"}
+# e.g., for connectivity, could have {key: "signal_strength", value: "-55dBm"}
+diagnostic_msgs/KeyValue[] state_details
 ```
 
 ### 3.1. Enums
