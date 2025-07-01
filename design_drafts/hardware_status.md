@@ -45,12 +45,20 @@ string           hardware_id  # unique per‐instance, e.g. "left_wheel/driver"
 
 # ——— Health & Error ——————————————————————————————————————————————
 uint8  health_status         # see HealthStatus enum
+diagnostic_msgs/KeyValue[] health_diagnostics # more info on health
+
 uint8  error_domain          # see ErrorDomain enum
+diagnostic_msgs/KeyValue[] error_diagnostics # more info on error like HW error codes and FW error codes
 
 # ——— Operational State ———————————————————————————————————————————
 uint8  operational_mode      # see ModeStatus enum
+diagnostic_msgs/KeyValue[] operational_diagnostics # The operational mode information like hybrid mode, position, position-velocity, gain scheduling being on etc
+
 uint8  power_state           # see PowerState enum
+diagnostic_msgs/KeyValue[] power_diagnostics # To log more information like the battery voltage, current, charging rate etc
+
 uint8  connectivity_status   # see ConnectivityStatus enum
+diagnostic_msgs/KeyValue[] connectivity_diagnostics # To log information like signal strength and more
 
 # ——— Vendor & Version Info ————————————————————————————————————————
 string manufacturer          # e.g. "Bosch"
