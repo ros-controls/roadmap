@@ -18,13 +18,14 @@ Let's discuss this in slightly more detail.
 
 The core idea is to split status reporting into two complementary parts.
 
-1. **Structured Status:**
-- A fixed set of fields covering \~80% of common hardware needs—machine-readable, reliable, and directly consumable by controllers, watchdogs, automation tools and even for us internally.
-- A compact, general-purpose block of enums and identifiers. If a device can’t fill one of these fields, it simply reports `UNKNOWN`.
+1.  **Structured, Standards-Based Status:**
+    - A fixed set of fields covering \~80% of common hardware needs—machine-readable, reliable, and directly consumable by controllers, watchdogs, automation tools and even for us internally.
+    - A collection of status messages, where each message type corresponds to a specific industry standard (e.g., `CANopenState`), providing a machine-readable and reliable format.
+    - A hardware interface populates only the status blocks relevant to it within a single, component-specific message, covering the common hardware needs for controllers, watchdogs, and automation tools.
 
-2. **Unstructured Status:**
-- A free-form array of key/value diagnostics for everything else—geared toward logs, dashboards, and human inspection only.
-- A slower, richer stream of `diagnostic_msgs/KeyValue[]`, strictly for debugging and UI, ideally not parsed by control loops.
+2.  **Unstructured Status:**
+    - A free-form array of key/value diagnostics for everything else—geared toward logs, dashboards, and human inspection only.
+    - A slower, richer stream of `diagnostic_msgs/KeyValue[]`, strictly for debugging and UI, ideally not parsed by control loops.
 
 ## 2. Example Message Topology
 
@@ -37,15 +38,39 @@ We separate **real-time status** (fast, small) from **detailed diagnostics** (bu
 
 ## 3. Structured Status: `HardwareStatus`
 
+The foundation of this approach is the `HardwareStatus` message. A single publisher on the `/hardware_status` topic would publish an array of these messages, one for each component in the system.
+
 ```
 # control_msgs/msg/HardwareStatus
 
 std_msgs/Header header        # timestamp + frame_id (optional)
 string           hardware_id  # unique per‐instance, e.g. "left_wheel/driver"
 
+# ——— Standard-Specific States ——————————————————————————————————————
+# Arrays of states populated based on the standards relevant to this component.
+# A component will only fill the arrays for the standards it implements.
+ROS2ControlState[]     ros2control_states
+CANopenState[]         canopen_states
+EtherCATState[]        ethercat_states
+VDA5050State[]         vda5050_states
+```
+
+### 3.1. Standardized State Messages
+
+Below are the proposed initial standard-specific messages, based on widely used industrial standards. Additions and opinions here would be really appreciated!
+
+---
+
+**`ros2_control` Generic State**
+
+This message encapsulates the general-purpose status fields, serving as a baseline for any hardware interface.
+
+```
+# control_msgs/msg/ROS2ControlState
+
 # ——— Health & Error ——————————————————————————————————————————————
 uint8  health_status         # see HealthStatus enum
-uint8[]  error_domain        # Array of device errors, because hardware can throw more than one, see ErrorDomain enum
+uint8[]  error_domain        # Array of device errors, see ErrorDomain enum
 
 # ——— Operational State ———————————————————————————————————————————
 uint8  operational_mode      # see ModeStatus enum
@@ -64,17 +89,15 @@ string firmware_version      # e.g. "1.2.3"
 diagnostic_msgs/KeyValue[] state_details
 ```
 
-### 3.1. Enums
-
+#### `ROS2ControlState` Enums
 ```
-# control_msgs/msg/HardwareStatus (continued)
+# control_msgs/msg/ROS2ControlState (enums)
 
 # High-level health
 uint8 HEALTH_UNKNOWN=0
 uint8 HEALTH_OK     =1
 uint8 HEALTH_DEGRADED=2
 uint8 HEALTH_WARNING =3
-# Hardware stops publishing state when it returns ERROR/FATAL, how are these set/updated?
 uint8 HEALTH_ERROR   =4
 uint8 HEALTH_FATAL   =5
 
@@ -90,10 +113,7 @@ uint8 EMERGENCY_STOP_HW # state of the emergency stop hardware (i.e. e-stop butt
 uint8 EMERGENCY_STOP_SW # state of the emergency stop software system (over travel, pinch point)
 uint8 PROTECTIVE_STOP_HW # state of the protective stop hardware (i.e. safety field state)
 uint8 PROTECTIVE_STOP_SW # state of the software protective stop
-# Some protective stop errors need to be acknowledged before the hardware can reactivate
-# see https://docs.universal-robots.com/Universal_Robots_ROS2_Documentation/doc/ur_robot_driver/ur_robot_driver/doc/dashboard_client.html#unlock-protective-stop-std-srvs-trigger
 uint8 SAFETY_STOP
-# Some hardware requires calibration on startup (for example a linear rail or quadruped)
 unit8 CALIBRATION_REQUIRED
 
 
@@ -133,27 +153,72 @@ uint8 CONNECT_FAILURE =3
 uint8 CONNECTION_SLOW # to tell the controlling system it is struggling to communicate at rate
 ```
 
-#### 3.2. A Note on a Future Addition 
+---
 
-A potential limitation of the single-value enums above is that a component can only report one state per category at a time. Consider the `error_domain`: what happens if a hardware fault (`ERROR_HW`) immediately causes a communication failure (`ERROR_COMM`)? With the current design, the hardware driver must choose to (or is limited to) report only one.
-That or return an array of errors and let mission control sort out the correct action to recover.
+**CANopen State**
 
-A potential solution for this in a future iteration would be to define some enums as **bitfields**. This would involve assigning values as powers of 2, allowing multiple states to be combined using a bitwise `OR` operation.
+Reports state according to CiA 301 and CiA 402, common for motor drives and I/O.
+-   **Source:** [CAN in Automation (CiA)](https://www.can-cia.org/) - CiA 301 & 402 specifications.
 
-For example, the `ErrorDomain` enum could be redefined as a bitmask:
 ```
-# Example ErrorDomain as a bitfield (why only an 8 bit number?)
-uint8 ERROR_NONE    = 0  # 0b00000000
-uint8 ERROR_HW      = 1  # 0b00000001
-uint8 ERROR_FW      = 2  # 0b00000010
-uint8 ERROR_COMM    = 4  # 0b00000100
-uint8 ERROR_POWER   = 8  # 0b00001000
-# ... up to 4 more flags
+# control_msgs/msg/CANopenState
+
+uint8  node_id           # The CANopen node ID of the device
+
+# ——— CiA 301 State —————————————————————————————————————————————————
+uint8  nmt_state         # Network Management state (e.g., OPERATIONAL)
+
+# ——— CiA 402 State (for drives) ————————————————————————————————————
+uint8  dsp_402_state     # Drive state machine state (e.g., OPERATION_ENABLED)
+
+# ——— Error Reporting ———————————————————————————————————————————————
+uint32 last_emcy_code    # Last Emergency (EMCY) error code received
 ```
 
-A publisher could then report both a hardware and power fault simultaneously by setting the value to `ERROR_HW | ERROR_POWER` (which is `9`, or `0b00001001`). A subscriber could then check for a specific error using a bitwise `AND` (e.g., `if (status.error_domain & ERROR_HW)`).
+---
 
-The primary trade-off is that we would be limited by the size of the enum's underlying type. A `uint8` allows for exactly 8 unique flags. While this may be sufficient for now, it's a constraint to keep in mind as we finalize this design. We can add this if we hear from the community that this is needed.
+**EtherCAT State**
+
+Reports the EtherCAT slave state according to the EtherCAT State Machine (ESM).
+-   **Source:** [EtherCAT Technology Group (ETG)](https://www.ethercat.org/en/downloads.html) - ETG.1000.4 EtherCAT Protocol Specifications.
+
+```
+# control_msgs/msg/EtherCATState
+
+uint16 slave_position    # Position of the slave on the bus (0, 1, 2...)
+string vendor_id         # Unique vendor identifier
+string product_code      # Unique product code for the device
+
+# ——— EtherCAT State Machine (ESM) ——————————————————————————————————
+uint8  al_state          # Application Layer state (INIT, PREOP, SAFEOP, OP)
+bool   has_error         # True if the slave is in an error state
+uint16 al_status_code    # AL Status Code indicating the reason for an error
+```
+
+---
+
+**VDA5050 State**
+
+For AGVs and AMRs compliant with VDA5050, this provides a snapshot of the vehicle's high-level status.
+-   **Source:** [Verband der Automobilindustrie (VDA)](https://github.com/VDA5050/VDA5050) - VDA 5050 Specification.
+
+```
+# control_msgs/msg/VDA5050State
+
+# ——— Order and Action Status ———————————————————————————————————————
+string order_id          # ID of the currently executed order
+string action_status     # e.g., RUNNING, PAUSED, FINISHED, FAILED
+uint32 last_node_id      # ID of the last reached node in the topology
+
+# ——— Vehicle State —————————————————————————————————————————————————
+bool   driving           # True if the vehicle's drives are active
+float64 battery_charge   # Current battery charge in percent
+string operating_mode    # e.g., MANUAL, AUTOMATIC, SERVICE
+
+# ——— Error Reporting ———————————————————————————————————————————————
+string error_type
+string error_description
+```
 
 ## 4. Unstructured Diagnostics: `HardwareDiagnostics`
 
@@ -178,14 +243,19 @@ KeyValue[]         entries   # diagnostic_msgs/KeyValue[]
 > ```
 
 ## 5. Open Questions & Discussion
+1.  Is the current list of standardized state messages (`CANopen`, `EtherCAT`, `VDA5050`, `ISO10218`) a good starting point? Are there other non-proprietary standards that are critical to include?
+3.  How should a hardware component that implements multiple instances of a standard (e.g., a board with two CANopen nodes) represent this? Should it publish two `CANopenState` messages in the array, or is there a better way?
+4.  Is the single `/hardware_status` topic scalable for systems with hundreds of components, or should we define an alternative "topic-per-component" strategy as a best practice for large systems?
+5.  And the questions that I have had, Is this whole approach overly complicated, let's avoid that pitfall.
 
-1. Could we reuse `lifecycle_msgs/State` for `operational_mode`, or is a dedicated enum preferable for clarity?
-2. I left some question marks in the diagrams, any categories we are missing?
-3. Should `HardwareStatus` include a short `string error_message`, or strictly push error details into diagnostics only?
-4. Also another thing, maybe we use one big message (`control_msgs/HardwareStatus`) to make it simpler rather than publish structured vs. unstructured data on separate topics (`/hardware_status` and `/hardware_diagnostics`)?
-5. And the main questions that I have, Is this whole approach overly complicated, let's avoid that pitfall.
+## 6. Alternative Publishing Strategies
 
-Looking forward to hearing what everyone thinks!
+While this proposal centers on a single topic with an array of component statuses, it's worth discussing the trade-offs of other possible architectures. How else could we structure the flow of status information?
+
+-   **Topic per Component**
+    -   What if, instead of a single aggregated topic, each hardware component published its own `HardwareStatus` message on a dedicated, namespaced topic (e.g., `/left_wheel_motor/status`)?
+    -   This approach would align closely with ROS conventions, where nodes publish their data on unique topics, simplifying the debugging of individual components with standard tools like `ros2 topic echo`.
+    -   The main challenge here is for system-wide monitoring tools, which would need to discover and subscribe to a potentially large and dynamic number of topics.
 
 ## Hardware Status Interface
 What does configuring the Hardware Status (per hardware because a mobile_base is likely different than the arm mounted on top of it) look like?
