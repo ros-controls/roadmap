@@ -98,6 +98,7 @@ uint8 HEALTH_UNKNOWN=0
 uint8 HEALTH_OK     =1
 uint8 HEALTH_DEGRADED=2
 uint8 HEALTH_WARNING =3
+# Hardware stops publishing state when it returns ERROR/FATAL, how are these set/updated?
 uint8 HEALTH_ERROR   =4
 uint8 HEALTH_FATAL   =5
 
