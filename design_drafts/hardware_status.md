@@ -47,8 +47,8 @@ std_msgs/Header header        # timestamp + frame_id (optional)
 string           hardware_id  # unique per‐instance, e.g. "left_wheel/driver"
 
 # ——— Standard-Specific States ——————————————————————————————————————
-# Arrays of states populated based on the standards relevant to this component.
-# A component will only fill the arrays for the standards it implements.
+# States populated based on the standards relevant to this component.
+# A component will only fill the arrays for the standards it implements, rest will be empty
 ROS2ControlState[]     ros2control_states
 CANopenState[]         canopen_states
 EtherCATState[]        ethercat_states
@@ -257,52 +257,3 @@ While this proposal centers on a single topic with an array of component statuse
     -   What if, instead of a single aggregated topic, each hardware component published its own `HardwareStatus` message on a dedicated, namespaced topic (e.g., `/left_wheel_motor/status`)?
     -   This approach would align closely with ROS conventions, where nodes publish their data on unique topics, simplifying the debugging of individual components with standard tools like `ros2 topic echo`.
     -   The main challenge here is for system-wide monitoring tools, which would need to discover and subscribe to a potentially large and dynamic number of topics.
-
-## Hardware Status Interface
-What does configuring the Hardware Status (per hardware because a mobile_base is likely different than the arm mounted on top of it) look like?
-Should we have blocks of state (i.e. standardized messages) that can be added together if the hardware offers X, Y and Z features?
-(For example my robot arm has a `safety interface` for e-stop/p-stop and a `hardware_status` interface to report power, operating mode and ...)
-What does it look like at the interface level? Is there a separate read (and maybe write) method for status reporting and reconfiguration?
-For example standard safety status (E-stop, P-stop), operating mode, [battery state](https://docs.ros2.org/foxy/api/sensor_msgs/msg/BatteryState.html).
-
-JointState has been the standard ROS2 control works with. What about GPIO, SafetyStatus, BatteryState, .... these are interfaces that hardware frequently provides.
-What if ros2_control made a set of messages to standardize it's interfaces for each subcategory?
-[SensorMsgs](https://docs.ros2.org/foxy/api/sensor_msgs/index-msg.html) is a start of what we need.
-For example the UR controller exposes lots of interfaces via [GPIO](https://github.com/UniversalRobots/Universal_Robots_ROS2_Description/blob/85d2ad8d1526ee6c0f21dca94e1e697c83706b71/urdf/ur.ros2_control.xacro#L294-L311) but not in a standardized way so if someone wanted to control it and then switch robots their codebase would likely need to change to handle auxiliary control and monitoring.
-
-Some errors or states will be set as the hardware stops functioning.
-Should the status broadcaster hold and continue to publish last known state?
-Should the status broadcaster offer statistics on hardware DEACTIVATE/ERROR and ACTIVATIONS?
-Lots of industrial applications would like to know how many e-stops, number of controller errors/faults, ____ per shift, week or some period of time
-Could this open the option for custom or standard controllers to monitor and keep the system healthy? i.e. automatic arm fault reset controller,
-
-Links of hardware interfaces and their attempt to convey hardware status and support other control modes
-
-### UR
-[hardware_interface](https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver/blob/868f240bc8578ebfa1d19b94f8a6a1ad62fa0bd1/ur_robot_driver/src/hardware_interface.cpp#L266-L270)
-[SafetyMode.msg](https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver/blob/main/ur_dashboard_msgs/msg/SafetyMode.msg)
-[RobotMode.msg](https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver/blob/main/ur_dashboard_msgs/msg/RobotMode.msg)
-[control.xacro](https://github.com/UniversalRobots/Universal_Robots_ROS2_Description/blob/85d2ad8d1526ee6c0f21dca94e1e697c83706b71/urdf/ur.ros2_control.xacro#L294-L311)
-
-### Kuka
-[hardware_interface](https://github.com/lbr-stack/lbr_fri_ros2_stack/blob/f2784b86e5975eddc9b5eab901baaca329306653/lbr_ros2_control/include/lbr_ros2_control/system_interface_type_values.hpp#L8-L27)
-
-### Kinova
-[fault_reset controller](https://github.com/Kinovarobotics/ros2_kortex/blob/main/kortex_description/arms/gen3/7dof/config/ros2_controllers.yaml#L17-L18) to report and reset faults.
-[twist_controller](https://github.com/Kinovarobotics/ros2_kortex/blob/309f9c9d4a277970e542e5ac1fe260ced0630f65/kortex_description/arms/gen3/7dof/config/ros2_controllers.yaml#L11-L12)
-
-### Dynamixel
-[hardware_interface](https://github.com/ROBOTIS-GIT/dynamixel_hardware_interface/blob/02841dd2ae422676e5dc0fea37057bdec3be8cc1/include/dynamixel_hardware_interface/dynamixel_hardware_interface.hpp#L53-L91)
-
-### Robotiq
-[hardware_interface](https://github.com/PickNikRobotics/ros2_robotiq_gripper/blob/12e623212e6891a5fcc9af94d67b07e640916394/robotiq_driver/include/robotiq_driver/driver.hpp#L41-L66)
-[acrivation_controller](https://github.com/PickNikRobotics/ros2_robotiq_gripper/blob/main/robotiq_controllers/src/robotiq_activation_controller.cpp)
-
-### Ethercat
-[hardware_interface](https://github.com/ICube-Robotics/ethercat_driver_ros2/blob/52be2c2ed163bab25d46c402ddb4e7216c0a0ec3/ethercat_generic_plugins/ethercat_generic_cia402_drive/include/ethercat_generic_plugins/cia402_common_defs.hpp#L31-L56)
-
-### ROS2 canopen driver
-https://github.com/ros-industrial/ros2_canopen/tree/master
-
-### Picknik Twist & Fault controllers
-https://github.com/PickNikRobotics/picknik_controllers
