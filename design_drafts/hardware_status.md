@@ -19,12 +19,12 @@ Let's discuss this in slightly more detail.
 The core idea is to split status reporting into two complementary parts.
 
 1.  **Structured, Standards-Based Status:**
-    - A fixed set of fields covering \~80% of common hardware needs—machine-readable, reliable, and directly consumable by controllers, watchdogs, automation tools and even for us internally.
+    - A fixed set of fields covering \~80% of common hardware needs-machine-readable, reliable, and directly consumable by controllers, watchdogs, automation tools and even for us internally.
     - A collection of status messages, where each message type corresponds to a specific industry standard (e.g., `CANopenState`), providing a machine-readable and reliable format.
     - A hardware interface populates only the status blocks relevant to it within a single, component-specific message, aggregates it into one message, covering the common hardware needs for controllers, watchdogs, and automation tools.
 
 2.  **Unstructured Status:**
-    - A free-form array of key/value diagnostics for everything else—geared toward logs, dashboards, and human inspection only.
+    - A free-form array of key/value diagnostics for everything else-geared toward logs, dashboards, and human inspection only.
     - A slower, richer stream of `diagnostic_msgs/KeyValue[]`, strictly for debugging and UI, ideally not parsed by control loops.
 
 ## 2. Example Message Topology
@@ -46,7 +46,7 @@ The foundation of this approach is the `HardwareStatus` message. A single publis
 std_msgs/Header header        # timestamp + frame_id (optional)
 string           hardware_id  # unique per‐instance, ideally the name of the hardware derived from HardwareInfo e.g. "kuka_arm"
 
-# ——— Component Status Aggregation —————————————————————————————————
+# --- Component Status Aggregation ---------------------------------
 # An array containing the status of individual components in hardware interface specified by hardware_id
 HardwareStatusComponent[]     hardware_status_states
 ```
@@ -54,7 +54,7 @@ HardwareStatusComponent[]     hardware_status_states
 # control_msgs/msg/HardwareStatusComponent
 string           component_id  # unique per‐hardware, e.g. "base_motor"
 
-# ——— Standard-Specific States ——————————————————————————————————————
+# --- Standard-Specific States --------------------------------------
 # States populated based on the standards relevant to this component.
 # A component will only fill the arrays for the standards it implements, rest will be empty
 ROS2ControlState[]     ros2control_states
@@ -76,21 +76,21 @@ This message encapsulates the general-purpose status fields, serving as a baseli
 ```
 # control_msgs/msg/ROS2ControlState
 
-# ——— Health & Error ——————————————————————————————————————————————
+# --- Health & Error ----------------------------------------------
 uint8  health_status         # see HealthStatus enum
 uint8[]  error_domain        # Array of device errors, see ErrorDomain enum
 
-# ——— Operational State ———————————————————————————————————————————
+# --- Operational State -------------------------------------------
 uint8  operational_mode      # see ModeStatus enum
 uint8  power_state           # see PowerState enum
 uint8  connectivity_status   # see ConnectivityStatus enum
 
-# ——— Vendor & Version Info ————————————————————————————————————————
+# --- Vendor & Version Info ----------------------------------------
 string manufacturer          # e.g. "Bosch"
 string model                 # e.g. "Lidar-XYZ-v2"
 string firmware_version      # e.g. "1.2.3"
 
-# ——— Optional Details for Context —————————————————————————————————
+# --- Optional Details for Context ---------------------------------
 # Provides specific quantitative values related to the enums above.
 # e.g., for power_state, could have {key: "voltage", value: "24.1"}
 # e.g., for connectivity, could have {key: "signal_strength", value: "-55dBm"}
@@ -174,13 +174,13 @@ Reports state according to CiA 301 and CiA 402, common for motor drives and I/O.
 
 uint8  node_id           # The CANopen node ID of the device
 
-# ——— CiA 301 State —————————————————————————————————————————————————
+# --- CiA 301 State -------------------------------------------------
 uint8  nmt_state         # Network Management state (e.g., OPERATIONAL)
 
-# ——— CiA 402 State (for drives) ————————————————————————————————————
+# --- CiA 402 State (for drives) ------------------------------------
 uint8  dsp_402_state     # Drive state machine state (e.g., OPERATION_ENABLED)
 
-# ——— Error Reporting ———————————————————————————————————————————————
+# --- Error Reporting -----------------------------------------------
 uint32 last_emcy_code    # Last Emergency (EMCY) error code received
 ```
 
@@ -198,7 +198,7 @@ uint16 slave_position    # Position of the slave on the bus (0, 1, 2...)
 string vendor_id         # Unique vendor identifier
 string product_code      # Unique product code for the device
 
-# ——— EtherCAT State Machine (ESM) ——————————————————————————————————
+# --- EtherCAT State Machine (ESM) ----------------------------------
 uint8  al_state          # Application Layer state (INIT, PREOP, SAFEOP, OP)
 bool   has_error         # True if the slave is in an error state
 uint16 al_status_code    # AL Status Code indicating the reason for an error
@@ -214,17 +214,17 @@ For AGVs and AMRs compliant with VDA5050, this provides a snapshot of the vehicl
 ```
 # control_msgs/msg/VDA5050State
 
-# ——— Order and Action Status ———————————————————————————————————————
+# --- Order and Action Status ---------------------------------------
 string order_id          # ID of the currently executed order
 string action_status     # e.g., RUNNING, PAUSED, FINISHED, FAILED
 uint32 last_node_id      # ID of the last reached node in the topology
 
-# ——— Vehicle State —————————————————————————————————————————————————
+# --- Vehicle State -------------------------------------------------
 bool   driving           # True if the vehicle's drives are active
 float64 battery_charge   # Current battery charge in percent
 string operating_mode    # e.g., MANUAL, AUTOMATIC, SERVICE
 
-# ——— Error Reporting ———————————————————————————————————————————————
+# --- Error Reporting -----------------------------------------------
 string error_type
 string error_description
 ```
