@@ -21,7 +21,7 @@ The core idea is to split status reporting into two complementary parts.
 1.  **Structured, Standards-Based Status:**
     - A fixed set of fields covering \~80% of common hardware needs—machine-readable, reliable, and directly consumable by controllers, watchdogs, automation tools and even for us internally.
     - A collection of status messages, where each message type corresponds to a specific industry standard (e.g., `CANopenState`), providing a machine-readable and reliable format.
-    - A hardware interface populates only the status blocks relevant to it within a single, component-specific message, covering the common hardware needs for controllers, watchdogs, and automation tools.
+    - A hardware interface populates only the status blocks relevant to it within a single, component-specific message, aggregates it into one message, covering the common hardware needs for controllers, watchdogs, and automation tools.
 
 2.  **Unstructured Status:**
     - A free-form array of key/value diagnostics for everything else—geared toward logs, dashboards, and human inspection only.
@@ -38,13 +38,21 @@ We separate **real-time status** (fast, small) from **detailed diagnostics** (bu
 
 ## 3. Structured Status: `HardwareStatus`
 
-The foundation of this approach is the `HardwareStatus` message. A single publisher on the `/hardware_status` topic would publish an array of these messages, one for each component in the system.
+The foundation of this approach is the `HardwareStatus` message. A single publisher per hardware interface would publish an array of `HardwareStatus` messages on the `/hardware_status` topic , each message is an array of `HardwareStatusComponent` messages which contain the standard separated messages of a single component in the hardware interface.
 
 ```
 # control_msgs/msg/HardwareStatus
 
 std_msgs/Header header        # timestamp + frame_id (optional)
-string           hardware_id  # unique per‐instance, e.g. "left_wheel/driver"
+string           hardware_id  # unique per‐instance, ideally the name of the hardware derived from HardwareInfo e.g. "kuka_arm"
+
+# ——— Component Status Aggregation —————————————————————————————————
+# An array containing the status of individual components in hardware interface specified by hardware_id
+HardwareStatusComponent[]     hardware_status_states
+```
+```
+# control_msgs/msg/HardwareStatusComponent
+string           component_id  # unique per‐hardware, e.g. "base_motor"
 
 # ——— Standard-Specific States ——————————————————————————————————————
 # States populated based on the standards relevant to this component.
@@ -245,15 +253,14 @@ KeyValue[]         entries   # diagnostic_msgs/KeyValue[]
 
 ## 5. Open Questions & Discussion
 1.  Is the current list of standardized state messages (`CANopen`, `EtherCAT`, `VDA5050`, `ISO10218`) a good starting point? Are there other non-proprietary standards that are critical to include?
-3.  How should a hardware component that implements multiple instances of a standard (e.g., a board with two CANopen nodes) represent this? Should it publish two `CANopenState` messages in the array, or is there a better way?
-4.  Is the single `/hardware_status` topic scalable for systems with hundreds of components, or should we define an alternative "topic-per-component" strategy as a best practice for large systems?
-5.  And the questions that I have had, Is this whole approach overly complicated, let's avoid that pitfall.
+2.  Is the single `/hardware_status` topic scalable for systems with hundreds of components, or should we define an alternative "topic-per-component" strategy as a best practice for large systems?
+3.  And the questions that I have had, Is this whole approach overly complicated, let's avoid that pitfall.
 
 ## 6. Alternative Publishing Strategies
 
 While this proposal centers on a single topic with an array of component statuses, it's worth discussing the trade-offs of other possible architectures. How else could we structure the flow of status information?
 
--   **Topic per Component**
-    -   What if, instead of a single aggregated topic, each hardware component published its own `HardwareStatus` message on a dedicated, namespaced topic (e.g., `/left_wheel_motor/status`)?
-    -   This approach would align closely with ROS conventions, where nodes publish their data on unique topics, simplifying the debugging of individual components with standard tools like `ros2 topic echo`.
-    -   The main challenge here is for system-wide monitoring tools, which would need to discover and subscribe to a potentially large and dynamic number of topics.
+-   **Single Component Messages**
+    -   One issue I see with the current aggregated status message approach is that it seems a tad bit complicated for simple systems, what if a hardware interface has only 1 actuator?
+    -   Then what if, instead of a single aggregated topic, each hardware component published just a `HardwareStatusComponent` message on the the `/hardware_status` topic which will now be of the `HardwareStatusComponent`
+    -   Then receivers just listen to the same `/hardware_status` topic as before, but just have to parse the `component_id` to see if the data is relevant, and similarly, publishers have to also only fill in the `HardwareStatusComponent` message and send it without need of aggregation
