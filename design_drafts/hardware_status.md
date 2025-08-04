@@ -269,3 +269,27 @@ While this proposal centers on a single topic with an array of device statuses, 
     -   One issue I see with the current aggregated status message approach is that it seems a tad bit complicated for simple systems, what if a hardware component has only 1 actuator?
     -   Then what if, instead of a single aggregated topic, each device in a hardware component published its own `HardwareDeviceStatus` message on the same `/hardware_status` topic which will now be of the type `HardwareDeviceStatus`
     -   Then receivers just listen to the same `/hardware_status` topic as before, but just have to parse the `device_id` to see if the data is relevant, and similarly, publishers have to also only fill in the `HardwareDeviceStatus` message and send it without need of aggregation
+
+## References
+Links of hardware interfaces and their attempt to convey hardware status and support other control modes
+### UR
+[hardware_interface](https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver/blob/868f240bc8578ebfa1d19b94f8a6a1ad62fa0bd1/ur_robot_driver/src/hardware_interface.cpp#L266-L270)
+[SafetyMode.msg](https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver/blob/main/ur_dashboard_msgs/msg/SafetyMode.msg)
+[RobotMode.msg](https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver/blob/main/ur_dashboard_msgs/msg/RobotMode.msg)
+[control.xacro](https://github.com/UniversalRobots/Universal_Robots_ROS2_Description/blob/85d2ad8d1526ee6c0f21dca94e1e697c83706b71/urdf/ur.ros2_control.xacro#L294-L311)
+### Kuka
+[hardware_interface](https://github.com/lbr-stack/lbr_fri_ros2_stack/blob/f2784b86e5975eddc9b5eab901baaca329306653/lbr_ros2_control/include/lbr_ros2_control/system_interface_type_values.hpp#L8-L27)
+### Kinova
+[fault_reset controller](https://github.com/Kinovarobotics/ros2_kortex/blob/main/kortex_description/arms/gen3/7dof/config/ros2_controllers.yaml#L17-L18) to report and reset faults.
+[twist_controller](https://github.com/Kinovarobotics/ros2_kortex/blob/309f9c9d4a277970e542e5ac1fe260ced0630f65/kortex_description/arms/gen3/7dof/config/ros2_controllers.yaml#L11-L12)
+### Dynamixel
+[hardware_interface](https://github.com/ROBOTIS-GIT/dynamixel_hardware_interface/blob/02841dd2ae422676e5dc0fea37057bdec3be8cc1/include/dynamixel_hardware_interface/dynamixel_hardware_interface.hpp#L53-L91)
+### Robotiq
+[hardware_interface](https://github.com/PickNikRobotics/ros2_robotiq_gripper/blob/12e623212e6891a5fcc9af94d67b07e640916394/robotiq_driver/include/robotiq_driver/driver.hpp#L41-L66)
+[acrivation_controller](https://github.com/PickNikRobotics/ros2_robotiq_gripper/blob/main/robotiq_controllers/src/robotiq_activation_controller.cpp)
+### Ethercat
+[hardware_interface](https://github.com/ICube-Robotics/ethercat_driver_ros2/blob/52be2c2ed163bab25d46c402ddb4e7216c0a0ec3/ethercat_generic_plugins/ethercat_generic_cia402_drive/include/ethercat_generic_plugins/cia402_common_defs.hpp#L31-L56)
+### ROS2 canopen driver
+https://github.com/ros-industrial/ros2_canopen/tree/master
+### Picknik Twist & Fault controllers
+https://github.com/PickNikRobotics/picknik_controllers
