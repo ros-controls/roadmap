@@ -259,7 +259,7 @@ KeyValue[]         entries   # diagnostic_msgs/KeyValue[]
 
 ## 5. Open Questions & Discussion
 1.  Is the current list of standardized state messages (`CANopen`, `EtherCAT`, `VDA5050`, `ISO10218`) a good starting point? Are there other non-proprietary standards that are critical to include?
-2.  And the questions that I have had, Is this whole approach overly complicated, let's avoid that pitfall.
+2.  Is this whole approach overly complicated? It would be good to avoid that pitfall.
 
 ## 6. Alternative Publishing Strategies
 
