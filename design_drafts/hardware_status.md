@@ -63,7 +63,7 @@ string           device_id  # unique per-device, e.g. "base_motor"
 # --- Standard-Specific States --------------------------------------
 # States populated based on the standards relevant to this device.
 # A device will only fill the arrays for the standards it implements, rest will be empty
-ROS2ControlState[]     ros2control_states
+GenericState[]     generic_hardware_status
 CANopenState[]         canopen_states
 EtherCATState[]        ethercat_states
 VDA5050State[]         vda5050_states
