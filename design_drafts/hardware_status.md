@@ -105,7 +105,7 @@ diagnostic_msgs/KeyValue[] state_details
 
 #### `ROS2ControlState` Enums
 ```
-# control_msgs/msg/ROS2ControlState (enums)
+# control_msgs/msg/GenericState (enums)
 
 # High-level health
 uint8 HEALTH_UNKNOWN=0
