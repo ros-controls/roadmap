@@ -80,7 +80,7 @@ Below are the proposed initial standard-specific messages, based on widely used 
 This message encapsulates the general-purpose status fields, serving as a baseline for any hardware component.
 
 ```
-# control_msgs/msg/ROS2ControlState
+# control_msgs/msg/GenericState
 
 # --- Health & Error ----------------------------------------------
 uint8  health_status         # see HealthStatus enum
