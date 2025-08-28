@@ -9,7 +9,7 @@ In a project, we're wrapping `controller_manager` in a custom scheduler task, es
 ## Proposed changes
 We propose a simple refactoring with two main objectives:
 
-1. **Extract all ROS 2 interfaces** and their callback implementations into a helper file `ros2_communication.cpp/hpp` which current `controller_manager.hpp` would include.
+1. **Extract all ROS 2 interfaces** and their callback implementations into a helper file `controller_manager_ros.cpp/hpp` which current `controller_manager.hpp` would include.
 
 2. **Rename the current `ros2_control_node`** to `ros2_control_executable` to accurately reflect its function as a system entry point rather than a Node
 
