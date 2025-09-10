@@ -14,7 +14,7 @@ We propose a simple refactoring with two main objectives:
 2. **Rename the current `ros2_control_node`** to `ros2_control_executable` to accurately reflect its function as a system entry point rather than a Node
 
 ## Notes:
-naming is are for discussion, of course
+naming is up for discussion, of course
 
 #### Food for thought:
 Outside of scope for this suggestion, but we could push it a step further and make `ControllerManager` not inherit from `Node` at all, and place all ROS-related stuff into `ControllerManagerNode` class.
