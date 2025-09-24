@@ -1,6 +1,6 @@
 # ros2_control profiles
 
-When a system has multiple controllers or a chain of controllers then switching between different control modes is quite a hassle as all the respective controllers needs to be activated and deactivated. In order to handle those cases, I propose something called profiles in the ros2_control framework which is a separate package or a separate python node that handles these transmission. Every package is free to define their own profiles and we will be getting that information at runtime using the [ament_resource_index](https://github.com/ament/ament_cmake/blob/master/ament_cmake_core/doc/resource_index.md#implementation). This allows flexibility and modularity for the design
+When a system has multiple controllers or a chain of controllers then switching between different control modes is quite a hassle as all the respective controllers needs to be activated and deactivated. In order to handle those cases, I propose something called profiles in the ros2_control framework which is a separate package or a separate python node that handles these transitions. Every package is free to define their own profiles and we will be getting that information at runtime using the [ament_resource_index](https://github.com/ament/ament_cmake/blob/master/ament_cmake_core/doc/resource_index.md#implementation). This allows flexibility and modularity for the design
 
 We would need a new service and topic message types, for instance as below:
 
